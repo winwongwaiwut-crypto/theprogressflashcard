@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เกมสะกดคำ – The Progress</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Sarabun', sans-serif;
+    background: #ffffff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 24px 16px 48px;
+    color: #111;
+  }
+
+  header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  header h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #111;
+  }
+  header p {
+    margin-top: 6px;
+    font-size: 1rem;
+    color: #666;
+  }
+
+  #scoreboard {
+    display: flex;
+    gap: 24px;
+    margin-bottom: 28px;
+    font-size: 1rem;
+    font-weight: 600;
+  }
+  .score-box {
+    background: #f4f4f4;
+    border-radius: 12px;
+    padding: 10px 20px;
+    text-align: center;
+    min-width: 80px;
+  }
+  .score-box .num { font-size: 1.6rem; font-weight: 800; }
+  .score-box .lbl { font-size: 0.78rem; color: #888; margin-top: 2px; }
+  .score-box.correct .num { color: #16a34a; }
+  .score-box.wrong .num { color: #dc2626; }
+
+  #progress-wrap {
+    width: 100%;
+    max-width: 560px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.85rem;
+    color: #888;
+  }
+  #progress-bar-outer {
+    width: 100%;
+    max-width: 560px;
+    height: 6px;
+    background: #e5e7eb;
+    border-radius: 99px;
+    margin-bottom: 28px;
+    overflow: hidden;
+  }
+  #progress-bar {
+    height: 100%;
+    background: #111;
+    border-radius: 99px;
+    transition: width 0.3s ease;
+  }
+
+  #card {
+    width: 100%;
+    max-width: 560px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    padding: 28px 24px 24px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+    margin-bottom: 20px;
+  }
+
+  #question-label {
+    font-size: 0.8rem;
+    color: #aaa;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+
+  #question-text {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 24px;
+  }
+
+  #choices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .choice-btn {
+    background: #f9fafb;
+    border: 2px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px 12px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #111;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    text-align: center;
+    line-height: 1.4;
+    position: relative;
+    word-break: break-all;
+  }
+  .choice-btn:hover:not(:disabled) {
+    border-color: #111;
+    background: #f3f4f6;
+    transform: translateY(-1px);
+  }
+  .choice-btn:disabled { cursor: default; }
+
+  .choice-btn.correct {
+    background: #dcfce7;
+    border-color: #16a34a;
+    color: #15803d;
+  }
+  .choice-btn.wrong {
+    background: #fee2e2;
+    border-color: #dc2626;
+    color: #b91c1c;
+  }
+
+  #feedback-area {
+    width: 100%;
+    max-width: 560px;
+    border-radius: 16px;
+    padding: 16px 20px;
+    font-size: 1rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: none;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  #feedback-area.show { display: flex; }
+  #feedback-area.correct-fb { background: #dcfce7; color: #15803d; border: 1.5px solid #86efac; }
+  #feedback-area.wrong-fb { background: #fee2e2; color: #b91c1c; border: 1.5px solid #fca5a5; }
+  .fb-icon { font-size: 1.4rem; flex-shrink: 0; }
+  .fb-detail { font-size: 0.92rem; font-weight: 400; margin-top: 4px; color: inherit; opacity: 0.85; }
+
+  #next-btn {
+    display: none;
+    width: 100%;
+    max-width: 560px;
+    padding: 16px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s;
+    letter-spacing: 0.3px;
+  }
+  #next-btn:hover { background: #333; }
+  #next-btn.show { display: block; }
+
+  #end-screen {
+    display: none;
+    width: 100%;
+    max-width: 560px;
+    text-align: center;
+    padding: 40px 24px;
+    background: #fff;
+    border: 2px solid #e5e7eb;
+    border-radius: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  #end-screen.show { display: block; }
+  #end-screen h2 { font-size: 2rem; font-weight: 800; margin-bottom: 8px; }
+  #end-screen .final-score { font-size: 3.5rem; font-weight: 800; color: #111; margin: 16px 0 4px; }
+  #end-screen .final-total { font-size: 1rem; color: #888; margin-bottom: 24px; }
+  #end-screen .end-msg { font-size: 1.1rem; color: #555; margin-bottom: 28px; line-height: 1.6; }
+  #restart-btn {
+    padding: 14px 32px;
+    background: #111;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    font-family: 'Sarabun', sans-serif;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  #restart-btn:hover { background: #333; }
+
+  #game-wrap { width: 100%; display: flex; flex-direction: column; align-items: center; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>🔤 เกมสะกดคำ</h1>
+  <p>เลือกคำที่สะกด <strong>ถูกต้อง</strong> จากสองตัวเลือก</p>
+</header>
+
+<div id="scoreboard">
+  <div class="score-box correct"><div class="num" id="s-correct">0</div><div class="lbl">ถูก</div></div>
+  <div class="score-box wrong"><div class="num" id="s-wrong">0</div><div class="lbl">ผิด</div></div>
+  <div class="score-box"><div class="num" id="s-remain">0</div><div class="lbl">เหลือ</div></div>
+</div>
+
+<div id="progress-wrap">
+  <span id="q-num">ข้อ 1</span>
+  <span id="q-total"></span>
+</div>
+<div id="progress-bar-outer"><div id="progress-bar" style="width:0%"></div></div>
+
+<div id="game-wrap">
+  <div id="card">
+    <div id="question-label">เลือกคำที่สะกดถูกต้อง</div>
+    <div id="question-text"></div>
+    <div id="choices">
+      <button class="choice-btn" id="btn-left" onclick="answer('left')"></button>
+      <button class="choice-btn" id="btn-right" onclick="answer('right')"></button>
+    </div>
+  </div>
+
+  <div id="feedback-area">
+    <span class="fb-icon" id="fb-icon"></span>
+    <div>
+      <div id="fb-main"></div>
+      <div class="fb-detail" id="fb-detail"></div>
+    </div>
+  </div>
+
+  <button id="next-btn" onclick="nextQuestion()">ข้อถัดไป →</button>
+
+  <div id="end-screen">
+    <h2>🎉 จบแล้ว!</h2>
+    <div class="final-score" id="final-score"></div>
+    <div class="final-total" id="final-total"></div>
+    <div class="end-msg" id="end-msg"></div>
+    <button id="restart-btn" onclick="restart()">🔄 เล่นใหม่</button>
+  </div>
+</div>
+
+<script>
+// ====== DATA ======
+// [correct, wrong]  –  ถูกต้องเสมอเป็น index 0
+const rawPairs = [
+  // ไทย 1-45
+  ["กะเทย","กระเทย"],
+  ["กะเพรา","กระเพรา"],
+  ["กะทันหัน","กระทันหัน"],
+  ["แกงกะหรี่","แกงกระหรี่"],
+  ["ประแป้ง","ปะแป้ง"],
+  ["ปลากะพง","ปลากระพง"],
+  ["ไอศกรีม","ไอศครีม"],
+  ["ลิดรอน","ริดรอน"],
+  ["บุคลากร","บุคคลากร"],
+  ["อนุญาต","อนุญาติ"],
+  ["มุกตลก","มุขตลก"],
+  ["สังเกต","สังเกตุ"],
+  ["ปรากฏ","ปรากฎ"],
+  ["กฎหมาย","กฏหมาย"],
+  ["ออฟฟิศ","ออฟฟิซ"],
+  ["นะคะ","นะค่ะ"],
+  ["หลงใหล","หลงไหล"],
+  ["ทยอย","ทะยอย"],
+  ["ศีรษะ","ศรีษะ"],
+  ["โพสต์","โพสท์"],
+  ["ไต้ฝุ่น","ใต้ฝุ่น"],
+  ["เสน่ห์","สเน่ห์"],
+  ["ฉะนั้น","ฉนั้น"],
+  ["กบฏ","กบฎ"],
+  ["คำนวณ","คำนวน"],
+  ["ผัดวันประกันพรุ่ง","ผลัดวันประกันพรุ่ง"],
+  ["ผาสุก","ผาสุข"],
+  ["พะแนง","พแนง"],
+  ["กะเทาะ","กระเทาะ"],
+  ["มัคคุเทศก์","มัคคุเทศน์"],
+  ["กงเกวียนกำเกวียน","กงกำากงเกวียน"],
+  ["กังวาน","กังวาล"],
+  ["ขี้เกียจ","ขี้เกลียด"],
+  ["กะทัดรัด","กระทัดรัด"],
+  ["ผัดไทย","ผัดไท"],
+  ["กะปิ","กระปิ"],
+  ["กะทิ","กระทิ"],
+  ["กะบัง","กระบัง"],
+  ["กระบะ","กะบะ"],
+  ["กะปอม","กระปอม"],
+  ["กระปุก","กะปุก"],
+  ["กะพริบ","กระพริบ"],
+  ["กะลาสี","กระลาสี"],
+  ["กะหล่ำ","กระหล่ำ"],
+  ["กะโหลก","กระโหลก"],
+  // ทับศัพท์ 1-60
+  ["แอนิเมชัน","อนิเมชั่น"],
+  ["แอปพลิเคชัน","แอฟพลิเคชั่น"],
+  ["แบตเตอรี่","แบตเตอร์รี่"],
+  ["บล็อก","บล็อค"],
+  ["แบรนด์","แบรน"],
+  ["บรอกโคลี","บล็อกโคลี่"],
+  ["เบราว์เซอร์","บราวเซอร์"],
+  ["บุฟเฟต์","บุฟเฟ่ต์"],
+  ["คาเฟ","คาเฟ่ห์"],
+  ["แคปชัน","แค็ปชั่น"],
+  ["แคร์รอต","แครอท"],
+  ["เช็กอิน","เช็คอิน"],
+  ["ช็อกโกแลต","ช็อคโกแลต"],
+  ["คลินิก","คลีนิค"],
+  ["โค้ช","โค๊ช"],
+  ["คอนเซปต์","คอนเสป"],
+  ["คอนเสิร์ต","คอนเสิร์ท"],
+  ["คอนเทนต์","คอนเท้น"],
+  ["คุกกี้","คุ้กกี้"],
+  ["เครดิต","เครดิตท์"],
+  ["ดิจิทัล","ดิจิตอล"],
+  ["อีเมล","อีเมล์"],
+  ["เฟซบุ๊ก","เฟสบุ๊ก"],
+  ["ฟิล์ม","ฟิลม์"],
+  ["ฟิตเนส","ฟิตเน็ต"],
+  ["ฟุตบอล","ฟุตบอลล์"],
+  ["ฟังก์ชัน","ฟังชั่น"],
+  ["แก๊ง","แก๊งค์"],
+  ["กอล์ฟ","ก๊อฟ"],
+  ["กราฟิก","กราฟฟิค"],
+  ["ฮาร์ดแวร์","ฮาร์ดแว"],
+  ["แฮชแท็ก","แฮชแท็ค"],
+  ["อินเทอร์เน็ต","อินเตอร์เน็ต"],
+  ["ลิฟต์","ลิฟท์"],
+  ["ลิงก์","ลิ้งค์"],
+  ["ล็อกเกอร์","ล็อคเกอร์"],
+  ["มาร์เก็ตติ้ง","มาร์เก็ตติ้งค์"],
+  ["เมนู","เมนิว"],
+  ["มอเตอร์ไซค์","มอไซด์"],
+  ["โน้ตบุ๊ก","โน๊ตบุ๊ค"],
+  ["แพ็กเกจ","แพ็คเกจ"],
+  ["พิซซา","พิซซ่า"],
+  ["โพรเจกต์","โปรเจ็ค"],
+  ["โพรโมชัน","โพรโมชั่น"],
+  ["เซลฟี","เซลฟี่"],
+  ["ซีรีส์","ซีรี่ย์"],
+  ["ซิกซ์แพ็ก","ซิกแพ็ค"],
+  ["สมาร์ตโฟน","สมาทโฟน"],
+  ["ซอฟต์แวร์","ซอฟแวร์"],
+  ["สปอนเซอร์","สปอนเซ่อร์"],
+  ["สปอยล์","สปอย"],
+  ["สตาร์ตอัป","สตาร์ทอัพ"],
+  ["สตรีตฟูด","สตรีทฟู้ด"],
+  ["แท็กซี่","แท็กซี่ย์"],
+  ["ธีม","ตรีม"],
+  ["อัปเดต","อัพเดท"],
+  ["วอยเชอร์","วอชเชอร์"],
+  ["ไวไฟ","วายไฟ"],
+  ["เวิร์กชอป","เวิคชอป"],
+  ["ยูทูบ","ยูทูป"],
+];
+
+// Build questions with alternating correct side
+// odd index (1st, 3rd, …) → correct on LEFT; even index → correct on RIGHT
+let questions = [];
+rawPairs.forEach(([correct, wrong], i) => {
+  const correctOnLeft = (i % 2 === 0); // 0-indexed: 0→left, 1→right, …
+  questions.push({ correct, wrong, correctOnLeft });
+});
+
+let current = 0;
+let scoreCorrect = 0;
+let scoreWrong = 0;
+let answered = false;
+const total = questions.length;
+
+function renderQuestion() {
+  const q = questions[current];
+  answered = false;
+
+  document.getElementById('q-num').textContent = `ข้อ ${current + 1}`;
+  document.getElementById('q-total').textContent = `${total} ข้อ`;
+  document.getElementById('s-remain').textContent = total - current;
+  document.getElementById('progress-bar').style.width = `${(current / total) * 100}%`;
+
+  document.getElementById('question-text').textContent =
+    (current < 45)
+      ? `คำไทยลำดับที่ ${current + 1} — คำไหนสะกดถูก?`
+      : `คำทับศัพท์ลำดับที่ ${current - 44} (${rawPairs[current][0]} / ${rawPairs[current][1]}) — เขียนอย่างไร?`;
+
+  const leftText  = q.correctOnLeft ? q.correct : q.wrong;
+  const rightText = q.correctOnLeft ? q.wrong   : q.correct;
+
+  const btnL = document.getElementById('btn-left');
+  const btnR = document.getElementById('btn-right');
+  btnL.textContent = leftText;
+  btnR.textContent = rightText;
+  btnL.className = 'choice-btn';
+  btnR.className = 'choice-btn';
+  btnL.disabled = false;
+  btnR.disabled = false;
+
+  hideFeedback();
+  document.getElementById('next-btn').classList.remove('show');
+  document.getElementById('end-screen').classList.remove('show');
+  document.getElementById('card').style.display = '';
+}
+
+function answer(side) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const pickedCorrect = (side === 'left') === q.correctOnLeft;
+
+  const btnL = document.getElementById('btn-left');
+  const btnR = document.getElementById('btn-right');
+  btnL.disabled = true;
+  btnR.disabled = true;
+
+  if (q.correctOnLeft) {
+    btnL.classList.add('correct');
+    btnR.classList.add('wrong');
+  } else {
+    btnR.classList.add('correct');
+    btnL.classList.add('wrong');
+  }
+
+  if (pickedCorrect) {
+    scoreCorrect++;
+    showFeedback(true, `✅ ถูกต้อง! คำที่สะกดถูกคือ "${q.correct}"`, `"${q.wrong}" เป็นคำที่สะกดผิด`);
+  } else {
+    scoreWrong++;
+    showFeedback(false, `❌ ผิด! คำที่ถูกต้องคือ "${q.correct}"`, `คำที่คุณเลือก "${side === 'left' ? btnL.textContent : btnR.textContent}" สะกดไม่ถูกต้อง`);
+  }
+
+  document.getElementById('s-correct').textContent = scoreCorrect;
+  document.getElementById('s-wrong').textContent = scoreWrong;
+  document.getElementById('s-remain').textContent = total - current - 1;
+
+  if (current + 1 < total) {
+    document.getElementById('next-btn').classList.add('show');
+  } else {
+    setTimeout(showEnd, 800);
+  }
+}
+
+function showFeedback(ok, main, detail) {
+  const el = document.getElementById('feedback-area');
+  el.className = 'feedback-area show ' + (ok ? 'correct-fb' : 'wrong-fb');
+  el.classList.add('show');
+  document.getElementById('fb-icon').textContent = ok ? '🎉' : '💡';
+  document.getElementById('fb-main').textContent = main;
+  document.getElementById('fb-detail').textContent = detail;
+}
+function hideFeedback() {
+  const el = document.getElementById('feedback-area');
+  el.classList.remove('show', 'correct-fb', 'wrong-fb');
+}
+
+function nextQuestion() {
+  current++;
+  renderQuestion();
+}
+
+function showEnd() {
+  document.getElementById('card').style.display = 'none';
+  hideFeedback();
+  document.getElementById('next-btn').classList.remove('show');
+
+  const pct = Math.round((scoreCorrect / total) * 100);
+  let msg = '';
+  if (pct === 100) msg = 'เพอร์เฟกต์! 🏆 คุณสะกดคำได้ถูกต้องทุกข้อ';
+  else if (pct >= 80) msg = 'ยอดเยี่ยม! 🌟 คุณสะกดคำได้ดีมาก';
+  else if (pct >= 60) msg = 'ดีแล้ว! 👍 ลองฝึกอีกหน่อยจะยิ่งเก่งขึ้น';
+  else msg = 'ไม่เป็นไร! 💪 ทบทวนแล้วลองใหม่อีกครั้ง';
+
+  document.getElementById('final-score').textContent = `${scoreCorrect} / ${total}`;
+  document.getElementById('final-total').textContent = `คะแนน ${pct}%`;
+  document.getElementById('end-msg').textContent = msg;
+  document.getElementById('end-screen').classList.add('show');
+  document.getElementById('progress-bar').style.width = '100%';
+}
+
+function restart() {
+  current = 0;
+  scoreCorrect = 0;
+  scoreWrong = 0;
+  document.getElementById('s-correct').textContent = 0;
+  document.getElementById('s-wrong').textContent = 0;
+  document.getElementById('end-screen').classList.remove('show');
+  renderQuestion();
+}
+
+// Init
+renderQuestion();
+</script>
+</body>
+</html>
