@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Flashcard สำนวนไทย 100 ตัว – The Progress</title>
+<meta name="description" content="ฝึกจำสำนวนไทย 100 ตัวพร้อมความหมาย สำหรับ TGAT 2">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #ffffff;
+  --bg2: #f7f6f3;
+  --bg3: #efede8;
+  --text: #1a1917;
+  --text2: #6b6963;
+  --text3: #aba8a2;
+  --border: rgba(0,0,0,0.11);
+  --border2: rgba(0,0,0,0.20);
+  --accent: #1a1917;
+  --seen: #c9c6bf;
+  --r: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: 'Sarabun', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0 16px 72px;
+}
+
+/* HEADER */
+header {
+  width: 100%; max-width: 680px;
+  padding: 32px 0 18px;
+  display: flex; align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+}
+.brand { font-size: 10px; font-weight: 700; letter-spacing: 1.8px; color: var(--text3); text-transform: uppercase; margin-bottom: 4px; }
+.title-group h1 { font-size: 22px; font-weight: 700; color: var(--text); }
+.title-group p  { font-size: 13px; color: var(--text2); margin-top: 3px; }
+.stats-row { display: flex; gap: 8px; flex-shrink: 0; }
+.stat-pill {
+  font-size: 12px; font-weight: 600;
+  background: var(--bg2); border: 0.5px solid var(--border2);
+  padding: 5px 12px; border-radius: 99px; color: var(--text2);
+  white-space: nowrap;
+}
+.stat-pill span { color: var(--text); }
+
+/* PROGRESS */
+.prog-wrap {
+  width: 100%; max-width: 680px;
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 20px;
+}
+.prog-outer { flex: 1; height: 3px; background: var(--bg3); border-radius: 99px; overflow: hidden; }
+.prog-fill   { height: 100%; background: var(--accent); border-radius: 99px; transition: width .35s ease; }
+.prog-label  { font-size: 12px; font-weight: 600; color: var(--text2); min-width: 44px; text-align: right; }
+
+/* GROUP FILTER */
+.group-bar {
+  width: 100%; max-width: 680px;
+  display: flex; gap: 7px; overflow-x: auto;
+  padding-bottom: 2px; margin-bottom: 20px;
+  scrollbar-width: none;
+}
+.group-bar::-webkit-scrollbar { display: none; }
+.chip {
+  flex-shrink: 0;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 12px; font-weight: 600;
+  padding: 5px 14px; border-radius: 99px;
+  border: 0.5px solid var(--border2);
+  background: var(--bg); color: var(--text2);
+  cursor: pointer; white-space: nowrap;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.chip:hover:not(.active) { background: var(--bg2); }
+
+/* ====== CARD FLIP ====== */
+.card-wrap {
+  width: 100%; max-width: 680px;
+  height: 280px;
+  perspective: 1400px;
+  cursor: pointer;
+  margin-bottom: 18px;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+}
+@media (max-width: 480px) { .card-wrap { height: 256px; } }
+
+.card-inner {
+  width: 100%; height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.52s cubic-bezier(.4,0,.2,1);
+  will-change: transform;
+}
+
+/* THE FLIP */
+.card-inner.is-flipped {
+  transform: rotateY(180deg);
+}
+
+.card-face {
+  position: absolute; inset: 0;
+  border-radius: var(--r);
+  border: 0.5px solid var(--border2);
+  box-shadow: var(--shadow);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 32px 36px;
+  text-align: center; gap: 10px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.card-front { background: var(--bg); }
+.card-back  {
+  background: var(--bg2);
+  transform: rotateY(180deg);
+}
+
+.card-corner {
+  position: absolute; font-size: 10px; font-weight: 700;
+  letter-spacing: 1px; text-transform: uppercase; color: var(--text3);
+}
+.card-corner.tl { top: 16px; left: 20px; }
+.card-corner.tr { top: 16px; right: 20px; }
+
+.card-phrase {
+  font-size: 24px; font-weight: 700; color: var(--text); line-height: 1.45;
+}
+@media (max-width: 480px) { .card-phrase { font-size: 19px; } }
+
+.card-hint {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--text3); margin-top: 6px;
+}
+
+.card-meaning {
+  font-size: 16px; font-weight: 400; color: var(--text); line-height: 1.7;
+}
+@media (max-width: 480px) { .card-meaning { font-size: 14px; } }
+
+/* FLIP INDICATOR on card */
+.flip-ring {
+  position: absolute; bottom: 18px; right: 20px;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--bg3); border: 0.5px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--text3);
+  transition: background .15s;
+}
+.card-wrap:hover .flip-ring { background: var(--bg2); }
+
+/* CONTROLS */
+.controls {
+  width: 100%; max-width: 680px;
+  display: flex; align-items: center; gap: 9px;
+  margin-bottom: 20px; flex-wrap: wrap;
+}
+.btn {
+  display: flex; align-items: center; gap: 6px;
+  font-family: 'Sarabun', sans-serif;
+  font-size: 14px; font-weight: 600;
+  padding: 10px 20px; border-radius: 12px;
+  border: 0.5px solid var(--border2);
+  background: var(--bg); color: var(--text);
+  cursor: pointer;
+  transition: background .15s, transform .1s;
+  -webkit-tap-highlight-color: transparent;
+}
+.btn:hover:not(:disabled)  { background: var(--bg2); }
+.btn:active:not(:disabled) { transform: scale(.97); }
+.btn:disabled { opacity: .3; cursor: default; }
+.btn-primary  { background: var(--accent); color: #fff; border-color: var(--accent); }
+.btn-primary:hover:not(:disabled) { background: #333; border-color: #333; }
+.btn-ghost    { border-color: transparent; background: var(--bg2); font-size: 13px; margin-left: auto; }
+
+/* DOTS */
+.dot-nav {
+  width: 100%; max-width: 680px;
+  display: flex; flex-wrap: wrap; gap: 5px;
+  margin-bottom: 24px;
+}
+.dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--border2);
+  border: none; padding: 0; flex-shrink: 0;
+  cursor: pointer;
+  transition: background .2s, transform .2s;
+}
+.dot.active { background: var(--accent); transform: scale(1.4); }
+.dot.seen   { background: var(--seen); }
+
+/* KBD HINT */
+.kbd-hint {
+  width: 100%; max-width: 680px;
+  font-size: 12px; color: var(--text3);
+  display: flex; gap: 14px; flex-wrap: wrap;
+  margin-bottom: 10px;
+}
+.kbd {
+  display: inline-block; background: var(--bg2);
+  border: 0.5px solid var(--border2); border-radius: 5px;
+  padding: 1px 7px; font-size: 11px; color: var(--text2); font-weight: 600;
+}
+
+footer {
+  width: 100%; max-width: 680px;
+  text-align: center; padding-top: 12px;
+  font-size: 12px; color: var(--text3);
+  border-top: 0.5px solid var(--border);
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="title-group">
+    <div class="brand">The Progress · TGAT 2</div>
+    <h1>Flashcard สำนวนไทย</h1>
+    <p>100 สำนวน พร้อมความหมาย — คลิกการ์ดเพื่อพลิก</p>
+  </div>
+  <div class="stats-row">
+    <div class="stat-pill">เปิดแล้ว <span id="seen-count">0</span>/100</div>
+    <div class="stat-pill" id="pct-pill">0%</div>
+  </div>
+</header>
+
+<div class="prog-wrap">
+  <div class="prog-outer"><div class="prog-fill" id="prog" style="width:1%"></div></div>
+  <div class="prog-label" id="prog-label">1 / 100</div>
+</div>
+
+<div class="group-bar">
+  <button class="chip active" data-group="all">ทั้งหมด (100)</button>
+  <button class="chip" data-group="0">การพูด &amp; ความสัมพันธ์</button>
+  <button class="chip" data-group="1">โอกาส &amp; เวลา</button>
+  <button class="chip" data-group="2">คนและนิสัย</button>
+  <button class="chip" data-group="3">ผลกรรม &amp; ความผิด</button>
+  <button class="chip" data-group="4">การทำงาน &amp; ความพยายาม</button>
+</div>
+
+<!-- CARD -->
+<div class="card-wrap" id="card-wrap" tabindex="0" role="button" aria-label="การ์ดสำนวน คลิกเพื่อพลิก">
+  <div class="card-inner" id="card-inner">
+
+    <div class="card-face card-front">
+      <span class="card-corner tl" id="front-num">#1</span>
+      <span class="card-corner tr">สำนวนไทย</span>
+      <div class="card-phrase" id="front-text"></div>
+      <div class="card-hint">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M20 10a8 8 0 00-14.93-2M4 14a8 8 0 0014.93 2"/></svg>
+        แตะหรือคลิกเพื่อดูความหมาย
+      </div>
+      <div class="flip-ring">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 10l5 5 5-5"/></svg>
+      </div>
+    </div>
+
+    <div class="card-face card-back">
+      <span class="card-corner tl" id="back-num">#1</span>
+      <span class="card-corner tr">ความหมาย</span>
+      <div class="card-meaning" id="back-text"></div>
+      <div class="flip-ring">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 14l5-5 5 5"/></svg>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<div class="controls">
+  <button class="btn" id="prev-btn" onclick="move(-1)">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M15 18l-6-6 6-6"/></svg>
+    ก่อนหน้า
+  </button>
+  <button class="btn btn-primary" id="flip-btn" onclick="doFlip()">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 4v6h6M20 20v-6h-6"/><path d="M20 10a8 8 0 00-14.93-2M4 14a8 8 0 0014.93 2"/></svg>
+    พลิกการ์ด
+  </button>
+  <button class="btn" id="next-btn" onclick="move(1)">
+    ถัดไป
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <button class="btn btn-ghost" onclick="doShuffle()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 3h5v5M4 20L21 3M21 16v5h-5M15 15l6 6M4 4l5 5"/></svg>
+    สุ่มลำดับ
+  </button>
+</div>
+
+<div class="dot-nav" id="dot-nav"></div>
+
+<div class="kbd-hint">
+  <span><span class="kbd">Space</span> พลิก</span>
+  <span><span class="kbd">←</span> ก่อนหน้า</span>
+  <span><span class="kbd">→</span> ถัดไป</span>
+  <span><span class="kbd">S</span> สุ่ม</span>
+</div>
+
+<footer>สำนวนไทย 100 ตัว จาก The Progress · TGAT First Step</footer>
+
+<script>
+const ALL = [
+  ["ขวานผ่าซาก","พูดตรงไปตรงมา ไม่อ้อมค้อม บางครั้งอาจฟังดูไม่สุภาพ",0],
+  ["กระดี่ได้น้ำ","แสดงอาการดีใจอย่างมาก",2],
+  ["กินบนเรือนขี้บนหลังคา","ทำสิ่งไม่ซื่อสัตย์หรือเนรคุณต่อผู้มีบุญคุณ",3],
+  ["ขิงก็ราข่าก็แรง","ต่างฝ่ายต่างไม่ยอมกัน",0],
+  ["ชักน้ำเข้าลึกชักศึกเข้าบ้าน","นำปัญหาหรือสิ่งเลวร้ายเข้ามาใกล้ตัวหรือครอบครัว",3],
+  ["จับปลาสองมือ","ทำสองอย่างในเวลาเดียวกัน แต่ไม่ได้ผลดีทั้งสองอย่าง",4],
+  ["ตีงูให้หลังหัก","ช่วยเหลือศัตรูหรือผู้ไม่หวังดีจนทำให้เกิดผลร้ายกลับมาหาตน",3],
+  ["ปิดทองหลังพระ","ทำดีโดยไม่หวังผลตอบแทนหรือการยกย่อง",2],
+  ["มือไม่พายเอาเท้าราน้ำ","คนที่ไม่ช่วยงานแต่กลับสร้างปัญหาหรือขัดขวาง",2],
+  ["น้ำขึ้นให้รีบตัก","เมื่อโอกาสมาถึงให้รีบลงมือทำ",1],
+  ["ตีตนไปก่อนไข้","กังวลในสิ่งที่ยังไม่เกิดขึ้น",2],
+  ["เข็นครกขึ้นภูเขา","ทำงานที่ยากลำบากและต้องใช้ความพยายามมาก",4],
+  ["กำขี้ดีกว่ากำตด","ได้สิ่งที่มีคุณค่าน้อยยังดีกว่าไม่ได้อะไรเลย",4],
+  ["ขี่ช้างจับตั๊กแตน","ลงทุนหรือใช้ความพยายามเกินจำเป็นในเรื่องเล็กน้อย",4],
+  ["น้ำท่วมปาก","ไม่สามารถพูดหรือเปิดเผยสิ่งที่รู้ได้เพราะมีข้อจำกัดบางอย่าง",0],
+  ["ผักชีโรยหน้า","ทำอะไรเพื่อให้ดูดีเพียงภายนอก",2],
+  ["น้ำตาลใกล้มด","ชายหญิงที่อยู่ใกล้ชิดกัน ย่อมมีโอกาสพัฒนาเป็นความรัก",1],
+  ["สอนจระเข้ว่ายน้ำ","สอนสิ่งที่อีกฝ่ายรู้ดีอยู่แล้ว",0],
+  ["ฆ่าช้างเอางา","เสียสิ่งใหญ่เพื่อหวังผลเล็ก",4],
+  ["หมากัดอย่ากัดตอบ","อย่าโต้ตอบกับคนที่ต่ำกว่าหรือนิสัยไม่ดี",0],
+  ["ยกหางตัวเอง","ชมเชยหรือยกย่องตัวเอง",2],
+  ["กระต่ายขาเดียว","ยืนยันหรือปฏิเสธอย่างหนักแน่นโดยไม่เปลี่ยนแปลง",2],
+  ["ตีหน้าเศร้าเล่าความเท็จ","แกล้งทำเป็นทุกข์หรือเศร้าเพื่อหลอกลวงผู้อื่น",3],
+  ["วัวหายล้อมคอก","แก้ปัญหาหลังจากเกิดความเสียหายไปแล้ว",1],
+  ["งมเข็มในมหาสมุทร","ค้นหาสิ่งที่แทบเป็นไปไม่ได้ว่าจะเจอ",4],
+  ["น้ำพึ่งเรือเสือพึ่งป่า","การช่วยเหลือเกื้อกูลซึ่งกันและกัน",0],
+  ["กวนน้ำให้ขุ่น","สร้างความวุ่นวายหรือยุ่งยากในสถานการณ์ที่สงบ",3],
+  ["แกว่งเท้าหาเสี้ยน","หาเรื่องเดือดร้อนใส่ตัว",3],
+  ["เอาหูไปนาเอาตาไปไร่","แกล้งทำเป็นไม่รู้ไม่เห็น",2],
+  ["ชี้โพรงให้กระรอก","แนะนำหรือชี้ทางให้ผู้อื่นทำสิ่งที่ไม่ดี",3],
+  ["วัดรอยเท้า","ท้าทายหรือแข่งขันกับผู้ที่มีประสบการณ์มากกว่า",4],
+  ["ตักน้ำใส่กะโหลกชะโงกดูเงา","ให้รู้จักประมาณตนเอง",2],
+  ["น้ำซึมบ่อทราย","มีรายได้หรือประโยชน์เล็กน้อยแต่ได้ต่อเนื่องยาวนาน",1],
+  ["ช้า ๆ ได้พร้าเล่มงาม","ทำอะไรให้รอบคอบ ไม่ต้องรีบร้อน",1],
+  ["คาบลูกคาบดอก","สถานการณ์ที่ไม่ชัดเจนหรืออยู่ระหว่างสองฝ่าย",1],
+  ["ข้าวใหม่ปลามัน","ความสัมพันธ์ที่อยู่ในช่วงเริ่มต้น จึงเต็มไปด้วยความหวานชื่น",0],
+  ["รำไม่ดีโทษปี่โทษกลอง","โทษสิ่งอื่นแทนที่จะยอมรับความผิดพลาดของตัวเอง",3],
+  ["สองฝักสองฝ่าย","ลังเลหรือเข้าข้างทั้งสองฝ่าย",0],
+  ["ตีเหล็กเมื่อร้อน","ทำในช่วงเวลาที่เหมาะสม",1],
+  ["วัวเคยขา ม้าเคยขี่","คนที่คุ้นเคยกับสถานการณ์หรือสิ่งนั้นอยู่แล้ว",2],
+  ["ได้ทีขี่แพะไล่","ใช้โอกาสที่เหนือกว่ากดดันผู้อื่น",2],
+  ["ปิดประตูตีแมว","ใช้อำนาจหรือเล่นงานผู้ที่ไม่มีทางต่อสู้",3],
+  ["เอามะพร้าวห้าวมาขายสวน","ทำสิ่งที่คนอื่นรู้ดีกว่าตัวเอง",0],
+  ["กระต่ายตื่นตูม","ตื่นตกใจกับสิ่งที่ไม่ควรตื่นกลัว",2],
+  ["ใกล้เกลือกินด่าง","มีของดีอยู่ใกล้ตัวแต่ไม่เห็นคุณค่า",2],
+  ["โยนหินถามทาง","ทดลองทำบางอย่างเพื่อดูปฏิกิริยาของผู้อื่น",1],
+  ["เสียน้อยเสียยากเสียมากเสียง่าย","ไม่ยอมเสียเงินเพียงเล็กน้อย แต่กลับเสียมากกว่าในภายหลัง",4],
+  ["งูๆ ปลาๆ","มีความรู้น้อยหรือไม่เชี่ยวชาญในเรื่องนั้น",2],
+  ["เข้าด้ายเข้าเข็ม","อยู่ในช่วงสำคัญที่ไม่ควรขัดจังหวะ",1],
+  ["ถี่ลอดตาช้าง ห่างลอดตาเล็น","ตรวจสอบสิ่งใหญ่ละเอียดแต่กลับมองข้ามสิ่งเล็ก ๆ",2],
+  ["กงเกวียนกำเกวียน","การกระทำใด ๆ ที่จะย้อนกลับมาหาผู้กระทำเอง",3],
+  ["กินน้ำใต้ศอก","ยอมเป็นรองหรือยอมอยู่ในตำแหน่งที่ด้อยกว่า",0],
+  ["ไก่เห็นตีนงู งูเห็นนมไก่","ต่างฝ่ายต่างรู้ความลับหรือข้อเสียของกันและกัน",0],
+  ["กระดังงาลนไฟ","ผู้หญิงที่เคยแต่งงานแล้วจะดูแลผู้ชายได้ดีกว่า",2],
+  ["ชุบมือเปิบ","เอาประโยชน์จากสิ่งที่ผู้อื่นลงแรงทำไว้",3],
+  ["เด็ดดอกไม้สะเทือนถึงดวงดาว","การกระทำเล็กน้อยที่ส่งผลกระทบอย่างใหญ่หลวง",1],
+  ["เอาเนื้อหนูไปปะเนื้อช้าง","เอาทรัพย์สินจากคนที่ไม่มีไปให้คนที่มีมาก",4],
+  ["ตีปลาหน้าไซ","ทำลายโอกาสหรือผลประโยชน์ของคนอื่น",3],
+  ["จับแพะชนแกะ","แก้ปัญหาแบบขอไปทีหรือมั่ว ๆ",4],
+  ["ผีซ้ำด้ำพลอย","เจอปัญหาซ้ำซ้อนในช่วงเวลาที่ยากลำบาก",3],
+  ["รักวัวให้ผูก รักลูกให้ตี","หากรักใครหรือสิ่งใด ควรให้การดูแลและอบรม",0],
+  ["เส้นผมบังภูเขา","มองข้ามสิ่งที่ชัดเจนเพราะมัวแต่สนใจสิ่งเล็กน้อย",2],
+  ["คอขาดบาดตาย","สถานการณ์ที่สำคัญหรือร้ายแรง",1],
+  ["น้ำท่วมทุ่งผักบุ้งโหรงเหรง","พูดมากแต่เนื้อหาน้อย",0],
+  ["หัวหกก้นขวิด","อาการดิ้นรนต่อสู้หรือทำงานอย่างยากลำบาก",4],
+  ["กระดูกคนละเบอร์","คนที่มีความสามารถหรือประสบการณ์ต่างกัน",2],
+  ["เข้าเมืองตาหลิ่วให้หลิ่วตาตาม","ปรับตัวให้เหมาะสมกับสภาพแวดล้อมหรือสังคมนั้น ๆ",2],
+  ["ดินพอกหางหมู","ปล่อยงานหรือหน้าที่ให้คั่งค้างจนกลายเป็นภาระ",4],
+  ["ขึ้นต้นไม้ใหญ่","หาความช่วยเหลือจากคนที่มีอำนาจหรือความสามารถ",0],
+  ["กินปูนร้อนท้อง","ทำผิดแล้วแสดงอาการผิดเอง",3],
+  ["เข้ากันเป็นปี่เป็นขลุ่ย","เข้ากันได้ดีหรือทำงานร่วมกันได้อย่างราบรื่น",0],
+  ["งูกินหาง","สถานการณ์ที่วนเวียนกลับมาจุดเริ่มต้น",1],
+  ["ตีเหล็กหลังไฟ","ทำสิ่งใด ๆ ช้าเกินไปจนพลาดโอกาส",1],
+  ["คางคกขึ้นวอ","คนที่มีฐานะต่ำต้อยแล้วได้ดีจนหลงตัวเอง",2],
+  ["แพะรับบาป","คนที่ต้องรับผิดในสิ่งที่ไม่ได้ทำ",3],
+  ["เอาหินทับถมตัว","ทำให้ตัวเองอยู่ในสถานการณ์ที่ลำบากหรือกดดัน",3],
+  ["น้ำร้อนปลาเป็น น้ำเย็นปลาตาย","การปฏิบัติที่สุภาพเกินไปอาจทำให้เกิดผลเสีย",0],
+  ["แพ้เป็นพระ ชนะเป็นมาร","การรู้จักยอมรับความพ่ายแพ้ทำให้เป็นที่ยอมรับ",2],
+  ["หัวล้านได้หวี","ได้สิ่งที่ไม่มีประโยชน์ต่อตัวเอง",4],
+  ["ชี้นกเป็นนก ชี้ไม้เป็นไม้","ยอมทำตามคำสั่งของผู้ที่มีอำนาจ",0],
+  ["ปิดหูปิดตา","แกล้งทำเป็นไม่รู้ไม่เห็นในสิ่งที่ผิด",2],
+  ["ไม้ซีกงัดไม้ซุง","คนที่มีอำนาจน้อยพยายามต่อกรกับคนที่มีอำนาจมาก",4],
+  ["ย้อมแมวขาย","หลอกลวงโดยการทำให้สิ่งของดูดีหรือดูใหม่",3],
+  ["น้ำน้อยย่อมแพ้ไฟ","คนที่มีกำลังน้อยย่อมพ่ายแพ้ต่อคนที่มีกำลังมาก",4],
+  ["สวมหมวกหลายใบ","รับผิดชอบงานหรือบทบาทหลายอย่างพร้อมกัน",4],
+  ["หัวเราะทั้งน้ำตา","ยิ้มสู้หรือฝืนทำตัวให้ดูเข้มแข็งทั้งที่ในใจเศร้า",2],
+  ["ดินดีปลูกอะไรก็งาม","คนที่มีพื้นฐานดีจะพัฒนาตนเองได้ดี",2],
+  ["หนามยอกต้องเอาหนามบ่ง","ใช้วิธีการหรือสิ่งที่คล้ายกันแก้ปัญหา",4],
+  ["มือใครยาวสาวได้สาวเอา","ใครที่มีความสามารถหรือโอกาสมากกว่าย่อมได้เปรียบ",4],
+  ["แมวไม่อยู่หนูร่าเริง","เมื่อผู้ดูแลหรือผู้คุมไม่อยู่ ลูกน้องหรือเด็กมักทำตามใจ",2],
+  ["เขียนเสือให้วัวกลัว","ขู่หรือแสดงให้ผู้อื่นกลัวเพื่อไม่ให้ทำในสิ่งที่ไม่ควรทำ",0],
+  ["นกสองหัว","คนที่คบทั้งสองฝ่ายเพื่อประโยชน์ของตัวเอง",2],
+  ["สะเออะ","ทำในสิ่งที่ไม่ใช่หน้าที่ของตัวเอง",2],
+  ["เกลือจิ้มเกลือ","ตอบโต้กันด้วยวิธีหรือการกระทำที่ร้ายเท่าเทียมกัน",0],
+  ["เสือซ่อนเล็บ","คนที่เก่งหรือมีความสามารถ แต่เก็บงำไว้ไม่แสดงออก",2],
+  ["จับเสือมือเปล่า","หาประโยชน์โดยไม่ต้องลงทุน",4],
+  ["น้ำขุ่นอยู่ใน น้ำใสอยู่นอก","การเก็บความไม่พอใจไว้ข้างในแต่แสดงท่าทีดีภายนอก",2],
+  ["ผ้าขี้ริ้วห่อทอง","คนหรือสิ่งที่ดูไม่ดีแต่มีคุณค่าอยู่ภายใน",2],
+  ["เห็นกงจักรเป็นดอกบัว","เห็นสิ่งที่ผิดหรือไม่ดีเป็นสิ่งที่ถูกหรือดี",3],
+  ["ฟังหูไว้หู","ฟังข้อมูลหรือความคิดเห็นโดยไม่ด่วนตัดสิน",0]
+];
+
+// ── State ──
+let data   = ALL.slice();
+let order  = [];
+let idx    = 0;
+let isFlipped = false;
+let seen   = new Set();
+
+// ── Init ──
+function init() {
+  resetOrder();
+  buildDots();
+  renderCard();
+  setupGroups();
+}
+
+function resetOrder() {
+  order = data.map((_,i) => i);
+  idx = 0;
+  isFlipped = false;
+  seen = new Set();
+  updateStats();
+}
+
+// ── FLIP (the only place we toggle class) ──
+function doFlip() {
+  isFlipped = !isFlipped;
+  document.getElementById('card-inner').classList.toggle('is-flipped', isFlipped);
+  if (isFlipped) {
+    seen.add(idx);
+    updateStats();
+    updateDots();
+  }
+}
+
+// ── Move ──
+function move(dir) {
+  const ni = idx + dir;
+  if (ni < 0 || ni >= data.length) return;
+  idx = ni;
+  isFlipped = false;
+  document.getElementById('card-inner').classList.remove('is-flipped');
+  renderCard();
+}
+
+function goTo(i) {
+  idx = i;
+  isFlipped = false;
+  document.getElementById('card-inner').classList.remove('is-flipped');
+  renderCard();
+}
+
+// ── Render card content (never touches is-flipped) ──
+function renderCard() {
+  const n = data.length;
+  if (n === 0) {
+    document.getElementById('front-text').textContent = 'ไม่มีการ์ดในกลุ่มนี้';
+    document.getElementById('back-text').textContent  = '';
+    document.getElementById('prog-label').textContent = '0 / 0';
+    document.getElementById('prog').style.width = '0%';
+    return;
+  }
+  const card = data[order[idx]];
+  const num  = order[idx] + 1;
+
+  document.getElementById('front-text').textContent = card[0];
+  document.getElementById('back-text').textContent  = card[1];
+  document.getElementById('front-num').textContent  = '#' + num;
+  document.getElementById('back-num').textContent   = '#' + num;
+  document.getElementById('prog-label').textContent = (idx+1) + ' / ' + n;
+  document.getElementById('prog').style.width = ((idx+1)/n*100) + '%';
+
+  document.getElementById('prev-btn').disabled = (idx === 0);
+  document.getElementById('next-btn').disabled = (idx === n - 1);
+  updateDots();
+  updateStats();
+}
+
+function updateStats() {
+  const n = data.length || 100;
+  document.getElementById('seen-count').textContent = seen.size;
+  document.getElementById('pct-pill').textContent   = Math.round(seen.size/n*100) + '%';
+}
+
+function updateDots() {
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.classList.toggle('active', i === idx);
+    d.classList.toggle('seen',   seen.has(i) && i !== idx);
+  });
+}
+
+// ── Dots ──
+function buildDots() {
+  const c = document.getElementById('dot-nav');
+  c.innerHTML = '';
+  order.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.setAttribute('aria-label', 'การ์ดที่ ' + (i+1));
+    d.onclick = (e) => { e.stopPropagation(); goTo(i); };
+    c.appendChild(d);
+  });
+}
+
+// ── Shuffle ──
+function doShuffle() {
+  for (let i = order.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i+1));
+    [order[i], order[j]] = [order[j], order[i]];
+  }
+  idx = 0; isFlipped = false; seen = new Set();
+  document.getElementById('card-inner').classList.remove('is-flipped');
+  buildDots();
+  renderCard();
+}
+
+// ── Group filter ──
+function setupGroups() {
+  document.querySelectorAll('.chip').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const g = btn.dataset.group;
+      document.querySelectorAll('.chip').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      data = g === 'all' ? ALL.slice() : ALL.filter(c => c[2] === parseInt(g));
+      resetOrder();
+      buildDots();
+      renderCard();
+    });
+  });
+}
+
+// ── Click on card ──
+document.getElementById('card-wrap').addEventListener('click', doFlip);
+document.getElementById('card-wrap').addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doFlip(); }
+});
+
+// ── Keyboard ──
+document.addEventListener('keydown', e => {
+  if (e.target.tagName === 'BUTTON') return;
+  if (e.key === 'ArrowRight') move(1);
+  else if (e.key === 'ArrowLeft') move(-1);
+  else if (e.key === ' ') { e.preventDefault(); doFlip(); }
+  else if (e.key.toLowerCase() === 's') doShuffle();
+});
+
+init();
+</script>
+</body>
+</html>
