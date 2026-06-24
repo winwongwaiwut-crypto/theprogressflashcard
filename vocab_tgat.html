@@ -1,0 +1,1045 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VocabPro — TGAT & A-Level ENG</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --pink:      #FF6B9D;
+  --pink2:     #FF4785;
+  --pink3:     #FF8CB4;
+  --pink-soft: #FFD6E7;
+  --pink-bg:   #FFF0F6;
+  --rose:      #FF3D7F;
+  --cream:     #FFF8FB;
+  --white:     #FFFFFF;
+  --gray1:     #F9F0F4;
+  --gray2:     #F0DDE7;
+  --gray3:     #C9A0B4;
+  --gray4:     #8B6070;
+  --dark:      #3D1F2B;
+  --text:      #4A2535;
+  --green:     #22C55E;
+  --red:       #EF4444;
+  --purple:    #C026D3;
+  --yellow:    #F59E0B;
+  --radius:    18px;
+  --shadow:    0 4px 24px rgba(255,71,133,0.12);
+  --shadow2:   0 8px 40px rgba(255,71,133,0.18);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Sarabun', 'Inter', sans-serif;
+  background: var(--cream);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── BG DECO ── */
+body::before {
+  content: '';
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(ellipse 70% 40% at 90% 5%, rgba(255,107,157,0.12) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 5% 90%, rgba(255,71,133,0.08) 0%, transparent 70%);
+}
+
+.app { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 0 16px 80px; }
+
+/* ── HEADER ── */
+.header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 0 16px;
+  border-bottom: 2px solid var(--pink-soft);
+  margin-bottom: 24px; gap: 12px; flex-wrap: wrap;
+}
+.logo {
+  font-size: 1.3rem; font-weight: 800; color: var(--pink2);
+  display: flex; align-items: center; gap: 8px; letter-spacing: -0.5px;
+}
+.logo-sub { font-size: 0.72rem; font-weight: 500; color: var(--gray3); margin-top: 1px; }
+.tab-nav { display: flex; background: var(--gray1); border-radius: 50px; padding: 4px; gap: 2px; border: 1.5px solid var(--pink-soft); }
+.tab-btn {
+  padding: 8px 20px; border-radius: 50px; border: none; cursor: pointer;
+  font-family: 'Sarabun', sans-serif; font-size: 0.88rem; font-weight: 600;
+  color: var(--gray3); background: transparent; transition: all .22s;
+}
+.tab-btn.active { background: var(--pink2); color: #fff; box-shadow: 0 3px 12px rgba(255,71,133,0.3); }
+.score-pill {
+  background: var(--pink-bg); border: 1.5px solid var(--pink-soft);
+  border-radius: 50px; padding: 6px 14px; font-size: 0.8rem;
+  font-weight: 700; color: var(--pink2);
+}
+
+/* ── VIEWS ── */
+.view { display: none; }
+.view.active { display: block; animation: fadeUp .3s ease; }
+@keyframes fadeUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+/* ── HERO STRIP ── */
+.hero-strip {
+  background: linear-gradient(135deg, var(--pink2), var(--pink));
+  border-radius: 20px; padding: 22px 24px; margin-bottom: 22px;
+  color: #fff; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;
+}
+.hero-strip h1 { font-size: 1.2rem; font-weight: 800; line-height: 1.3; }
+.hero-strip p { font-size: 0.82rem; opacity: 0.88; margin-top: 4px; }
+.hero-stats { display: flex; gap: 18px; }
+.h-stat { text-align: center; }
+.h-stat-num { font-size: 1.5rem; font-weight: 800; }
+.h-stat-lbl { font-size: 0.68rem; opacity: 0.8; }
+
+/* ── MODE CARDS ── */
+.mode-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+@media(max-width:480px){ .mode-row { grid-template-columns: 1fr; } }
+.mode-card {
+  background: #fff; border: 2px solid var(--pink-soft);
+  border-radius: var(--radius); padding: 20px 18px;
+  cursor: pointer; transition: all .22s; text-align: left;
+}
+.mode-card:hover { transform: translateY(-3px); border-color: var(--pink); box-shadow: var(--shadow2); }
+.mode-card:hover .mc-icon { transform: scale(1.15); }
+.mc-icon { font-size: 2rem; margin-bottom: 10px; display: block; transition: transform .2s; }
+.mc-title { font-size: 1rem; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+.mc-desc { font-size: 0.78rem; color: var(--gray3); line-height: 1.5; }
+.mc-badge {
+  display: inline-block; margin-top: 8px;
+  background: var(--pink-bg); color: var(--pink2);
+  font-size: 0.7rem; font-weight: 700; padding: 2px 8px;
+  border-radius: 20px; border: 1px solid var(--pink-soft);
+}
+
+/* ── SECTION LABEL ── */
+.sec-label {
+  font-size: 0.72rem; font-weight: 700; color: var(--gray3);
+  text-transform: uppercase; letter-spacing: .08em;
+  margin-bottom: 12px; margin-top: 24px;
+}
+
+/* ── CATEGORY PILLS ── */
+.cat-row { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+.cat-pill {
+  padding: 6px 14px; border-radius: 50px;
+  border: 1.5px solid var(--pink-soft); background: #fff;
+  font-size: 0.8rem; font-weight: 600; color: var(--gray4);
+  cursor: pointer; transition: all .2s; font-family: 'Sarabun', sans-serif;
+}
+.cat-pill:hover { border-color: var(--pink); color: var(--pink2); }
+.cat-pill.active { background: var(--pink2); color: #fff; border-color: var(--pink2); }
+
+/* ════════════════════════════
+   FLASHCARD VIEW
+════════════════════════════ */
+.fc-top {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 8px;
+}
+.fc-counter-box {
+  background: var(--gray1); border-radius: 50px; padding: 5px 14px;
+  font-size: 0.82rem; font-weight: 600; color: var(--gray4);
+  border: 1.5px solid var(--pink-soft);
+}
+.fc-progress { flex: 1; min-width: 80px; }
+.fc-prog-bar { height: 5px; background: var(--gray2); border-radius: 3px; overflow: hidden; }
+.fc-prog-fill { height: 100%; background: linear-gradient(90deg,var(--pink2),var(--pink3)); border-radius: 3px; transition: width .3s; }
+
+.card-wrap { perspective: 1200px; margin-bottom: 18px; }
+.flashcard {
+  width: 100%; min-height: 200px; position: relative;
+  transform-style: preserve-3d; transition: transform .45s cubic-bezier(.4,0,.2,1);
+  cursor: pointer; border-radius: 22px;
+}
+.flashcard.flipped { transform: rotateY(180deg); }
+.card-face {
+  position: absolute; width: 100%; min-height: 200px; backface-visibility: hidden;
+  border-radius: 22px; padding: 32px 28px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center;
+}
+.card-front {
+  background: linear-gradient(160deg, #fff 0%, var(--pink-bg) 100%);
+  border: 2px solid var(--pink-soft);
+  box-shadow: var(--shadow2);
+}
+.card-back {
+  background: linear-gradient(160deg, var(--pink2) 0%, var(--rose) 100%);
+  transform: rotateY(180deg);
+  color: #fff;
+}
+.cf-en { font-family: 'Inter', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.cf-pos { font-size: 0.78rem; font-weight: 600; color: var(--pink2); margin-top: 5px; background: var(--pink-bg); padding: 2px 10px; border-radius: 20px; display: inline-block; }
+.cf-hint { font-size: 0.8rem; color: var(--gray3); margin-top: 16px; }
+.cf-hint span { display: inline-block; animation: bounce 1.4s infinite; }
+@keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(4px)} }
+
+.cb-meaning { font-size: 1.7rem; font-weight: 800; margin-bottom: 6px; }
+.cb-syn { font-size: 0.88rem; opacity: 0.85; margin-bottom: 10px; }
+.cb-example { font-size: 0.8rem; opacity: 0.8; font-style: italic; line-height: 1.6; border-top: 1px solid rgba(255,255,255,0.3); padding-top: 10px; margin-top: 4px; }
+
+.fc-actions { display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+.btn-main {
+  background: var(--pink2); color: #fff; border: none;
+  padding: 11px 24px; border-radius: 50px; font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; transition: all .2s; font-family: 'Sarabun', sans-serif;
+  box-shadow: 0 4px 14px rgba(255,71,133,0.3);
+}
+.btn-main:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,71,133,0.4); background: var(--rose); }
+.btn-ghost {
+  background: #fff; color: var(--pink2); border: 2px solid var(--pink-soft);
+  padding: 10px 22px; border-radius: 50px; font-size: 0.88rem; font-weight: 700;
+  cursor: pointer; transition: all .2s; font-family: 'Sarabun', sans-serif;
+}
+.btn-ghost:hover { border-color: var(--pink2); background: var(--pink-bg); }
+.btn-icon {
+  background: #fff; border: 2px solid var(--pink-soft); color: var(--pink2);
+  width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+  cursor: pointer; font-size: 1.1rem; transition: all .2s; flex-shrink: 0;
+}
+.btn-icon:hover { border-color: var(--pink2); background: var(--pink-bg); }
+.star-icon { background: none; border: none; font-size: 1.4rem; cursor: pointer; transition: transform .2s; padding: 4px; }
+.star-icon:hover { transform: scale(1.2); }
+
+/* ════════════════════════════
+   QUIZ VIEW
+════════════════════════════ */
+.quiz-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 16px; flex-wrap: wrap; gap: 10px;
+}
+.quiz-meta { font-size: 0.8rem; color: var(--gray3); font-weight: 600; }
+.quiz-score {
+  background: #fff; border: 2px solid var(--pink-soft); border-radius: 50px;
+  padding: 6px 16px; font-size: 0.85rem; font-weight: 700; color: var(--pink2);
+}
+.quiz-prog-bar { height: 6px; background: var(--gray2); border-radius: 3px; overflow: hidden; margin-bottom: 18px; }
+.quiz-prog-fill { height: 100%; background: linear-gradient(90deg,var(--pink2),var(--pink)); border-radius: 3px; transition: width .35s; }
+
+.q-card {
+  background: #fff; border: 2px solid var(--pink-soft);
+  border-radius: 22px; padding: 28px 24px; margin-bottom: 16px;
+  box-shadow: var(--shadow); position: relative;
+}
+.q-label { font-size: 0.72rem; font-weight: 700; color: var(--gray3); text-transform: uppercase; letter-spacing: .07em; margin-bottom: 10px; }
+.q-word { font-family: 'Inter', sans-serif; font-size: clamp(1.7rem,5vw,2.5rem); font-weight: 800; color: var(--text); letter-spacing: -1px; }
+.q-pos { font-size: 0.78rem; font-weight: 600; color: var(--pink2); background: var(--pink-bg); padding: 2px 10px; border-radius: 20px; display: inline-block; margin-top: 6px; }
+.q-star { position: absolute; top: 16px; right: 16px; background: none; border: none; cursor: pointer; font-size: 1.3rem; }
+
+.choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+@media(max-width:480px){ .choices { grid-template-columns: 1fr; } }
+
+.choice-btn {
+  background: #fff; border: 2px solid var(--gray2);
+  border-radius: 14px; padding: 13px 14px; cursor: pointer;
+  font-family: 'Sarabun', sans-serif; font-size: 0.9rem; font-weight: 600;
+  color: var(--text); text-align: left; transition: all .18s;
+  display: flex; align-items: center; gap: 10px;
+}
+.choice-btn:hover:not(:disabled) { border-color: var(--pink); background: var(--pink-bg); }
+.choice-btn.correct { border-color: var(--green); background: rgba(34,197,94,0.08); color: #166534; }
+.choice-btn.wrong   { border-color: var(--red);   background: rgba(239,68,68,0.08);  color: #991b1b; }
+.choice-btn:disabled { cursor: default; }
+.c-letter {
+  width: 28px; height: 28px; border-radius: 8px;
+  background: var(--gray1); color: var(--gray4);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; font-weight: 800; flex-shrink: 0;
+}
+.choice-btn.correct .c-letter { background: var(--green); color: #fff; }
+.choice-btn.wrong   .c-letter { background: var(--red);   color: #fff; }
+
+.feedback {
+  background: #fff; border-radius: 16px; padding: 16px 18px;
+  margin-bottom: 14px; display: none; border: 2px solid;
+  animation: fadeUp .25s;
+}
+.feedback.show { display: block; }
+.feedback.ok  { border-color: rgba(34,197,94,.3);  background: rgba(34,197,94,.06); }
+.feedback.bad { border-color: rgba(239,68,68,.3);  background: rgba(239,68,68,.06); }
+.fb-title { font-size: 1rem; font-weight: 800; margin-bottom: 5px; }
+.feedback.ok  .fb-title { color: #16a34a; }
+.feedback.bad .fb-title { color: #dc2626; }
+.fb-body { font-size: 0.88rem; color: var(--text); line-height: 1.6; }
+.fb-ex   { font-size: 0.8rem;  color: var(--gray4); margin-top: 5px; font-style: italic; }
+
+.quiz-btn-row { display: flex; justify-content: flex-end; gap: 10px; }
+
+/* ── RESULT ── */
+.result-card {
+  background: #fff; border: 2px solid var(--pink-soft);
+  border-radius: 22px; padding: 36px 24px; text-align: center;
+  box-shadow: var(--shadow2);
+}
+.result-emoji { font-size: 3.5rem; margin-bottom: 10px; }
+.result-title { font-size: 1.4rem; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.result-pct { font-family: 'Inter', sans-serif; font-size: 3.2rem; font-weight: 900; color: var(--pink2); }
+.result-stats { display: flex; justify-content: center; gap: 24px; margin: 18px 0; flex-wrap: wrap; }
+.rs { text-align: center; }
+.rs-num { font-size: 1.4rem; font-weight: 800; }
+.rs-lbl { font-size: 0.72rem; color: var(--gray3); margin-top: 2px; }
+.result-btns { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; margin-top: 18px; }
+.mistake-section { margin-top: 22px; text-align: left; }
+.ms-title { font-size: 0.75rem; font-weight: 800; color: var(--red); text-transform: uppercase; letter-spacing: .06em; margin-bottom: 10px; }
+.ms-item {
+  background: rgba(239,68,68,.06); border: 1.5px solid rgba(239,68,68,.2);
+  border-radius: 10px; padding: 10px 14px; margin-bottom: 7px; font-size: 0.85rem;
+  display: flex; justify-content: space-between; align-items: center; gap: 10px;
+}
+.ms-word { font-weight: 800; color: var(--text); font-family: 'Inter', sans-serif; }
+.ms-th   { color: var(--gray4); }
+
+/* ── MOBILE ── */
+@media(max-width:600px){
+  .hero-strip { flex-direction: column; }
+  .hero-stats { gap: 14px; }
+  .tab-btn { padding: 7px 14px; font-size: 0.82rem; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div>
+      <div class="logo">🌸 VocabPro</div>
+      <div class="logo-sub">500 คำศัพท์จริง TGAT / A-Level ENG</div>
+    </div>
+    <div class="tab-nav">
+      <button class="tab-btn active" onclick="switchTab('flashcard',this)">🃏 ท่องศัพท์</button>
+      <button class="tab-btn" onclick="switchTab('quiz',this)">✏️ ทำโจทย์</button>
+    </div>
+    <div class="score-pill" id="scorePill">✅ 0 ถูก</div>
+  </header>
+
+  <!-- ════════ FLASHCARD TAB ════════ -->
+  <div class="view active" id="tab-flashcard">
+
+    <div class="hero-strip">
+      <div>
+        <h1>ท่องจำคำศัพท์<br>ให้แม่นก่อนสอบ 🚀</h1>
+        <p>กดการ์ดเพื่อดูคำแปลภาษาไทย</p>
+      </div>
+      <div class="hero-stats">
+        <div class="h-stat"><div class="h-stat-num" id="hs-total">0</div><div class="h-stat-lbl">คำทั้งหมด</div></div>
+        <div class="h-stat"><div class="h-stat-num" id="hs-done">0</div><div class="h-stat-lbl">ดูแล้ว</div></div>
+        <div class="h-stat"><div class="h-stat-num" id="hs-star">0</div><div class="h-stat-lbl">⭐ ยาก</div></div>
+      </div>
+    </div>
+
+    <div class="sec-label">เลือกหมวด</div>
+    <div class="cat-row" id="fcCatRow"></div>
+
+    <!-- progress -->
+    <div class="fc-top">
+      <div class="fc-counter-box" id="fcCounter">1 / 1</div>
+      <div class="fc-progress">
+        <div class="fc-prog-bar"><div class="fc-prog-fill" id="fcProgFill" style="width:0%"></div></div>
+      </div>
+      <button class="star-icon" id="fcStarBtn" onclick="toggleStarFC()" title="ติดดาวคำนี้">☆</button>
+    </div>
+
+    <!-- card -->
+    <div class="card-wrap">
+      <div class="flashcard" id="flashcard" onclick="flipCard()">
+        <div class="card-face card-front">
+          <div class="cf-en" id="fcWord">—</div>
+          <div class="cf-pos" id="fcPos"></div>
+          <div class="cf-hint">แตะการ์ดเพื่อดูคำแปล <span>👇</span></div>
+        </div>
+        <div class="card-face card-back">
+          <div class="cb-meaning" id="fcMeaning">—</div>
+          <div class="cb-syn" id="fcSyn"></div>
+          <div class="cb-example" id="fcEx"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fc-actions">
+      <button class="btn-ghost" onclick="prevCard()">← ก่อนหน้า</button>
+      <button class="btn-main" onclick="nextCard()">ถัดไป →</button>
+      <button class="btn-icon" onclick="shuffleFC()" title="สุ่มใหม่">🔀</button>
+    </div>
+
+    <div class="sec-label" style="margin-top:22px">ตัวกรองพิเศษ</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <button class="btn-ghost" onclick="filterFC('all')">📚 ทั้งหมด</button>
+      <button class="btn-ghost" onclick="filterFC('starred')">⭐ คำที่ติดดาว</button>
+      <button class="btn-ghost" onclick="filterFC('mistakes')">❌ คำที่เคยผิด</button>
+    </div>
+  </div>
+
+  <!-- ════════ QUIZ TAB ════════ -->
+  <div class="view" id="tab-quiz">
+
+    <!-- start screen -->
+    <div id="quizStart">
+      <div class="hero-strip">
+        <div>
+          <h1>ทำโจทย์คำศัพท์ 🎯</h1>
+          <p>เลือก 4 ตัวเลือก ตอบให้ถูกให้มากที่สุด!</p>
+        </div>
+      </div>
+      <div class="sec-label">เลือกหมวด</div>
+      <div class="cat-row" id="qzCatRow"></div>
+      <div class="sec-label">จำนวนข้อ</div>
+      <div class="cat-row">
+        <button class="cat-pill active" id="qn10" onclick="setQCount(10,this)">10 ข้อ</button>
+        <button class="cat-pill" id="qn20" onclick="setQCount(20,this)">20 ข้อ</button>
+        <button class="cat-pill" id="qn30" onclick="setQCount(30,this)">30 ข้อ</button>
+        <button class="cat-pill" id="qnAll" onclick="setQCount(0,this)">ทั้งหมด</button>
+      </div>
+      <div class="mode-row" style="margin-top:4px">
+        <div class="mode-card" onclick="beginQuiz('normal')">
+          <span class="mc-icon">✏️</span>
+          <div class="mc-title">ทำโจทย์ปกติ</div>
+          <div class="mc-desc">ตอบคำถามและดูผลทันที มีคำอธิบายหลังตอบทุกข้อ</div>
+          <span class="mc-badge">แนะนำ</span>
+        </div>
+        <div class="mode-card" onclick="beginQuiz('mistakes')">
+          <span class="mc-icon">🔁</span>
+          <div class="mc-title">รีวิวคำผิด</div>
+          <div class="mc-desc">ทำซ้ำเฉพาะคำที่เคยตอบผิด เพื่อให้จำได้ขึ้น</div>
+          <span class="mc-badge">Smart Review</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- quiz screen -->
+    <div id="quizPlay" style="display:none">
+      <div class="quiz-header">
+        <div class="quiz-meta" id="qMeta">ข้อที่ 1 / 20</div>
+        <div class="quiz-score" id="qScore">✅ 0 ❌ 0</div>
+        <button class="btn-ghost" style="padding:7px 14px;font-size:.8rem" onclick="exitQuiz()">ออก</button>
+      </div>
+      <div class="quiz-prog-bar"><div class="quiz-prog-fill" id="qProgFill" style="width:0%"></div></div>
+      <div class="q-card">
+        <div class="q-label">คำศัพท์นี้แปลว่าอะไร?</div>
+        <div class="q-word" id="qWord">—</div>
+        <div class="q-pos" id="qPos"></div>
+        <button class="q-star" id="qStarBtn" onclick="toggleStarQ()">☆</button>
+      </div>
+      <div class="choices" id="choicesGrid"></div>
+      <div class="feedback" id="feedback">
+        <div class="fb-title" id="fbTitle"></div>
+        <div class="fb-body" id="fbBody"></div>
+        <div class="fb-ex"   id="fbEx"></div>
+      </div>
+      <div class="quiz-btn-row">
+        <button class="btn-main" id="nextBtn" style="display:none" onclick="nextQ()">ข้อต่อไป →</button>
+      </div>
+    </div>
+
+    <!-- result screen -->
+    <div id="quizResult" style="display:none">
+      <div class="result-card">
+        <div class="result-emoji" id="resEmoji">🎉</div>
+        <div class="result-title" id="resTitle">จบแล้ว!</div>
+        <div class="result-pct" id="resPct">0%</div>
+        <div class="result-stats">
+          <div class="rs"><div class="rs-num" style="color:var(--green)" id="resC">0</div><div class="rs-lbl">ถูก</div></div>
+          <div class="rs"><div class="rs-num" style="color:var(--red)"   id="resW">0</div><div class="rs-lbl">ผิด</div></div>
+          <div class="rs"><div class="rs-num" style="color:var(--pink2)" id="resT">0</div><div class="rs-lbl">ทั้งหมด</div></div>
+        </div>
+        <div class="result-btns">
+          <button class="btn-main" onclick="retryQuiz()">ลองใหม่</button>
+          <button class="btn-main" onclick="beginQuiz('mistakes')">รีวิวคำผิด 🔁</button>
+          <button class="btn-ghost" onclick="exitQuiz()">กลับหน้าแรก</button>
+        </div>
+        <div class="mistake-section" id="mistakeSection"></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- end .app -->
+
+<script>
+// ════════════════════════════════════════════════
+// VOCABULARY DATABASE
+// ════════════════════════════════════════════════
+const VOCAB = [
+  // ── ACADEMIC WORDS ──────────────────────────
+  {word:"abrupt",pos:"Adj.",th:"ฉับพลัน",syn:"sudden",ex:"The meeting came to an abrupt end.",cat:"academic"},
+  {word:"abstract",pos:"Adj.",th:"เป็นนามธรรม",syn:"theoretical",ex:"The concept is too abstract for beginners.",cat:"academic"},
+  {word:"abundance",pos:"N.",th:"ความอุดมสมบูรณ์",syn:"plenty",ex:"There is an abundance of natural resources here.",cat:"academic"},
+  {word:"access",pos:"N./V.",th:"การเข้าถึง / เข้าถึง",syn:"reach",ex:"Students need access to quality education.",cat:"academic"},
+  {word:"accommodate",pos:"V.",th:"ปรับให้เหมาะ / รองรับ",syn:"adapt",ex:"The school accommodated students with disabilities.",cat:"academic"},
+  {word:"accountability",pos:"N.",th:"ความรับผิดชอบ",syn:"responsibility",ex:"Accountability is essential in public service.",cat:"academic"},
+  {word:"accumulate",pos:"V.",th:"สะสม",syn:"gather",ex:"He accumulated wealth over many years.",cat:"academic"},
+  {word:"accurate",pos:"Adj.",th:"แม่นยำ",syn:"precise",ex:"The data must be accurate to be useful.",cat:"academic"},
+  {word:"acknowledge",pos:"V.",th:"ยอมรับ",syn:"recognize",ex:"She acknowledged her mistake openly.",cat:"academic"},
+  {word:"acquire",pos:"V.",th:"ได้มา",syn:"obtain",ex:"Children acquire language naturally.",cat:"academic"},
+  {word:"adapt",pos:"V.",th:"ปรับตัว",syn:"adjust",ex:"Animals adapt to their environment over time.",cat:"academic"},
+  {word:"address",pos:"V.",th:"จัดการปัญหา",syn:"tackle",ex:"The policy addresses poverty effectively.",cat:"academic"},
+  {word:"adjacent",pos:"Adj.",th:"ติดกัน",syn:"nearby",ex:"The two countries are adjacent to each other.",cat:"academic"},
+  {word:"advancement",pos:"N.",th:"ความก้าวหน้า",syn:"progress",ex:"Technology has led to great advancements in medicine.",cat:"academic"},
+  {word:"adverse",pos:"Adj.",th:"เป็นผลเสีย",syn:"harmful",ex:"The drug had adverse side effects.",cat:"academic"},
+  {word:"adversity",pos:"N.",th:"ความยากลำบาก",syn:"hardship",ex:"She overcame adversity to succeed.",cat:"academic"},
+  {word:"advocate",pos:"V.",th:"สนับสนุน",syn:"support",ex:"She advocates for children's rights.",cat:"academic"},
+  {word:"affect",pos:"V.",th:"ส่งผลกระทบ",syn:"impact",ex:"Pollution affects public health.",cat:"academic"},
+  {word:"affordable",pos:"Adj.",th:"ราคาเอื้อมถึง",syn:"reasonable",ex:"We need affordable housing for low-income families.",cat:"academic"},
+  {word:"aggregate",pos:"Adj./V.",th:"รวมกัน",syn:"total",ex:"The aggregate data shows a positive trend.",cat:"academic"},
+  {word:"align",pos:"V.",th:"จัดให้สอดคล้อง",syn:"coordinate",ex:"Our goals align with the organization's mission.",cat:"academic"},
+  {word:"alleviate",pos:"V.",th:"บรรเทา",syn:"relieve",ex:"Exercise can alleviate stress.",cat:"academic"},
+  {word:"allocate",pos:"V.",th:"จัดสรร",syn:"distribute",ex:"The government allocated funds to education.",cat:"academic"},
+  {word:"alter",pos:"V.",th:"เปลี่ยนแปลง",syn:"modify",ex:"The new law altered the way businesses operate.",cat:"academic"},
+  {word:"alternative",pos:"N./Adj.",th:"ทางเลือก",syn:"option",ex:"We need an alternative solution to this problem.",cat:"academic"},
+  {word:"ambiguous",pos:"Adj.",th:"คลุมเครือ",syn:"vague",ex:"The instructions were ambiguous and confusing.",cat:"academic"},
+  {word:"ambition",pos:"N.",th:"ความทะเยอทะยาน",syn:"drive",ex:"Her ambition drove her to succeed.",cat:"academic"},
+  {word:"amplify",pos:"V.",th:"ขยาย",syn:"increase",ex:"Social media can amplify misinformation.",cat:"academic"},
+  {word:"analogy",pos:"N.",th:"การเปรียบเทียบ",syn:"comparison",ex:"He used an analogy to explain the concept.",cat:"academic"},
+  {word:"analyze",pos:"V.",th:"วิเคราะห์",syn:"examine",ex:"Scientists analyze data to find patterns.",cat:"academic"},
+  {word:"anecdote",pos:"N.",th:"เรื่องเล่า",syn:"story",ex:"She shared an anecdote from her childhood.",cat:"academic"},
+  {word:"annual",pos:"Adj.",th:"ประจำปี",syn:"yearly",ex:"The annual report shows steady growth.",cat:"academic"},
+  {word:"anomaly",pos:"N.",th:"ความผิดปกติ",syn:"irregularity",ex:"The anomaly in the data was investigated.",cat:"academic"},
+  {word:"anticipate",pos:"V.",th:"คาดการณ์ล่วงหน้า",syn:"predict",ex:"We anticipate a rise in demand.",cat:"academic"},
+  {word:"anxiety",pos:"N.",th:"ความกังวล",syn:"worry",ex:"Exam anxiety affects many students.",cat:"academic"},
+  {word:"apparatus",pos:"N.",th:"เครื่องมือ",syn:"equipment",ex:"The laboratory apparatus was expensive.",cat:"academic"},
+  {word:"apparent",pos:"Adj.",th:"เห็นได้ชัด",syn:"obvious",ex:"The problem was apparent to everyone.",cat:"academic"},
+  {word:"approval",pos:"N.",th:"การอนุมัติ",syn:"consent",ex:"The plan received government approval.",cat:"academic"},
+  {word:"approximate",pos:"Adj.",th:"โดยประมาณ",syn:"rough",ex:"The approximate cost is 500 baht.",cat:"academic"},
+  {word:"arbitrary",pos:"Adj.",th:"ตามอำเภอใจ",syn:"random",ex:"The decision seemed arbitrary and unfair.",cat:"academic"},
+  {word:"arise",pos:"V.",th:"เกิดขึ้น",syn:"emerge",ex:"Problems can arise without warning.",cat:"academic"},
+  {word:"artificial",pos:"Adj.",th:"เทียม",syn:"synthetic",ex:"Artificial intelligence is transforming industries.",cat:"academic"},
+  {word:"aspect",pos:"N.",th:"แง่มุม",syn:"element",ex:"Consider every aspect of the problem.",cat:"academic"},
+  {word:"assess",pos:"V.",th:"ประเมิน",syn:"evaluate",ex:"Teachers assess students regularly.",cat:"academic"},
+  {word:"asset",pos:"N.",th:"ทรัพยากร",syn:"resource",ex:"Knowledge is a valuable asset.",cat:"academic"},
+  {word:"assumption",pos:"N.",th:"ข้อสมมติ",syn:"presumption",ex:"The theory rests on a false assumption.",cat:"academic"},
+  {word:"assurance",pos:"N.",th:"การรับประกัน",syn:"guarantee",ex:"He gave his assurance that the work would be done.",cat:"academic"},
+  {word:"attainment",pos:"N.",th:"ความสำเร็จ",syn:"achievement",ex:"Educational attainment improves life outcomes.",cat:"academic"},
+  {word:"attitude",pos:"N.",th:"ทัศนคติ",syn:"mindset",ex:"A positive attitude leads to success.",cat:"academic"},
+  {word:"authority",pos:"N.",th:"อำนาจ",syn:"power",ex:"The authority to make decisions lies with the board.",cat:"academic"},
+  {word:"available",pos:"Adj.",th:"มีอยู่",syn:"accessible",ex:"The report is available online.",cat:"academic"},
+  {word:"awareness",pos:"N.",th:"การตระหนักรู้",syn:"consciousness",ex:"Public awareness of climate change is growing.",cat:"academic"},
+  {word:"backlash",pos:"N.",th:"กระแสต่อต้าน",syn:"opposition",ex:"The policy faced a strong backlash.",cat:"academic"},
+  {word:"barrier",pos:"N.",th:"อุปสรรค",syn:"obstacle",ex:"Language can be a barrier to learning.",cat:"academic"},
+  {word:"benchmark",pos:"N.",th:"มาตรฐานอ้างอิง",syn:"standard",ex:"This test serves as a benchmark for performance.",cat:"academic"},
+  {word:"beneficial",pos:"Adj.",th:"เป็นประโยชน์",syn:"helpful",ex:"Exercise is beneficial for mental health.",cat:"academic"},
+  {word:"beneficiary",pos:"N.",th:"ผู้ได้รับประโยชน์",syn:"recipient",ex:"Students are the main beneficiaries of this program.",cat:"academic"},
+  {word:"bias",pos:"N.",th:"อคติ",syn:"prejudice",ex:"Research must be free from bias.",cat:"academic"},
+  {word:"boost",pos:"V.",th:"กระตุ้น",syn:"increase",ex:"The new policy boosted economic growth.",cat:"academic"},
+  {word:"boundary",pos:"N.",th:"ขอบเขต",syn:"limit",ex:"We must set clear boundaries.",cat:"academic"},
+  {word:"burden",pos:"N.",th:"ภาระ",syn:"load",ex:"Financial burden affects student performance.",cat:"academic"},
+  {word:"capability",pos:"N.",th:"ศักยภาพ",syn:"ability",ex:"She has the capability to lead the team.",cat:"academic"},
+  {word:"capacity",pos:"N.",th:"ความสามารถ / ความจุ",syn:"ability",ex:"The school has the capacity for 500 students.",cat:"academic"},
+  {word:"catalyst",pos:"N.",th:"ตัวเร่ง",syn:"trigger",ex:"Education is a catalyst for social change.",cat:"academic"},
+  {word:"cease",pos:"V.",th:"ยุติ",syn:"stop",ex:"The factory ceased production last year.",cat:"academic"},
+  {word:"challenge",pos:"N./V.",th:"ความท้าทาย",syn:"difficulty",ex:"Climate change is a major challenge.",cat:"academic"},
+  {word:"chronic",pos:"Adj.",th:"เรื้อรัง",syn:"persistent",ex:"Chronic poverty affects millions worldwide.",cat:"academic"},
+  {word:"circulation",pos:"N.",th:"การหมุนเวียน",syn:"flow",ex:"Good blood circulation is important for health.",cat:"academic"},
+  {word:"clarify",pos:"V.",th:"ทำให้ชัด",syn:"explain",ex:"Please clarify your main argument.",cat:"academic"},
+  {word:"clarity",pos:"N.",th:"ความชัดเจน",syn:"clearness",ex:"The report lacks clarity.",cat:"academic"},
+  {word:"cohesion",pos:"N.",th:"ความเชื่อมโยง",syn:"unity",ex:"Social cohesion is key for community development.",cat:"academic"},
+  {word:"coincidental",pos:"Adj.",th:"บังเอิญ",syn:"accidental",ex:"The similarity was purely coincidental.",cat:"academic"},
+  {word:"collapse",pos:"V.",th:"ล่มสลาย",syn:"fall",ex:"The economy collapsed during the crisis.",cat:"academic"},
+  {word:"collective",pos:"Adj.",th:"ร่วมกัน",syn:"shared",ex:"This is a collective responsibility.",cat:"academic"},
+  {word:"commitment",pos:"N.",th:"ความมุ่งมั่น",syn:"dedication",ex:"Success requires commitment and hard work.",cat:"academic"},
+  {word:"commodity",pos:"N.",th:"สินค้า",syn:"product",ex:"Oil is a valuable commodity.",cat:"academic"},
+  {word:"compatible",pos:"Adj.",th:"เข้ากันได้",syn:"suitable",ex:"The software is compatible with all devices.",cat:"academic"},
+  {word:"compensate",pos:"V.",th:"ชดเชย",syn:"offset",ex:"The company compensated workers for their losses.",cat:"academic"},
+  {word:"compile",pos:"V.",th:"รวบรวม",syn:"collect",ex:"She compiled a list of resources.",cat:"academic"},
+  {word:"compliance",pos:"N.",th:"การปฏิบัติตาม",syn:"adherence",ex:"Compliance with safety rules is mandatory.",cat:"academic"},
+  {word:"comply",pos:"V.",th:"ปฏิบัติตาม",syn:"conform",ex:"All employees must comply with the policy.",cat:"academic"},
+  {word:"component",pos:"N.",th:"องค์ประกอบ",syn:"element",ex:"Trust is a key component of leadership.",cat:"academic"},
+  {word:"comprehensive",pos:"Adj.",th:"ครอบคลุม",syn:"thorough",ex:"We need a comprehensive study of the issue.",cat:"academic"},
+  {word:"consensus",pos:"N.",th:"ความเห็นพ้อง",syn:"agreement",ex:"The group reached a consensus.",cat:"academic"},
+  {word:"consequence",pos:"N.",th:"ผลที่ตามมา",syn:"result",ex:"Actions have consequences.",cat:"academic"},
+  {word:"constraint",pos:"N.",th:"ข้อจำกัด",syn:"restriction",ex:"Budget constraints limited the project.",cat:"academic"},
+  {word:"context",pos:"N.",th:"บริบท",syn:"background",ex:"Understand the historical context first.",cat:"academic"},
+  {word:"contrary",pos:"Adj.",th:"ตรงกันข้าม",syn:"opposite",ex:"The results were contrary to expectations.",cat:"academic"},
+  {word:"controversy",pos:"N.",th:"ประเด็นถกเถียง",syn:"debate",ex:"The policy sparked controversy.",cat:"academic"},
+  {word:"convey",pos:"V.",th:"สื่อความ",syn:"communicate",ex:"The data conveys a clear message.",cat:"academic"},
+  {word:"credible",pos:"Adj.",th:"น่าเชื่อถือ",syn:"reliable",ex:"We need credible sources of information.",cat:"academic"},
+  {word:"crucial",pos:"Adj.",th:"สำคัญยิ่ง",syn:"essential",ex:"Sleep is crucial for learning.",cat:"academic"},
+  {word:"cumulative",pos:"Adj.",th:"สะสม",syn:"accumulative",ex:"The cumulative effect of small habits is powerful.",cat:"academic"},
+  {word:"decline",pos:"N./V.",th:"ลดลง",syn:"decrease",ex:"The birth rate has declined significantly.",cat:"academic"},
+  {word:"dedicate",pos:"V.",th:"อุทิศ",syn:"devote",ex:"She dedicated her life to teaching.",cat:"academic"},
+  {word:"deficiency",pos:"N.",th:"ความบกพร่อง",syn:"lack",ex:"Vitamin deficiency can cause health problems.",cat:"academic"},
+  {word:"demographic",pos:"Adj.",th:"เชิงประชากร",syn:"population-related",ex:"Demographic changes affect public policy.",cat:"academic"},
+  {word:"derive",pos:"V.",th:"ได้มาจาก",syn:"obtain",ex:"Profits are derived from sales.",cat:"academic"},
+  {word:"despite",pos:"Prep.",th:"แม้ว่า",syn:"although",ex:"She succeeded despite many obstacles.",cat:"academic"},
+  {word:"detect",pos:"V.",th:"ตรวจพบ",syn:"identify",ex:"The test detected cancer early.",cat:"academic"},
+  {word:"deteriorate",pos:"V.",th:"เสื่อมลง",syn:"worsen",ex:"Air quality has deteriorated in cities.",cat:"academic"},
+  {word:"determine",pos:"V.",th:"กำหนด",syn:"decide",ex:"Data helps determine the best policy.",cat:"academic"},
+  {word:"dilemma",pos:"N.",th:"ทางเลือกยาก",syn:"predicament",ex:"She faced a moral dilemma.",cat:"academic"},
+  {word:"diminish",pos:"V.",th:"ลดลง",syn:"reduce",ex:"Trust can diminish if promises are broken.",cat:"academic"},
+  {word:"disrupt",pos:"V.",th:"รบกวน",syn:"disturb",ex:"Technology disrupts traditional industries.",cat:"academic"},
+  {word:"distinct",pos:"Adj.",th:"แตกต่าง",syn:"different",ex:"The two cultures are quite distinct.",cat:"academic"},
+  {word:"diversity",pos:"N.",th:"ความหลากหลาย",syn:"variety",ex:"Cultural diversity enriches society.",cat:"academic"},
+  {word:"dominant",pos:"Adj.",th:"ครอบงำ",syn:"prevailing",ex:"English is the dominant language in business.",cat:"academic"},
+  {word:"drastic",pos:"Adj.",th:"รุนแรง",syn:"extreme",ex:"Drastic measures were needed to stop the crisis.",cat:"academic"},
+  {word:"dynamic",pos:"Adj.",th:"เปลี่ยนแปลงตลอด",syn:"changing",ex:"The job market is highly dynamic.",cat:"academic"},
+  {word:"efficacy",pos:"N.",th:"ประสิทธิผล",syn:"effectiveness",ex:"The efficacy of the vaccine was proven.",cat:"academic"},
+  {word:"efficiency",pos:"N.",th:"ประสิทธิภาพ",syn:"productivity",ex:"Efficiency in production reduces costs.",cat:"academic"},
+  {word:"eliminate",pos:"V.",th:"กำจัด",syn:"remove",ex:"We aim to eliminate poverty by 2030.",cat:"academic"},
+  {word:"emerge",pos:"V.",th:"ปรากฏ",syn:"appear",ex:"New solutions will emerge over time.",cat:"academic"},
+  {word:"emphasis",pos:"N.",th:"การเน้นย้ำ",syn:"stress",ex:"The teacher placed emphasis on grammar.",cat:"academic"},
+  {word:"enable",pos:"V.",th:"ทำให้สามารถ",syn:"allow",ex:"Technology enables remote learning.",cat:"academic"},
+  {word:"enforce",pos:"V.",th:"บังคับใช้",syn:"implement",ex:"The law must be strictly enforced.",cat:"academic"},
+  {word:"enhance",pos:"V.",th:"เพิ่มคุณค่า",syn:"improve",ex:"Reading enhances vocabulary.",cat:"academic"},
+  {word:"enormous",pos:"Adj.",th:"มหาศาล",syn:"huge",ex:"There was an enormous improvement in results.",cat:"academic"},
+  {word:"ensure",pos:"V.",th:"ทำให้แน่ใจ",syn:"guarantee",ex:"We must ensure equal access to education.",cat:"academic"},
+  {word:"epidemic",pos:"N.",th:"การระบาด",syn:"outbreak",ex:"The epidemic spread rapidly.",cat:"academic"},
+  {word:"equivalent",pos:"Adj.",th:"เทียบเท่า",syn:"equal",ex:"One kilometer is equivalent to 0.6 miles.",cat:"academic"},
+  {word:"essential",pos:"Adj.",th:"จำเป็น",syn:"vital",ex:"Water is essential for life.",cat:"academic"},
+  {word:"establish",pos:"V.",th:"ก่อตั้ง",syn:"found",ex:"The school was established in 1990.",cat:"academic"},
+  {word:"ethical",pos:"Adj.",th:"มีจริยธรรม",syn:"moral",ex:"Ethical behavior is expected in research.",cat:"academic"},
+  {word:"evaluate",pos:"V.",th:"ประเมินค่า",syn:"assess",ex:"Students evaluate their own learning.",cat:"academic"},
+  {word:"evidence",pos:"N.",th:"หลักฐาน",syn:"proof",ex:"The evidence supports the hypothesis.",cat:"academic"},
+  {word:"evolve",pos:"V.",th:"พัฒนา",syn:"develop",ex:"Language evolves over time.",cat:"academic"},
+  {word:"exacerbate",pos:"V.",th:"ทำให้แย่ลง",syn:"worsen",ex:"Pollution exacerbates respiratory diseases.",cat:"academic"},
+  {word:"expectation",pos:"N.",th:"ความคาดหวัง",syn:"anticipation",ex:"Teachers set high expectations for students.",cat:"academic"},
+  {word:"exposure",pos:"N.",th:"การเผชิญ",syn:"contact",ex:"Exposure to English improves fluency.",cat:"academic"},
+  {word:"factor",pos:"N.",th:"ปัจจัย",syn:"element",ex:"Diet is a key factor in health.",cat:"academic"},
+  {word:"feasible",pos:"Adj.",th:"เป็นไปได้",syn:"practical",ex:"The plan is feasible within the budget.",cat:"academic"},
+  {word:"flexible",pos:"Adj.",th:"ยืดหยุ่น",syn:"adaptable",ex:"A flexible schedule helps students learn better.",cat:"academic"},
+  {word:"fluctuate",pos:"V.",th:"ผันผวน",syn:"vary",ex:"Prices fluctuate with demand.",cat:"academic"},
+  {word:"framework",pos:"N.",th:"กรอบแนวคิด",syn:"structure",ex:"The policy is based on a clear framework.",cat:"academic"},
+  {word:"funding",pos:"N.",th:"เงินทุน",syn:"financing",ex:"Research requires substantial funding.",cat:"academic"},
+  {word:"generate",pos:"V.",th:"สร้าง",syn:"produce",ex:"The project generated 100 new jobs.",cat:"academic"},
+  {word:"governance",pos:"N.",th:"การบริหาร",syn:"management",ex:"Good governance leads to prosperity.",cat:"academic"},
+  {word:"gradual",pos:"Adj.",th:"ค่อยเป็นค่อยไป",syn:"slow",ex:"There was a gradual improvement in results.",cat:"academic"},
+  {word:"guideline",pos:"N.",th:"แนวปฏิบัติ",syn:"rule",ex:"Follow the guidelines carefully.",cat:"academic"},
+  {word:"harmful",pos:"Adj.",th:"เป็นอันตราย",syn:"dangerous",ex:"Junk food is harmful to health.",cat:"academic"},
+  {word:"hierarchy",pos:"N.",th:"ลำดับชั้น",syn:"ranking",ex:"The organization has a clear hierarchy.",cat:"academic"},
+  {word:"hypothesis",pos:"N.",th:"สมมติฐาน",syn:"theory",ex:"The hypothesis was tested with experiments.",cat:"academic"},
+  {word:"identical",pos:"Adj.",th:"เหมือนกัน",syn:"same",ex:"The two samples were identical.",cat:"academic"},
+  {word:"identify",pos:"V.",th:"ระบุ",syn:"recognize",ex:"Can you identify the main problem?",cat:"academic"},
+  {word:"impact",pos:"N./V.",th:"ผลกระทบ",syn:"effect",ex:"The policy had a major impact on education.",cat:"academic"},
+  {word:"implication",pos:"N.",th:"นัยยะ",syn:"consequence",ex:"Consider the implications of this decision.",cat:"academic"},
+  {word:"incentive",pos:"N.",th:"แรงจูงใจ",syn:"motivation",ex:"Scholarships are an incentive to study hard.",cat:"academic"},
+  {word:"independent",pos:"Adj.",th:"อิสระ",syn:"autonomous",ex:"Critical thinking is an independent skill.",cat:"academic"},
+  {word:"indicator",pos:"N.",th:"ตัวชี้วัด",syn:"measure",ex:"GDP is a key economic indicator.",cat:"academic"},
+  {word:"inequality",pos:"N.",th:"ความเหลื่อมล้ำ",syn:"disparity",ex:"Income inequality is a global challenge.",cat:"academic"},
+  {word:"inevitable",pos:"Adj.",th:"หลีกเลี่ยงไม่ได้",syn:"unavoidable",ex:"Change is inevitable.",cat:"academic"},
+  {word:"influence",pos:"N./V.",th:"อิทธิพล",syn:"affect",ex:"Parents influence their children's values.",cat:"academic"},
+  {word:"innovation",pos:"N.",th:"นวัตกรรม",syn:"invention",ex:"Innovation drives economic growth.",cat:"academic"},
+  {word:"insight",pos:"N.",th:"ความเข้าใจลึกซึ้ง",syn:"understanding",ex:"The research provided valuable insights.",cat:"academic"},
+  {word:"insufficient",pos:"Adj.",th:"ไม่เพียงพอ",syn:"inadequate",ex:"The resources were insufficient for the project.",cat:"academic"},
+  {word:"integrity",pos:"N.",th:"ความซื่อสัตย์",syn:"honesty",ex:"Academic integrity is fundamental.",cat:"academic"},
+  {word:"intervention",pos:"N.",th:"การแทรกแซง",syn:"action",ex:"Early intervention improves outcomes.",cat:"academic"},
+  {word:"irrelevant",pos:"Adj.",th:"ไม่เกี่ยวข้อง",syn:"unrelated",ex:"That information is irrelevant to the topic.",cat:"academic"},
+  {word:"justify",pos:"V.",th:"ให้เหตุผล",syn:"explain",ex:"You need to justify your claims with evidence.",cat:"academic"},
+  {word:"legitimate",pos:"Adj.",th:"ถูกต้อง",syn:"valid",ex:"She had a legitimate reason for being late.",cat:"academic"},
+  {word:"limitation",pos:"N.",th:"ข้อจำกัด",syn:"constraint",ex:"Every method has its limitations.",cat:"academic"},
+  {word:"magnitude",pos:"N.",th:"ขนาด",syn:"scale",ex:"The magnitude of the problem was underestimated.",cat:"academic"},
+  {word:"maintain",pos:"V.",th:"รักษาไว้",syn:"preserve",ex:"We must maintain high standards.",cat:"academic"},
+  {word:"mechanism",pos:"N.",th:"กลไก",syn:"system",ex:"What is the mechanism behind this reaction?",cat:"academic"},
+  {word:"mitigate",pos:"V.",th:"บรรเทา",syn:"reduce",ex:"We must mitigate the effects of climate change.",cat:"academic"},
+  {word:"monitor",pos:"V.",th:"ติดตาม",syn:"track",ex:"Teachers monitor student progress regularly.",cat:"academic"},
+  {word:"norm",pos:"N.",th:"บรรทัดฐาน",syn:"standard",ex:"Politeness is a social norm.",cat:"academic"},
+  {word:"objective",pos:"N./Adj.",th:"เป้าหมาย",syn:"goal",ex:"What is the main objective of this research?",cat:"academic"},
+  {word:"outcome",pos:"N.",th:"ผลลัพธ์",syn:"result",ex:"The outcome of the experiment was positive.",cat:"academic"},
+  {word:"overlook",pos:"V.",th:"มองข้าม",syn:"ignore",ex:"Don't overlook important details.",cat:"academic"},
+  {word:"participation",pos:"N.",th:"การมีส่วนร่วม",syn:"involvement",ex:"Participation in class improves learning.",cat:"academic"},
+  {word:"pattern",pos:"N.",th:"รูปแบบ",syn:"trend",ex:"Researchers identified a recurring pattern.",cat:"academic"},
+  {word:"perception",pos:"N.",th:"การรับรู้",syn:"view",ex:"Perception of risk varies widely.",cat:"academic"},
+  {word:"persist",pos:"V.",th:"คงอยู่",syn:"continue",ex:"Problems persist despite interventions.",cat:"academic"},
+  {word:"perspective",pos:"N.",th:"มุมมอง",syn:"viewpoint",ex:"Consider the problem from a different perspective.",cat:"academic"},
+  {word:"phenomenon",pos:"N.",th:"ปรากฏการณ์",syn:"event",ex:"Climate change is a global phenomenon.",cat:"academic"},
+  {word:"policy",pos:"N.",th:"นโยบาย",syn:"rule",ex:"Education policy affects all students.",cat:"academic"},
+  {word:"probability",pos:"N.",th:"ความน่าจะเป็น",syn:"likelihood",ex:"What is the probability of success?",cat:"academic"},
+  {word:"profound",pos:"Adj.",th:"ลึกซึ้ง",syn:"deep",ex:"Her words had a profound effect on me.",cat:"academic"},
+  {word:"prominent",pos:"Adj.",th:"โดดเด่น",syn:"notable",ex:"She became a prominent researcher.",cat:"academic"},
+  {word:"proportion",pos:"N.",th:"สัดส่วน",syn:"ratio",ex:"A large proportion of students passed.",cat:"academic"},
+  {word:"rational",pos:"Adj.",th:"มีเหตุผล",syn:"logical",ex:"Make rational decisions based on data.",cat:"academic"},
+  {word:"rationale",pos:"N.",th:"เหตุผล",syn:"reason",ex:"Explain the rationale behind your decision.",cat:"academic"},
+  {word:"recover",pos:"V.",th:"ฟื้นตัว",syn:"heal",ex:"The economy recovered after the crisis.",cat:"academic"},
+  {word:"regulation",pos:"N.",th:"กฎระเบียบ",syn:"rule",ex:"Stricter regulations protect consumers.",cat:"academic"},
+  {word:"reinforce",pos:"V.",th:"เสริม",syn:"strengthen",ex:"Practice reinforces vocabulary learning.",cat:"academic"},
+  {word:"relevant",pos:"Adj.",th:"เกี่ยวข้อง",syn:"related",ex:"Include only relevant information.",cat:"academic"},
+  {word:"reliable",pos:"Adj.",th:"เชื่อถือได้",syn:"dependable",ex:"Use reliable sources for research.",cat:"academic"},
+  {word:"resilience",pos:"N.",th:"ความยืดหยุ่น",syn:"adaptability",ex:"Resilience helps students cope with failure.",cat:"academic"},
+  {word:"retain",pos:"V.",th:"รักษา",syn:"keep",ex:"Students retain information better through practice.",cat:"academic"},
+  {word:"reveal",pos:"V.",th:"เปิดเผย",syn:"show",ex:"The study reveals surprising findings.",cat:"academic"},
+  {word:"robust",pos:"Adj.",th:"แข็งแรง",syn:"strong",ex:"The economy showed robust growth.",cat:"academic"},
+  {word:"scenario",pos:"N.",th:"สถานการณ์",syn:"situation",ex:"Consider the worst-case scenario.",cat:"academic"},
+  {word:"significant",pos:"Adj.",th:"มีนัยสำคัญ",syn:"important",ex:"There was a significant drop in crime.",cat:"academic"},
+  {word:"stable",pos:"Adj.",th:"มั่นคง",syn:"steady",ex:"A stable environment supports learning.",cat:"academic"},
+  {word:"strategy",pos:"N.",th:"กลยุทธ์",syn:"plan",ex:"We need a clear strategy for success.",cat:"academic"},
+  {word:"substantial",pos:"Adj.",th:"มาก",syn:"significant",ex:"There was a substantial increase in enrollment.",cat:"academic"},
+  {word:"sufficient",pos:"Adj.",th:"เพียงพอ",syn:"enough",ex:"Is the evidence sufficient?",cat:"academic"},
+  {word:"sustainable",pos:"Adj.",th:"ยั่งยืน",syn:"lasting",ex:"Sustainable development is a global goal.",cat:"academic"},
+  {word:"tendency",pos:"N.",th:"แนวโน้ม",syn:"trend",ex:"There is a tendency to avoid difficult topics.",cat:"academic"},
+  {word:"tolerate",pos:"V.",th:"ยอมรับได้",syn:"accept",ex:"We should not tolerate discrimination.",cat:"academic"},
+  {word:"transform",pos:"V.",th:"เปลี่ยนแปลง",syn:"change",ex:"Education can transform lives.",cat:"academic"},
+  {word:"transition",pos:"N.",th:"การเปลี่ยนผ่าน",syn:"change",ex:"The transition to adulthood is challenging.",cat:"academic"},
+  {word:"trend",pos:"N.",th:"แนวโน้ม",syn:"pattern",ex:"There is a growing trend toward remote work.",cat:"academic"},
+  {word:"underlying",pos:"Adj.",th:"เบื้องหลัง",syn:"fundamental",ex:"What is the underlying cause of this problem?",cat:"academic"},
+  {word:"unique",pos:"Adj.",th:"เฉพาะตัว",syn:"distinct",ex:"Each student's learning style is unique.",cat:"academic"},
+  {word:"validate",pos:"V.",th:"ยืนยัน",syn:"confirm",ex:"The results validated our hypothesis.",cat:"academic"},
+  {word:"viable",pos:"Adj.",th:"ใช้ได้จริง",syn:"practical",ex:"This is a viable solution.",cat:"academic"},
+  {word:"vital",pos:"Adj.",th:"จำเป็น",syn:"essential",ex:"Sleep is vital for memory consolidation.",cat:"academic"},
+  {word:"vulnerable",pos:"Adj.",th:"เปราะบาง",syn:"fragile",ex:"Children are vulnerable to online dangers.",cat:"academic"},
+  {word:"widespread",pos:"Adj.",th:"แพร่หลาย",syn:"common",ex:"There is widespread support for the policy.",cat:"academic"},
+  {word:"workforce",pos:"N.",th:"แรงงาน",syn:"labor",ex:"AI will reshape the global workforce.",cat:"academic"},
+  {word:"yield",pos:"V./N",th:"ก่อให้เกิดผล/ผลผลิต",syn:"produce",ex:"This strategy will yield good results.",cat:"academic"},
+  {word:"versatile",pos:"Adj.",th:"หลากหลายการใช้",syn:"adaptable",ex:"She is a versatile and talented student.",cat:"academic"},
+
+  // ── PHRASAL VERBS ──────────────────────────
+  {word:"abide by",pos:"Phrasal V.",th:"ปฏิบัติตาม (กฎ/ข้อตกลง)",syn:"comply with",ex:"All students must abide by the school rules.",cat:"phrasal"},
+  {word:"account for",pos:"Phrasal V.",th:"อธิบาย / คิดเป็นสัดส่วน",syn:"explain",ex:"Can you account for the missing data?",cat:"phrasal"},
+  {word:"act on",pos:"Phrasal V.",th:"ดำเนินการตาม",syn:"follow through",ex:"The government acted on the recommendations.",cat:"phrasal"},
+  {word:"add up to",pos:"Phrasal V.",th:"รวมกันแล้วเท่ากับ / ส่งผลรวม",syn:"amount to",ex:"The costs add up to one million baht.",cat:"phrasal"},
+  {word:"adhere to",pos:"Phrasal V.",th:"ยึดถือ / ปฏิบัติตามอย่างเคร่งครัด",syn:"stick to",ex:"You must adhere to the deadline.",cat:"phrasal"},
+  {word:"appeal to",pos:"Phrasal V.",th:"ดึงดูด / จูงใจ",syn:"attract",ex:"This method appeals to visual learners.",cat:"phrasal"},
+  {word:"argue against",pos:"Phrasal V.",th:"โต้แย้งคัดค้าน",syn:"oppose",ex:"She argued against the new policy.",cat:"phrasal"},
+  {word:"argue for",pos:"Phrasal V.",th:"โต้แย้งสนับสนุน",syn:"support",ex:"He argued for stricter environmental laws.",cat:"phrasal"},
+  {word:"back up",pos:"Phrasal V.",th:"สนับสนุน / ยืนยัน",syn:"support",ex:"Back up your claims with evidence.",cat:"phrasal"},
+  {word:"be associated with",pos:"Phrasal V.",th:"มีความเกี่ยวข้องกับ",syn:"relate to",ex:"Smoking is associated with lung cancer.",cat:"phrasal"},
+  {word:"bear out",pos:"Phrasal V.",th:"ยืนยันว่าเป็นจริง",syn:"confirm",ex:"The data bears out our hypothesis.",cat:"phrasal"},
+  {word:"break down",pos:"Phrasal V.",th:"พัง / วิเคราะห์",syn:"analyze",ex:"Let's break down the problem step by step.",cat:"phrasal"},
+  {word:"break out",pos:"Phrasal V.",th:"ระบาด / เกิดขึ้นฉับพลัน",syn:"erupt",ex:"A fire broke out in the factory.",cat:"phrasal"},
+  {word:"bring about",pos:"Phrasal V.",th:"ทำให้เกิด",syn:"cause",ex:"The new law brought about significant changes.",cat:"phrasal"},
+  {word:"bring down",pos:"Phrasal V.",th:"ลดลง",syn:"reduce",ex:"The government aims to bring down inflation.",cat:"phrasal"},
+  {word:"bring up",pos:"Phrasal V.",th:"ยกประเด็นขึ้นมา",syn:"raise",ex:"She brought up an important issue at the meeting.",cat:"phrasal"},
+  {word:"build on",pos:"Phrasal V.",th:"ต่อยอดจาก",syn:"extend",ex:"We need to build on previous research.",cat:"phrasal"},
+  {word:"build up",pos:"Phrasal V.",th:"สะสม / เพิ่มขึ้นทีละน้อย",syn:"accumulate",ex:"Pressure has been building up for weeks.",cat:"phrasal"},
+  {word:"call for",pos:"Phrasal V.",th:"ต้องการ / เรียกร้อง",syn:"demand",ex:"The situation calls for immediate action.",cat:"phrasal"},
+  {word:"call off",pos:"Phrasal V.",th:"ยกเลิก",syn:"cancel",ex:"The event was called off due to bad weather.",cat:"phrasal"},
+  {word:"carry on",pos:"Phrasal V.",th:"ดำเนินต่อ",syn:"continue",ex:"Carry on with your work.",cat:"phrasal"},
+  {word:"carry out",pos:"Phrasal V.",th:"ดำเนินการ",syn:"perform",ex:"They carried out a detailed investigation.",cat:"phrasal"},
+  {word:"come about",pos:"Phrasal V.",th:"เกิดขึ้น",syn:"happen",ex:"How did this situation come about?",cat:"phrasal"},
+  {word:"come across",pos:"Phrasal V.",th:"เจอโดยบังเอิญ",syn:"encounter",ex:"I came across an interesting article.",cat:"phrasal"},
+  {word:"come into effect",pos:"Phrasal V.",th:"เริ่มมีผล",syn:"take effect",ex:"The new law comes into effect next month.",cat:"phrasal"},
+  {word:"come up with",pos:"Phrasal V.",th:"คิดออก / เสนอ",syn:"suggest",ex:"Can you come up with a better solution?",cat:"phrasal"},
+  {word:"comply with",pos:"Phrasal V.",th:"ปฏิบัติตาม",syn:"follow",ex:"You must comply with the regulations.",cat:"phrasal"},
+  {word:"contribute to",pos:"Phrasal V.",th:"มีส่วนทำให้เกิด",syn:"add to",ex:"Exercise contributes to better health.",cat:"phrasal"},
+  {word:"cope with",pos:"Phrasal V.",th:"รับมือกับ",syn:"deal with",ex:"She copes with stress through meditation.",cat:"phrasal"},
+  {word:"cut back",pos:"Phrasal V.",th:"ลดลง",syn:"reduce",ex:"The company cut back on expenses.",cat:"phrasal"},
+  {word:"cut down on",pos:"Phrasal V.",th:"ลดปริมาณ",syn:"reduce",ex:"You should cut down on sugar intake.",cat:"phrasal"},
+  {word:"deal with",pos:"Phrasal V.",th:"จัดการกับ",syn:"handle",ex:"We need to deal with this problem now.",cat:"phrasal"},
+  {word:"depend on",pos:"Phrasal V.",th:"ขึ้นอยู่กับ",syn:"rely on",ex:"Success depends on hard work.",cat:"phrasal"},
+  {word:"die out",pos:"Phrasal V.",th:"ค่อย ๆ หายไป",syn:"disappear",ex:"Some animal species are dying out.",cat:"phrasal"},
+  {word:"draw on",pos:"Phrasal V.",th:"ใช้ประโยชน์จาก",syn:"use",ex:"She drew on her personal experience.",cat:"phrasal"},
+  {word:"end up",pos:"Phrasal V.",th:"ลงเอยเป็น",syn:"result in",ex:"If you don't study, you'll end up failing.",cat:"phrasal"},
+  {word:"fall apart",pos:"Phrasal V.",th:"แตกสลาย",syn:"collapse",ex:"The old building fell apart.",cat:"phrasal"},
+  {word:"figure out",pos:"Phrasal V.",th:"ทำความเข้าใจ / แก้ปัญหา",syn:"understand",ex:"Can you figure out the answer?",cat:"phrasal"},
+  {word:"find out",pos:"Phrasal V.",th:"ค้นพบ",syn:"discover",ex:"We need to find out the truth.",cat:"phrasal"},
+  {word:"focus on",pos:"Phrasal V.",th:"มุ่งเน้น",syn:"concentrate on",ex:"Focus on what matters most.",cat:"phrasal"},
+  {word:"get across",pos:"Phrasal V.",th:"สื่อให้เข้าใจ",syn:"communicate",ex:"She struggled to get her point across.",cat:"phrasal"},
+  {word:"get along",pos:"Phrasal V.",th:"เข้ากันได้",syn:"coexist",ex:"Do you get along with your classmates?",cat:"phrasal"},
+  {word:"get over",pos:"Phrasal V.",th:"ก้าวข้ามผ่าน",syn:"recover from",ex:"It took time to get over the disappointment.",cat:"phrasal"},
+  {word:"get rid of",pos:"Phrasal V.",th:"กำจัด",syn:"eliminate",ex:"We need to get rid of bad habits.",cat:"phrasal"},
+  {word:"give rise to",pos:"Phrasal V.",th:"ก่อให้เกิด",syn:"lead to",ex:"Social media gives rise to new problems.",cat:"phrasal"},
+  {word:"give up",pos:"Phrasal V.",th:"เลิก / ยอมแพ้",syn:"quit",ex:"Never give up on your dreams.",cat:"phrasal"},
+  {word:"hold back",pos:"Phrasal V.",th:"ยับยั้ง",syn:"restrain",ex:"Fear held him back from speaking.",cat:"phrasal"},
+  {word:"identify with",pos:"Phrasal V.",th:"เห็นพ้อง / เชื่อมโยงตัวเองกับ",syn:"relate to",ex:"I identify with the characters in the book.",cat:"phrasal"},
+  {word:"impose on",pos:"Phrasal V.",th:"บังคับใช้กับ",syn:"force on",ex:"They imposed new rules on students.",cat:"phrasal"},
+  {word:"interfere with",pos:"Phrasal V.",th:"รบกวน / แทรกแซง",syn:"disrupt",ex:"Noise interferes with concentration.",cat:"phrasal"},
+  {word:"lead to",pos:"Phrasal V.",th:"นำไปสู่",syn:"result in",ex:"Hard work leads to success.",cat:"phrasal"},
+  {word:"level off",pos:"Phrasal V.",th:"คงที่",syn:"stabilize",ex:"The economy leveled off after the recession.",cat:"phrasal"},
+  {word:"look down on",pos:"Phrasal V.",th:"ดูถูก",syn:"disrespect",ex:"Never look down on others.",cat:"phrasal"},
+  {word:"look forward to",pos:"Phrasal V.",th:"ตั้งตารอ",syn:"anticipate",ex:"I look forward to the exam results.",cat:"phrasal"},
+  {word:"look into",pos:"Phrasal V.",th:"ตรวจสอบ",syn:"investigate",ex:"Police are looking into the case.",cat:"phrasal"},
+  {word:"look up to",pos:"Phrasal V.",th:"นับถือเป็นตัวอย่าง",syn:"admire",ex:"Students look up to their teacher.",cat:"phrasal"},
+  {word:"make up",pos:"Phrasal V.",th:"ประกอบเป็น",syn:"constitute",ex:"Women make up 60% of the workforce.",cat:"phrasal"},
+  {word:"object to",pos:"Phrasal V.",th:"คัดค้าน",syn:"oppose",ex:"She objected to the new policy.",cat:"phrasal"},
+  {word:"opt for",pos:"Phrasal V.",th:"เลือก",syn:"choose",ex:"Many students opt for online learning.",cat:"phrasal"},
+  {word:"phase out",pos:"Phrasal V.",th:"ยกเลิกทีละขั้น",syn:"discontinue",ex:"The company is phasing out old products.",cat:"phrasal"},
+  {word:"point out",pos:"Phrasal V.",th:"ชี้ให้เห็น",syn:"indicate",ex:"She pointed out the main flaws.",cat:"phrasal"},
+  {word:"put forward",pos:"Phrasal V.",th:"เสนอ",syn:"propose",ex:"He put forward a new idea.",cat:"phrasal"},
+  {word:"put off",pos:"Phrasal V.",th:"เลื่อน",syn:"postpone",ex:"Don't put off studying until the last minute.",cat:"phrasal"},
+  {word:"put up with",pos:"Phrasal V.",th:"อดทนกับ",syn:"tolerate",ex:"I can't put up with the noise anymore.",cat:"phrasal"},
+  {word:"rely on",pos:"Phrasal V.",th:"พึ่งพา",syn:"depend on",ex:"You can rely on this data.",cat:"phrasal"},
+  {word:"result from",pos:"Phrasal V.",th:"เกิดจาก",syn:"stem from",ex:"The problem results from poor planning.",cat:"phrasal"},
+  {word:"result in",pos:"Phrasal V.",th:"ส่งผลให้",syn:"lead to",ex:"Poor diet results in health problems.",cat:"phrasal"},
+  {word:"rule out",pos:"Phrasal V.",th:"ตัดความเป็นไปได้",syn:"eliminate",ex:"We cannot rule out other causes.",cat:"phrasal"},
+  {word:"run out",pos:"Phrasal V.",th:"หมด",syn:"be depleted",ex:"We're running out of time.",cat:"phrasal"},
+  {word:"scale up",pos:"Phrasal V.",th:"ขยายขนาด",syn:"expand",ex:"The company plans to scale up production.",cat:"phrasal"},
+  {word:"set off",pos:"Phrasal V.",th:"กระตุ้นให้เกิด",syn:"trigger",ex:"The news set off a wave of protests.",cat:"phrasal"},
+  {word:"set up",pos:"Phrasal V.",th:"จัดตั้ง",syn:"establish",ex:"They set up a new research center.",cat:"phrasal"},
+  {word:"slow down",pos:"Phrasal V.",th:"ชะลอลง",syn:"decelerate",ex:"Economic growth is slowing down.",cat:"phrasal"},
+  {word:"stand out",pos:"Phrasal V.",th:"โดดเด่น",syn:"distinguish",ex:"Her work stands out from the rest.",cat:"phrasal"},
+  {word:"stem from",pos:"Phrasal V.",th:"มีสาเหตุมาจาก",syn:"originate from",ex:"Many problems stem from poverty.",cat:"phrasal"},
+  {word:"step in",pos:"Phrasal V.",th:"เข้ามาแทรก",syn:"intervene",ex:"The government had to step in.",cat:"phrasal"},
+  {word:"take effect",pos:"Phrasal V.",th:"เริ่มมีผล",syn:"come into force",ex:"The new rules take effect tomorrow.",cat:"phrasal"},
+  {word:"take into account",pos:"Phrasal V.",th:"คำนึงถึง",syn:"consider",ex:"Take into account all possible outcomes.",cat:"phrasal"},
+  {word:"take on",pos:"Phrasal V.",th:"รับบทบาท / รับงาน",syn:"undertake",ex:"She took on a leadership role.",cat:"phrasal"},
+  {word:"take part in",pos:"Phrasal V.",th:"เข้าร่วม",syn:"participate in",ex:"All students should take part in discussions.",cat:"phrasal"},
+  {word:"turn down",pos:"Phrasal V.",th:"ปฏิเสธ",syn:"reject",ex:"She turned down the job offer.",cat:"phrasal"},
+  {word:"turn into",pos:"Phrasal V.",th:"เปลี่ยนเป็น",syn:"become",ex:"The idea turned into a successful business.",cat:"phrasal"},
+  {word:"turn out",pos:"Phrasal V.",th:"กลายเป็นว่า",syn:"result",ex:"It turned out the answer was wrong.",cat:"phrasal"},
+  {word:"vary with",pos:"Phrasal V.",th:"เปลี่ยนไปตาม",syn:"change with",ex:"Results vary with individual effort.",cat:"phrasal"},
+  {word:"wear off",pos:"Phrasal V.",th:"ค่อย ๆ หมดไป",syn:"fade",ex:"The effect of the medicine wore off.",cat:"phrasal"},
+  {word:"work on",pos:"Phrasal V.",th:"ทำงานเกี่ยวกับ",syn:"develop",ex:"She is working on her thesis.",cat:"phrasal"},
+  {word:"work out",pos:"Phrasal V.",th:"แก้ปัญหา / คำนวณ",syn:"solve",ex:"Can you work out the answer?",cat:"phrasal"},
+  {word:"work toward",pos:"Phrasal V.",th:"มุ่งสู่เป้าหมาย",syn:"strive for",ex:"Work toward your goals every day.",cat:"phrasal"},
+  {word:"wrap up",pos:"Phrasal V.",th:"สรุป",syn:"conclude",ex:"Let's wrap up the discussion.",cat:"phrasal"},
+];
+
+// ════════════════════════════════════════════════
+// STORAGE
+// ════════════════════════════════════════════════
+function load(k,d){ try{const v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d} }
+function save(k,v){ try{localStorage.setItem(k,JSON.stringify(v))}catch(e){} }
+
+let starred   = new Set(load('vp_starred',[]));
+let mistakes  = new Set(load('vp_mistakes',[]));
+let totalCorrect = load('vp_tc',0);
+let seenCards    = new Set(load('vp_seen',[]));
+
+function persist(){
+  save('vp_starred',[...starred]);
+  save('vp_mistakes',[...mistakes]);
+  save('vp_tc', totalCorrect);
+  save('vp_seen',[...seenCards]);
+}
+
+// ════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════
+function switchTab(name, btn){
+  document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+name).classList.add('active');
+  btn.classList.add('active');
+  if(name==='flashcard') renderFC();
+  if(name==='quiz') renderQzStart();
+}
+
+// ════════════════════════════════════════════════
+// FLASHCARD ENGINE
+// ════════════════════════════════════════════════
+const CATS = [
+  {key:'all',    label:'📚 ทั้งหมด'},
+  {key:'academic',label:'🎓 คำศัพท์หลัก'},
+  {key:'phrasal', label:'💬 Phrasal Verbs'},
+];
+
+let fcPool = [];
+let fcIdx  = 0;
+let fcCat  = 'all';
+
+function buildCatRows(){
+  ['fcCatRow','qzCatRow'].forEach(id=>{
+    const row = document.getElementById(id);
+    const isQz = id==='qzCatRow';
+    row.innerHTML = CATS.map(c=>{
+      const active = isQz ? (qzCat===c.key?'active':'') : (fcCat===c.key?'active':'');
+      return `<button class="cat-pill ${active}" onclick="${isQz?'setQzCat':'setFcCat'}('${c.key}',this)">${c.label}</button>`;
+    }).join('');
+  });
+}
+
+function getPool(cat){
+  if(cat==='all') return [...VOCAB];
+  return VOCAB.filter(v=>v.cat===cat);
+}
+
+function setFcCat(cat, btn){
+  fcCat = cat;
+  document.querySelectorAll('#fcCatRow .cat-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  fcPool = shuffle(getPool(cat));
+  fcIdx = 0;
+  renderFC();
+}
+
+function renderFC(){
+  if(!fcPool.length){ fcPool = shuffle(getPool(fcCat)); fcIdx = 0; }
+  if(!fcPool.length) return;
+  const w = fcPool[fcIdx];
+  document.getElementById('fcWord').textContent    = w.word;
+  document.getElementById('fcPos').textContent     = w.pos;
+  document.getElementById('fcMeaning').textContent = w.th;
+  document.getElementById('fcSyn').textContent     = w.syn ? 'syn: '+w.syn : '';
+  document.getElementById('fcEx').textContent      = w.ex  ? '"'+w.ex+'"' : '';
+  document.getElementById('fcCounter').textContent = (fcIdx+1)+' / '+fcPool.length;
+  const pct = Math.round((fcIdx+1)/fcPool.length*100);
+  document.getElementById('fcProgFill').style.width = pct+'%';
+  document.getElementById('flashcard').classList.remove('flipped');
+  document.getElementById('fcStarBtn').textContent = starred.has(w.word)?'⭐':'☆';
+  seenCards.add(w.word);
+  persist();
+  updateStats();
+}
+
+function flipCard(){ document.getElementById('flashcard').classList.toggle('flipped'); }
+function prevCard(){ fcIdx=(fcIdx-1+fcPool.length)%fcPool.length; renderFC(); }
+function nextCard(){ fcIdx=(fcIdx+1)%fcPool.length; renderFC(); }
+function shuffleFC(){ fcPool=shuffle(fcPool); fcIdx=0; renderFC(); }
+function toggleStarFC(){
+  const w = fcPool[fcIdx]?.word; if(!w) return;
+  starred.has(w)?starred.delete(w):starred.add(w);
+  document.getElementById('fcStarBtn').textContent = starred.has(w)?'⭐':'☆';
+  persist(); updateStats();
+}
+function filterFC(type){
+  if(type==='starred'){
+    fcPool = shuffle(VOCAB.filter(v=>starred.has(v.word)));
+    if(!fcPool.length){alert('ยังไม่มีคำที่ติดดาว! กดดาว ☆ ที่การ์ดก่อนนะคะ');return;}
+  } else if(type==='mistakes'){
+    fcPool = shuffle(VOCAB.filter(v=>mistakes.has(v.word)));
+    if(!fcPool.length){alert('ยังไม่มีคำที่เคยผิด! ลองทำ Quiz ก่อนนะคะ');return;}
+  } else {
+    fcPool = shuffle(getPool(fcCat));
+  }
+  fcIdx=0; renderFC();
+}
+
+function updateStats(){
+  document.getElementById('hs-total').textContent = VOCAB.length;
+  document.getElementById('hs-done').textContent  = seenCards.size;
+  document.getElementById('hs-star').textContent  = starred.size;
+  document.getElementById('scorePill').textContent= '✅ '+totalCorrect+' ถูก';
+}
+
+// ════════════════════════════════════════════════
+// QUIZ ENGINE
+// ════════════════════════════════════════════════
+let qzCat   = 'all';
+let qCount  = 10;
+let qPool   = [];
+let qIdx    = 0;
+let qCorrect= 0;
+let qWrong  = 0;
+let qAnswered=false;
+let qMistakesThisRound = [];
+let lastQuizPool = [];
+
+function setQzCat(cat, btn){
+  qzCat = cat;
+  document.querySelectorAll('#qzCatRow .cat-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function setQCount(n, btn){
+  qCount = n;
+  document.querySelectorAll('#tab-quiz .mode-row .cat-pill, #tab-quiz .cat-row .cat-pill').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+function renderQzStart(){
+  document.getElementById('quizStart').style.display='block';
+  document.getElementById('quizPlay').style.display='none';
+  document.getElementById('quizResult').style.display='none';
+  buildCatRows();
+}
+
+function beginQuiz(mode){
+  let base;
+  if(mode==='mistakes'){
+    base = VOCAB.filter(v=>mistakes.has(v.word));
+    if(!base.length){alert('ยังไม่มีคำที่เคยผิด ลองทำ Quiz ปกติก่อนนะคะ 😊');return;}
+  } else {
+    base = getPool(qzCat);
+  }
+  const n = qCount===0 ? base.length : Math.min(qCount, base.length);
+  qPool = shuffle(base).slice(0,n);
+  lastQuizPool = [...qPool];
+  qIdx=0; qCorrect=0; qWrong=0; qAnswered=false; qMistakesThisRound=[];
+
+  document.getElementById('quizStart').style.display='none';
+  document.getElementById('quizPlay').style.display='block';
+  document.getElementById('quizResult').style.display='none';
+  renderQ();
+}
+
+function renderQ(){
+  const w = qPool[qIdx];
+  qAnswered = false;
+  document.getElementById('qWord').textContent = w.word;
+  document.getElementById('qPos').textContent  = w.pos;
+  document.getElementById('qStarBtn').textContent = starred.has(w.word)?'⭐':'☆';
+  document.getElementById('qMeta').textContent  = 'ข้อที่ '+(qIdx+1)+' / '+qPool.length;
+  document.getElementById('qScore').textContent = '✅ '+qCorrect+' ❌ '+qWrong;
+  const pct = Math.round(qIdx/qPool.length*100);
+  document.getElementById('qProgFill').style.width = pct+'%';
+
+  // hide feedback
+  const fb = document.getElementById('feedback');
+  fb.className='feedback'; fb.style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+
+  // choices
+  const correct = w.th;
+  const wrongs  = shuffle(VOCAB.filter(v=>v.th!==correct)).slice(0,3).map(v=>v.th);
+  const choices = shuffle([correct,...wrongs]);
+  const letters = ['A','B','C','D'];
+  const grid = document.getElementById('choicesGrid');
+  grid.innerHTML = '';
+  choices.forEach((c,i)=>{
+    const btn = document.createElement('button');
+    btn.className = 'choice-btn';
+    btn.innerHTML = `<span class="c-letter">${letters[i]}</span>${c}`;
+    btn.onclick = ()=>checkQ(c,correct,btn,w);
+    grid.appendChild(btn);
+  });
+}
+
+function checkQ(chosen,correct,btn,w){
+  if(qAnswered) return;
+  qAnswered=true;
+  const ok = chosen===correct;
+  document.querySelectorAll('.choice-btn').forEach(b=>{
+    b.disabled=true;
+    if(b.textContent.slice(1)===correct) b.classList.add('correct');
+  });
+  if(!ok){ btn.classList.add('wrong'); qWrong++; mistakes.add(w.word); qMistakesThisRound.push(w); }
+  else   { qCorrect++; totalCorrect++; mistakes.delete(w.word); }
+  persist(); updateStats();
+
+  const fb = document.getElementById('feedback');
+  fb.className='feedback show '+(ok?'ok':'bad');
+  fb.style.display='block';
+  document.getElementById('fbTitle').textContent = ok?'✅ ถูกต้อง! เก่งมากเลย':'❌ ผิด — จำไว้นะคะ';
+  document.getElementById('fbBody').textContent  = w.word+' = '+w.th+(w.syn?' (syn: '+w.syn+')':'');
+  document.getElementById('fbEx').textContent    = w.ex?'"'+w.ex+'"':'';
+  document.getElementById('nextBtn').style.display='inline-flex';
+}
+
+function nextQ(){
+  qIdx++;
+  if(qIdx>=qPool.length) showResult();
+  else renderQ();
+}
+
+function showResult(){
+  const total = qCorrect+qWrong;
+  const pct   = total?Math.round(qCorrect/total*100):0;
+  document.getElementById('quizPlay').style.display='none';
+  document.getElementById('quizResult').style.display='block';
+  document.getElementById('resEmoji').textContent = pct>=80?'🏆':pct>=60?'👍':'💪';
+  document.getElementById('resTitle').textContent = pct>=80?'เก่งมากเลย! 🌸':pct>=60?'ดีมาก ต้องสู้ต่อ!':'ไม่เป็นไร ลองใหม่นะคะ';
+  document.getElementById('resPct').textContent   = pct+'%';
+  document.getElementById('resC').textContent     = qCorrect;
+  document.getElementById('resW').textContent     = qWrong;
+  document.getElementById('resT').textContent     = total;
+
+  const ms = document.getElementById('mistakeSection');
+  if(qMistakesThisRound.length){
+    ms.innerHTML = '<div class="ms-title">คำที่ตอบผิด ('+qMistakesThisRound.length+' คำ) — ควรทบทวนอีกครั้ง</div>'+
+      qMistakesThisRound.map(w=>`<div class="ms-item"><span class="ms-word">${w.word}</span><span class="ms-th">${w.th}</span></div>`).join('');
+  } else {
+    ms.innerHTML='<div style="color:var(--green);font-size:.9rem;margin-top:14px;font-weight:700">🎉 ไม่มีคำผิดเลย! ยอดเยี่ยมมาก</div>';
+  }
+}
+
+function retryQuiz(){ qPool=shuffle(lastQuizPool); qIdx=0;qCorrect=0;qWrong=0;qAnswered=false;qMistakesThisRound=[];
+  document.getElementById('quizPlay').style.display='block'; document.getElementById('quizResult').style.display='none'; renderQ(); }
+function exitQuiz(){ renderQzStart(); }
+function toggleStarQ(){
+  const w=qPool[qIdx]?.word; if(!w) return;
+  starred.has(w)?starred.delete(w):starred.add(w);
+  document.getElementById('qStarBtn').textContent=starred.has(w)?'⭐':'☆';
+  persist();
+}
+
+// ════════════════════════════════════════════════
+// UTILS
+// ════════════════════════════════════════════════
+function shuffle(a){ const b=[...a]; for(let i=b.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[b[i],b[j]]=[b[j],b[i]];} return b; }
+
+// ── INIT ──
+fcPool = shuffle(VOCAB);
+buildCatRows();
+renderFC();
+updateStats();
+</script>
+</body>
+</html>
