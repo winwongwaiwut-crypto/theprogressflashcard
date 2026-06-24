@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Phrasal Verbs & Idioms – M.4 Mastery</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@400;500;600;700&display=swap');
+
+  :root {
+    --pink-lightest: #FFF0F3;
+    --pink-light: #FFD6E0;
+    --pink: #FFB3C6;
+    --rose: #FF85A1;
+    --burgundy: #8B1A4A;
+    --burgundy-dark: #5C0F30;
+    --wine: #A0274F;
+    --white: #FFFFFF;
+    --gray-100: #F9F9F9;
+    --gray-200: #F0F0F0;
+    --gray-text: #3D3D3D;
+    --gray-muted: #777;
+    --success: #2D9E6B;
+    --error: #D63B3B;
+    --warning: #E07B00;
+    --shadow-sm: 0 2px 8px rgba(139,26,74,0.08);
+    --shadow-md: 0 4px 20px rgba(139,26,74,0.12);
+    --shadow-lg: 0 8px 40px rgba(139,26,74,0.18);
+    --radius: 16px;
+    --radius-sm: 10px;
+    --radius-pill: 999px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: var(--pink-lightest);
+    color: var(--gray-text);
+    min-height: 100vh;
+  }
+
+  /* NAV */
+  .nav {
+    background: var(--white);
+    box-shadow: var(--shadow-sm);
+    position: sticky; top: 0; z-index: 100;
+    padding: 0 20px;
+  }
+  .nav-inner {
+    max-width: 1100px; margin: 0 auto;
+    display: flex; align-items: center; gap: 8px;
+    height: 60px; overflow-x: auto;
+  }
+  .nav-logo {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 800; font-size: 1.1rem;
+    color: var(--burgundy); white-space: nowrap;
+    margin-right: 12px;
+  }
+  .nav-logo span { color: var(--rose); }
+  .nav-btn {
+    background: none; border: none; cursor: pointer;
+    padding: 6px 14px; border-radius: var(--radius-pill);
+    font-family: 'Nunito', sans-serif; font-size: 0.85rem;
+    font-weight: 700; color: var(--gray-muted);
+    white-space: nowrap; transition: all .2s;
+  }
+  .nav-btn:hover { background: var(--pink-light); color: var(--burgundy); }
+  .nav-btn.active { background: var(--burgundy); color: #fff; }
+
+  /* MAIN */
+  .main { max-width: 1100px; margin: 0 auto; padding: 24px 16px 60px; }
+
+  /* DASHBOARD */
+  .dashboard { margin-bottom: 28px; }
+  .dash-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 12px;
+  }
+  .dash-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 16px 12px; text-align: center;
+    box-shadow: var(--shadow-sm);
+  }
+  .dash-card .num {
+    font-size: 1.8rem; font-weight: 900; color: var(--burgundy);
+    line-height: 1;
+  }
+  .dash-card .lbl {
+    font-size: 0.72rem; font-weight: 700; color: var(--gray-muted);
+    margin-top: 4px; text-transform: uppercase; letter-spacing: .04em;
+  }
+
+  /* STREAK / BADGE BAR */
+  .streak-bar {
+    background: var(--white); border-radius: var(--radius);
+    padding: 14px 20px; margin-bottom: 20px;
+    box-shadow: var(--shadow-sm);
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+  }
+  .streak-item { display: flex; align-items: center; gap: 6px; font-weight: 700; font-size: .88rem; }
+  .streak-item .icon { font-size: 1.2rem; }
+  .badges { display: flex; gap: 8px; flex-wrap: wrap; margin-left: auto; }
+  .badge {
+    background: var(--pink-light); color: var(--burgundy);
+    border-radius: var(--radius-pill); padding: 4px 12px;
+    font-size: .75rem; font-weight: 800; display: flex; align-items: center; gap: 4px;
+  }
+  .badge.earned { background: var(--burgundy); color: #fff; }
+
+  /* FILTER + SEARCH */
+  .controls {
+    display: flex; gap: 10px; flex-wrap: wrap;
+    margin-bottom: 20px; align-items: center;
+  }
+  .search-wrap { flex: 1; min-width: 200px; position: relative; }
+  .search-wrap input {
+    width: 100%; padding: 10px 16px 10px 42px;
+    border: 2px solid var(--pink-light); border-radius: var(--radius-pill);
+    font-family: 'Nunito', sans-serif; font-size: .95rem;
+    background: var(--white); outline: none; transition: border .2s;
+  }
+  .search-wrap input:focus { border-color: var(--rose); }
+  .search-wrap .search-icon {
+    position: absolute; left: 14px; top: 50%; transform: translateY(-50%);
+    color: var(--rose); font-size: 1.1rem; pointer-events: none;
+  }
+  .filter-btns { display: flex; gap: 6px; }
+  .filter-btn {
+    padding: 8px 18px; border-radius: var(--radius-pill);
+    border: 2px solid var(--pink-light); background: var(--white);
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem;
+    color: var(--gray-muted); cursor: pointer; transition: all .2s;
+  }
+  .filter-btn:hover { border-color: var(--rose); color: var(--burgundy); }
+  .filter-btn.active { background: var(--burgundy); border-color: var(--burgundy); color: #fff; }
+
+  /* MODE TABS */
+  .mode-tabs {
+    display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
+  }
+  .mode-tab {
+    padding: 10px 20px; border-radius: var(--radius-pill);
+    border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: .9rem;
+    background: var(--white); color: var(--gray-muted);
+    box-shadow: var(--shadow-sm); transition: all .2s;
+  }
+  .mode-tab:hover { background: var(--pink-light); color: var(--burgundy); }
+  .mode-tab.active { background: var(--burgundy); color: #fff; box-shadow: var(--shadow-md); }
+
+  /* SECTION HIDDEN */
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* ===== FLASHCARD ===== */
+  .flashcard-controls {
+    display: flex; gap: 8px; flex-wrap: wrap; justify-content: center;
+    margin-bottom: 20px;
+  }
+  .fc-btn {
+    padding: 8px 18px; border-radius: var(--radius-pill);
+    border: 2px solid var(--pink); background: var(--white);
+    font-family: 'Nunito', sans-serif; font-weight: 700; font-size: .85rem;
+    color: var(--burgundy); cursor: pointer; transition: all .2s;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .fc-btn:hover { background: var(--pink-light); }
+  .fc-btn.active { background: var(--burgundy); color: #fff; border-color: var(--burgundy); }
+
+  .card-counter {
+    text-align: center; font-weight: 700; color: var(--gray-muted);
+    margin-bottom: 12px; font-size: .9rem;
+  }
+
+  .flashcard-scene {
+    perspective: 1200px; max-width: 600px; margin: 0 auto 20px;
+    height: 360px; cursor: pointer;
+  }
+  .flashcard-inner {
+    width: 100%; height: 100%;
+    position: relative; transform-style: preserve-3d;
+    transition: transform .6s cubic-bezier(.4,0,.2,1);
+  }
+  .flashcard-inner.flipped { transform: rotateY(180deg); }
+  .flashcard-face {
+    position: absolute; width: 100%; height: 100%;
+    backface-visibility: hidden; border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    padding: 32px;
+  }
+  .flashcard-front {
+    background: linear-gradient(135deg, var(--burgundy) 0%, var(--wine) 100%);
+    color: #fff;
+  }
+  .flashcard-front .type-badge {
+    position: absolute; top: 20px; right: 20px;
+    background: rgba(255,255,255,.2); color: #fff;
+    padding: 4px 12px; border-radius: var(--radius-pill);
+    font-size: .75rem; font-weight: 800;
+  }
+  .flashcard-front .star-btn {
+    position: absolute; top: 16px; left: 16px;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.4rem; color: rgba(255,255,255,.6);
+    transition: color .2s;
+  }
+  .flashcard-front .star-btn:hover,
+  .flashcard-front .star-btn.starred { color: #FFD700; }
+  .flashcard-front .expression {
+    font-size: 2.4rem; font-weight: 900; text-align: center;
+    line-height: 1.2; margin-bottom: 8px;
+  }
+  .flashcard-front .hint { font-size: .8rem; opacity: .7; }
+  .flashcard-back {
+    background: var(--white);
+    transform: rotateY(180deg);
+    text-align: left; justify-content: flex-start;
+    overflow-y: auto;
+  }
+  .flashcard-back .type-badge-back {
+    background: var(--pink-light); color: var(--burgundy);
+    padding: 4px 12px; border-radius: var(--radius-pill);
+    font-size: .75rem; font-weight: 800; margin-bottom: 16px;
+    align-self: flex-start;
+  }
+  .back-row { margin-bottom: 14px; width: 100%; }
+  .back-label {
+    font-size: .7rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--rose); margin-bottom: 3px;
+  }
+  .back-value { font-size: 1rem; font-weight: 700; color: var(--gray-text); }
+  .back-value.meaning-en { font-size: 1.1rem; }
+  .back-value.meaning-th { font-size: 1rem; color: var(--burgundy); }
+  .back-value.example { font-style: italic; color: var(--gray-muted); }
+  .back-value.translation { font-size: .9rem; color: var(--gray-muted); }
+
+  .nav-arrows {
+    display: flex; gap: 12px; justify-content: center; margin-top: 8px;
+  }
+  .arrow-btn {
+    padding: 10px 28px; border-radius: var(--radius-pill);
+    border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
+    background: var(--burgundy); color: #fff;
+    box-shadow: var(--shadow-sm); transition: all .2s;
+  }
+  .arrow-btn:hover { background: var(--burgundy-dark); transform: translateY(-1px); }
+  .arrow-btn:disabled { background: var(--gray-200); color: var(--gray-muted); transform: none; cursor: default; }
+
+  /* ===== BROWSE LIST ===== */
+  .browse-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 14px;
+  }
+  .word-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 18px; box-shadow: var(--shadow-sm);
+    transition: all .2s; position: relative;
+  }
+  .word-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+  .word-card .wc-top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .word-card .wc-expr {
+    font-size: 1.1rem; font-weight: 900; color: var(--burgundy);
+  }
+  .word-card .wc-type {
+    font-size: .7rem; font-weight: 800; padding: 3px 10px;
+    border-radius: var(--radius-pill); flex-shrink: 0;
+  }
+  .wc-type.phrasal { background: #FFE0E8; color: var(--burgundy); }
+  .wc-type.idiom { background: #FFF0CC; color: #A06000; }
+  .word-card .wc-en { font-size: .9rem; color: var(--gray-text); margin-bottom: 4px; }
+  .word-card .wc-th { font-size: .88rem; color: var(--wine); font-weight: 700; margin-bottom: 8px; }
+  .word-card .wc-ex { font-size: .8rem; color: var(--gray-muted); font-style: italic; }
+  .star-small {
+    position: absolute; bottom: 14px; right: 14px;
+    background: none; border: none; cursor: pointer;
+    font-size: 1.1rem; color: var(--gray-200); transition: color .2s;
+  }
+  .star-small:hover, .star-small.starred { color: #FFD700; }
+
+  /* ===== QUIZ ===== */
+  .quiz-wrap { max-width: 680px; margin: 0 auto; }
+  .quiz-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .quiz-progress-wrap { flex: 1; margin: 0 16px; }
+  .quiz-progress-bar {
+    height: 8px; background: var(--pink-light);
+    border-radius: var(--radius-pill); overflow: hidden;
+  }
+  .quiz-progress-fill {
+    height: 100%; background: var(--burgundy);
+    border-radius: var(--radius-pill); transition: width .4s;
+  }
+  .quiz-score-badge {
+    background: var(--burgundy); color: #fff;
+    padding: 6px 14px; border-radius: var(--radius-pill);
+    font-weight: 800; font-size: .9rem;
+  }
+  .quiz-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 30px; box-shadow: var(--shadow-md);
+  }
+  .quiz-q-type {
+    font-size: .72rem; font-weight: 800; text-transform: uppercase;
+    letter-spacing: .08em; color: var(--rose); margin-bottom: 8px;
+  }
+  .quiz-question {
+    font-size: 1.3rem; font-weight: 800; margin-bottom: 8px;
+    color: var(--gray-text);
+  }
+  .quiz-word {
+    display: inline-block;
+    background: var(--burgundy); color: #fff;
+    padding: 6px 20px; border-radius: var(--radius-pill);
+    font-size: 1.4rem; font-weight: 900; margin-bottom: 24px;
+  }
+  .quiz-options { display: flex; flex-direction: column; gap: 10px; }
+  .quiz-option {
+    padding: 14px 20px; border-radius: var(--radius-sm);
+    border: 2px solid var(--pink-light); background: var(--white);
+    cursor: pointer; font-family: 'Nunito', sans-serif;
+    font-size: 1rem; font-weight: 700; color: var(--gray-text);
+    text-align: left; transition: all .2s;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--rose); background: var(--pink-lightest); }
+  .quiz-option.correct { border-color: var(--success); background: #E8F8F0; color: var(--success); }
+  .quiz-option.wrong { border-color: var(--error); background: #FEECEC; color: var(--error); }
+  .quiz-option:disabled { cursor: default; }
+  .option-letter {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--pink-light); color: var(--burgundy);
+    display: flex; align-items: center; justify-content: center;
+    font-size: .8rem; font-weight: 900; flex-shrink: 0;
+  }
+  .quiz-option.correct .option-letter { background: var(--success); color: #fff; }
+  .quiz-option.wrong .option-letter { background: var(--error); color: #fff; }
+  .quiz-feedback {
+    margin-top: 16px; padding: 14px; border-radius: var(--radius-sm);
+    font-weight: 700; display: none;
+  }
+  .quiz-feedback.show { display: block; }
+  .quiz-feedback.correct { background: #E8F8F0; color: var(--success); }
+  .quiz-feedback.wrong { background: #FEECEC; color: var(--error); }
+  .quiz-next-btn {
+    margin-top: 16px; width: 100%;
+    padding: 14px; border-radius: var(--radius-pill);
+    border: none; cursor: pointer;
+    background: var(--burgundy); color: #fff;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1rem;
+    display: none; transition: all .2s;
+  }
+  .quiz-next-btn.show { display: block; }
+  .quiz-next-btn:hover { background: var(--burgundy-dark); }
+  .quiz-result {
+    text-align: center; padding: 40px 24px;
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-md); display: none;
+  }
+  .quiz-result.show { display: block; }
+  .result-emoji { font-size: 4rem; margin-bottom: 16px; }
+  .result-title { font-size: 1.8rem; font-weight: 900; color: var(--burgundy); margin-bottom: 8px; }
+  .result-score { font-size: 3rem; font-weight: 900; color: var(--burgundy); }
+  .result-label { color: var(--gray-muted); margin-bottom: 24px; }
+  .result-actions { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .result-btn {
+    padding: 12px 28px; border-radius: var(--radius-pill);
+    border: none; cursor: pointer;
+    font-family: 'Nunito', sans-serif; font-weight: 800;
+    transition: all .2s;
+  }
+  .result-btn.primary { background: var(--burgundy); color: #fff; }
+  .result-btn.secondary { background: var(--pink-light); color: var(--burgundy); }
+  .result-btn:hover { transform: translateY(-2px); box-shadow: var(--shadow-sm); }
+
+  /* DIFFICULT */
+  .difficult-header {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 16px;
+  }
+  .clear-btn {
+    padding: 8px 16px; border-radius: var(--radius-pill);
+    border: 2px solid var(--error); background: none;
+    color: var(--error); font-family: 'Nunito', sans-serif;
+    font-weight: 700; font-size: .85rem; cursor: pointer; transition: all .2s;
+  }
+  .clear-btn:hover { background: var(--error); color: #fff; }
+
+  .empty-state {
+    text-align: center; padding: 60px 20px; color: var(--gray-muted);
+  }
+  .empty-state .empty-icon { font-size: 3rem; margin-bottom: 12px; }
+  .empty-state p { font-size: 1rem; font-weight: 600; }
+
+  /* STUDY MODE */
+  .study-wrap { max-width: 700px; margin: 0 auto; }
+  .study-card {
+    background: var(--white); border-radius: var(--radius);
+    padding: 28px; box-shadow: var(--shadow-md); margin-bottom: 16px;
+  }
+  .study-card .s-expr {
+    font-size: 1.6rem; font-weight: 900; color: var(--burgundy); margin-bottom: 6px;
+  }
+  .study-card .s-type {
+    font-size: .75rem; font-weight: 800; padding: 3px 12px;
+    border-radius: var(--radius-pill); margin-bottom: 14px;
+    display: inline-block;
+  }
+  .study-card .s-en { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+  .study-card .s-th { font-size: .95rem; color: var(--wine); font-weight: 700; margin-bottom: 12px; }
+  .study-card .s-ex { font-style: italic; color: var(--gray-muted); font-size: .9rem; margin-bottom: 2px; }
+  .study-card .s-tr { font-size: .85rem; color: var(--gray-muted); }
+  .study-nav {
+    display: flex; gap: 12px; justify-content: center;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .flashcard-scene { height: 300px; }
+    .flashcard-front .expression { font-size: 1.7rem; }
+    .browse-grid { grid-template-columns: 1fr; }
+    .mode-tabs { gap: 6px; }
+    .mode-tab { padding: 8px 14px; font-size: .82rem; }
+    .dash-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  /* EXAM MODE */
+  .exam-setup {
+    text-align: center; padding: 40px 20px;
+    background: var(--white); border-radius: var(--radius);
+    box-shadow: var(--shadow-md);
+  }
+  .exam-setup h2 { font-size: 1.8rem; color: var(--burgundy); margin-bottom: 8px; }
+  .exam-setup p { color: var(--gray-muted); margin-bottom: 24px; }
+  .start-exam-btn {
+    padding: 14px 40px; border-radius: var(--radius-pill);
+    border: none; cursor: pointer;
+    background: var(--burgundy); color: #fff;
+    font-family: 'Nunito', sans-serif; font-weight: 800; font-size: 1.1rem;
+    box-shadow: var(--shadow-md); transition: all .2s;
+  }
+  .start-exam-btn:hover { background: var(--burgundy-dark); transform: translateY(-2px); }
+
+  /* Review mode link */
+  .review-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 10px 20px; border-radius: var(--radius-pill);
+    background: var(--pink-light); color: var(--burgundy);
+    font-weight: 800; font-size: .88rem; cursor: pointer;
+    border: none; font-family: 'Nunito', sans-serif; margin-bottom: 16px;
+    transition: all .2s;
+  }
+  .review-link:hover { background: var(--pink); }
+
+  h2.section-title {
+    font-size: 1.3rem; font-weight: 900; color: var(--burgundy);
+    margin-bottom: 16px;
+  }
+
+  /* Autoplay indicator */
+  .autoplay-bar {
+    max-width: 600px; margin: -12px auto 16px;
+    height: 4px; background: var(--pink-light); border-radius: 2px; overflow: hidden;
+    display: none;
+  }
+  .autoplay-bar.running { display: block; }
+  .autoplay-fill {
+    height: 100%; background: var(--burgundy);
+    animation: autoplayProgress 3s linear forwards;
+  }
+  @keyframes autoplayProgress {
+    from { width: 0%; }
+    to { width: 100%; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-inner">
+    <div class="nav-logo">M.4 <span>Vocab</span></div>
+    <button class="nav-btn active" onclick="showMode('flashcard')">🃏 Flashcards</button>
+    <button class="nav-btn" onclick="showMode('browse')">📖 Browse</button>
+    <button class="nav-btn" onclick="showMode('quiz')">🎯 Quiz</button>
+    <button class="nav-btn" onclick="showMode('exam')">📝 Exam (50Q)</button>
+    <button class="nav-btn" onclick="showMode('study')">📚 Study</button>
+    <button class="nav-btn" onclick="showMode('difficult')">⭐ Difficult</button>
+    <button class="nav-btn" onclick="showMode('review')">🔥 Review Mistakes</button>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- DASHBOARD -->
+  <div class="dashboard">
+    <div class="dash-grid">
+      <div class="dash-card"><div class="num" id="d-total">0</div><div class="lbl">Total</div></div>
+      <div class="dash-card"><div class="num" id="d-studied">0</div><div class="lbl">Studied</div></div>
+      <div class="dash-card"><div class="num" id="d-score">0%</div><div class="lbl">Accuracy</div></div>
+      <div class="dash-card"><div class="num" id="d-incorrect">0</div><div class="lbl">Mistakes</div></div>
+      <div class="dash-card"><div class="num" id="d-difficult">0</div><div class="lbl">Difficult</div></div>
+      <div class="dash-card"><div class="num" id="d-best">0%</div><div class="lbl">Best Score</div></div>
+      <div class="dash-card"><div class="num" id="d-streak">0🔥</div><div class="lbl">Streak</div></div>
+    </div>
+  </div>
+
+  <!-- BADGES -->
+  <div class="streak-bar">
+    <div class="streak-item"><span class="icon">🏆</span> Achievements</div>
+    <div class="badges" id="badge-list"></div>
+  </div>
+
+  <!-- CONTROLS -->
+  <div class="controls">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="search-input" placeholder="Search expression, meaning, Thai..." oninput="onSearch()">
+    </div>
+    <div class="filter-btns">
+      <button class="filter-btn active" onclick="setFilter('all', this)">All</button>
+      <button class="filter-btn" onclick="setFilter('Phrasal Verb', this)">Phrasal Verbs</button>
+      <button class="filter-btn" onclick="setFilter('Idiom', this)">Idioms</button>
+    </div>
+  </div>
+
+  <!-- ===== FLASHCARD ===== -->
+  <div class="section active" id="section-flashcard">
+    <div class="flashcard-controls">
+      <button class="fc-btn" onclick="shuffleCards()">🔀 Shuffle</button>
+      <button class="fc-btn" onclick="randomCard()">🎲 Random</button>
+      <button class="fc-btn" id="autoplay-btn" onclick="toggleAutoplay()">▶️ Auto Play</button>
+    </div>
+    <div class="card-counter" id="card-counter">Card 1 / 0</div>
+    <div class="autoplay-bar" id="autoplay-bar"><div class="autoplay-fill" id="autoplay-fill"></div></div>
+    <div class="flashcard-scene" onclick="flipCard()">
+      <div class="flashcard-inner" id="fc-inner">
+        <div class="flashcard-face flashcard-front">
+          <button class="star-btn" id="fc-star" onclick="event.stopPropagation();toggleStarCurrent()">★</button>
+          <span class="type-badge" id="fc-type-badge">Phrasal Verb</span>
+          <div class="expression" id="fc-expression">Loading...</div>
+          <div class="hint">Tap to reveal</div>
+        </div>
+        <div class="flashcard-face flashcard-back" id="fc-back">
+          <span class="type-badge-back" id="fc-type-back">Phrasal Verb</span>
+          <div class="back-row">
+            <div class="back-label">English Meaning</div>
+            <div class="back-value meaning-en" id="fc-en"></div>
+          </div>
+          <div class="back-row">
+            <div class="back-label">Thai Meaning</div>
+            <div class="back-value meaning-th" id="fc-th"></div>
+          </div>
+          <div class="back-row">
+            <div class="back-label">Example</div>
+            <div class="back-value example" id="fc-ex"></div>
+          </div>
+          <div class="back-row">
+            <div class="back-label">Translation</div>
+            <div class="back-value translation" id="fc-tr"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="nav-arrows">
+      <button class="arrow-btn" onclick="prevCard()">← Prev</button>
+      <button class="arrow-btn" onclick="nextCard()">Next →</button>
+    </div>
+  </div>
+
+  <!-- ===== BROWSE ===== -->
+  <div class="section" id="section-browse">
+    <h2 class="section-title">All Expressions</h2>
+    <div class="browse-grid" id="browse-grid"></div>
+  </div>
+
+  <!-- ===== QUIZ ===== -->
+  <div class="section" id="section-quiz">
+    <div class="quiz-wrap">
+      <button class="review-link" onclick="startQuiz('review')" id="review-mistakes-btn" style="display:none">
+        🔥 Review Mistakes Only
+      </button>
+      <div class="quiz-header" id="quiz-header">
+        <span id="quiz-q-num" style="font-weight:800;color:var(--burgundy)">Q 1/10</span>
+        <div class="quiz-progress-wrap">
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" id="quiz-progress-fill" style="width:0%"></div>
+          </div>
+        </div>
+        <div class="quiz-score-badge" id="quiz-score-display">✅ 0</div>
+      </div>
+      <div class="quiz-card" id="quiz-card">
+        <div class="quiz-q-type" id="quiz-q-type"></div>
+        <div class="quiz-question" id="quiz-question"></div>
+        <div class="quiz-word" id="quiz-word"></div>
+        <div class="quiz-options" id="quiz-options"></div>
+        <div class="quiz-feedback" id="quiz-feedback"></div>
+        <button class="quiz-next-btn" id="quiz-next-btn" onclick="nextQuestion()">Next Question →</button>
+      </div>
+      <div class="quiz-result" id="quiz-result">
+        <div class="result-emoji" id="result-emoji">🎉</div>
+        <div class="result-title">Quiz Complete!</div>
+        <div class="result-score" id="result-score">0/10</div>
+        <div class="result-label" id="result-label"></div>
+        <div class="result-actions">
+          <button class="result-btn primary" onclick="startQuiz('normal')">Try Again</button>
+          <button class="result-btn secondary" onclick="startQuiz('review')">Review Mistakes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== EXAM ===== -->
+  <div class="section" id="section-exam">
+    <div class="quiz-wrap">
+      <div class="exam-setup" id="exam-setup">
+        <h2>🎯 Exam Mode</h2>
+        <p>50 questions. Mixed types. Test everything you know!</p>
+        <button class="start-exam-btn" onclick="startExam()">Start Exam</button>
+      </div>
+      <div style="display:none" id="exam-quiz-area">
+        <div class="quiz-header">
+          <span id="exam-q-num" style="font-weight:800;color:var(--burgundy)">Q 1/50</span>
+          <div class="quiz-progress-wrap">
+            <div class="quiz-progress-bar">
+              <div class="quiz-progress-fill" id="exam-progress-fill" style="width:0%"></div>
+            </div>
+          </div>
+          <div class="quiz-score-badge" id="exam-score-display">✅ 0</div>
+        </div>
+        <div class="quiz-card" id="exam-card">
+          <div class="quiz-q-type" id="exam-q-type"></div>
+          <div class="quiz-question" id="exam-question"></div>
+          <div class="quiz-word" id="exam-word"></div>
+          <div class="quiz-options" id="exam-options"></div>
+          <div class="quiz-feedback" id="exam-feedback"></div>
+          <button class="quiz-next-btn" id="exam-next-btn" onclick="nextExamQuestion()">Next →</button>
+        </div>
+        <div class="quiz-result" id="exam-result">
+          <div class="result-emoji" id="exam-result-emoji">🏆</div>
+          <div class="result-title">Exam Complete!</div>
+          <div class="result-score" id="exam-result-score">0/50</div>
+          <div class="result-label" id="exam-result-label"></div>
+          <div class="result-actions">
+            <button class="result-btn primary" onclick="startExam()">Retake Exam</button>
+            <button class="result-btn secondary" onclick="showMode('review')">Review Mistakes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== STUDY ===== -->
+  <div class="section" id="section-study">
+    <div class="study-wrap">
+      <h2 class="section-title">📚 Study Mode</h2>
+      <div id="study-area"></div>
+      <div class="study-nav">
+        <button class="arrow-btn" onclick="studyPrev()">← Prev</button>
+        <button class="arrow-btn" onclick="studyNext()">Next →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DIFFICULT ===== -->
+  <div class="section" id="section-difficult">
+    <div class="difficult-header">
+      <h2 class="section-title" style="margin-bottom:0">⭐ My Difficult Expressions</h2>
+      <button class="clear-btn" onclick="clearDifficult()">Clear All</button>
+    </div>
+    <div class="browse-grid" id="difficult-grid"></div>
+  </div>
+
+  <!-- ===== REVIEW ===== -->
+  <div class="section" id="section-review">
+    <div class="quiz-wrap">
+      <h2 class="section-title">🔥 Review Mistakes</h2>
+      <div id="review-content"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ============================================================
+// DATABASE
+// ============================================================
+const DB = [
+  // ASK
+  {type:"Phrasal Verb",expression:"ask out",meaning_en:"to invite someone on a date",meaning_th:"ชวนออกเดต",example:"He finally asked her out after weeks of hesitation.",example_translation:"เขาชวนเธอออกเดตในที่สุดหลังจากลังเลมาหลายสัปดาห์"},
+  {type:"Phrasal Verb",expression:"ask around",meaning_en:"to ask many different people",meaning_th:"ถามหลาย ๆ คน",example:"I asked around and found a great restaurant nearby.",example_translation:"ฉันถามหลาย ๆ คนและพบร้านอาหารดี ๆ ใกล้ ๆ"},
+  {type:"Phrasal Verb",expression:"ask for",meaning_en:"to request something",meaning_th:"ขอ / ร้องขอ",example:"She asked for help with her homework.",example_translation:"เธอขอความช่วยเหลือเรื่องการบ้าน"},
+  // CALL
+  {type:"Phrasal Verb",expression:"call around",meaning_en:"to phone several people",meaning_th:"โทรหาหลาย ๆ คน",example:"I called around to find the best price.",example_translation:"ฉันโทรหาหลาย ๆ ที่เพื่อหาราคาที่ดีที่สุด"},
+  {type:"Phrasal Verb",expression:"call back",meaning_en:"to return a phone call",meaning_th:"โทรกลับ",example:"I'll call you back in five minutes.",example_translation:"ฉันจะโทรกลับหาคุณในอีกห้านาที"},
+  {type:"Phrasal Verb",expression:"call for",meaning_en:"to demand or require",meaning_th:"เรียกร้อง",example:"The situation calls for immediate action.",example_translation:"สถานการณ์นี้เรียกร้องให้มีการดำเนินการทันที"},
+  {type:"Phrasal Verb",expression:"call off",meaning_en:"to cancel a plan or event",meaning_th:"ยกเลิกแผน",example:"They called off the match due to rain.",example_translation:"พวกเขายกเลิกการแข่งขันเพราะฝนตก"},
+  {type:"Phrasal Verb",expression:"call on",meaning_en:"to ask someone for help or to speak",meaning_th:"เรียกให้ช่วย",example:"The teacher called on her to answer the question.",example_translation:"ครูเรียกให้เธอตอบคำถาม"},
+  {type:"Phrasal Verb",expression:"call out",meaning_en:"to shout or publicly criticize",meaning_th:"ร้องออก / เรียกให้ออกมา",example:"He called out the names of the winners.",example_translation:"เขาร้องเรียกชื่อผู้ชนะ"},
+  // COME
+  {type:"Phrasal Verb",expression:"come across",meaning_en:"to find or meet by chance",meaning_th:"พบโดยบังเอิญ",example:"I came across an old photo while cleaning.",example_translation:"ฉันพบรูปถ่ายเก่าโดยบังเอิญขณะทำความสะอาด"},
+  {type:"Phrasal Verb",expression:"come apart",meaning_en:"to fall into pieces; break apart",meaning_th:"แยกจากกัน",example:"The old book came apart when I opened it.",example_translation:"หนังสือเก่าแยกออกเมื่อฉันเปิดมัน"},
+  {type:"Phrasal Verb",expression:"come by",meaning_en:"to visit informally; to obtain",meaning_th:"แวะมา",example:"Can you come by later this evening?",example_translation:"คุณแวะมาได้ไหมช่วงเย็นนี้"},
+  {type:"Phrasal Verb",expression:"come down to",meaning_en:"to reduce to the main issue or point",meaning_th:"จบลงที่",example:"It all comes down to how much effort you put in.",example_translation:"ทุกอย่างจบลงที่ว่าคุณพยายามมากแค่ไหน"},
+  {type:"Phrasal Verb",expression:"come forward",meaning_en:"to volunteer or present oneself",meaning_th:"อาสา / แสดงตัว",example:"Witnesses were asked to come forward.",example_translation:"ผู้เห็นเหตุการณ์ถูกขอให้แสดงตัว"},
+  {type:"Phrasal Verb",expression:"come round",meaning_en:"to visit; to change one's opinion",meaning_th:"แวะมา",example:"She came round for coffee yesterday.",example_translation:"เธอแวะมาดื่มกาแฟเมื่อวาน"},
+  {type:"Phrasal Verb",expression:"come up with",meaning_en:"to think of an idea or solution",meaning_th:"คิดหา",example:"He came up with a brilliant plan.",example_translation:"เขาคิดแผนที่ยอดเยี่ยมขึ้นมา"},
+  // BREAK
+  {type:"Phrasal Verb",expression:"break away",meaning_en:"to separate from a group",meaning_th:"แยกตัวออกจากกลุ่ม",example:"She broke away from the crowd.",example_translation:"เธอแยกตัวออกจากฝูงชน"},
+  {type:"Phrasal Verb",expression:"break down",meaning_en:"to stop working; to lose emotional control",meaning_th:"ใช้งานไม่ได้ / ควบคุมอารมณ์ไม่ได้",example:"My car broke down on the highway.",example_translation:"รถของฉันเสียกลางทางหลวง"},
+  {type:"Phrasal Verb",expression:"break in/into",meaning_en:"to enter by force",meaning_th:"บุกรุกเข้าไป",example:"Someone broke into the shop last night.",example_translation:"มีคนบุกรุกเข้าร้านเมื่อคืน"},
+  {type:"Phrasal Verb",expression:"break up",meaning_en:"to end a relationship or group",meaning_th:"เลิกรา",example:"They broke up after two years together.",example_translation:"พวกเขาเลิกกันหลังจากอยู่ด้วยกันสองปี"},
+  {type:"Phrasal Verb",expression:"break out",meaning_en:"to escape; to begin suddenly",meaning_th:"หลบหนี / เกิดขึ้นอย่างกะทันหัน",example:"A fire broke out in the building.",example_translation:"เกิดไฟไหม้ขึ้นในอาคาร"},
+  // BRING
+  {type:"Phrasal Verb",expression:"bring back",meaning_en:"to return something; to recall a memory",meaning_th:"นำไปคืน",example:"Can you bring back my book tomorrow?",example_translation:"คุณนำหนังสือของฉันมาคืนพรุ่งนี้ได้ไหม"},
+  {type:"Phrasal Verb",expression:"bring down",meaning_en:"to reduce; to make someone unhappy",meaning_th:"ทำให้ไม่มีความสุข / หมดอำนาจ",example:"The news brought him down.",example_translation:"ข่าวนั้นทำให้เขาเสียใจ"},
+  {type:"Phrasal Verb",expression:"bring over",meaning_en:"to bring to another place",meaning_th:"นำไปไว้อีกที่",example:"He brought over some food for us.",example_translation:"เขานำอาหารมาให้พวกเรา"},
+  {type:"Phrasal Verb",expression:"bring up",meaning_en:"to raise a child; to mention a topic",meaning_th:"เลี้ยงดู / พูดขึ้นมา",example:"She was brought up in Bangkok.",example_translation:"เธอถูกเลี้ยงดูในกรุงเทพฯ"},
+  // CUT
+  {type:"Phrasal Verb",expression:"cut back on",meaning_en:"to reduce the amount of something",meaning_th:"บริโภคน้อยลง",example:"He cut back on sugar for his health.",example_translation:"เขาลดการบริโภคน้ำตาลเพื่อสุขภาพ"},
+  {type:"Phrasal Verb",expression:"cut down",meaning_en:"to reduce; to fell a tree",meaning_th:"ลดการทำสิ่งนั้นลง",example:"You should cut down on junk food.",example_translation:"คุณควรลดการกินขยะ"},
+  {type:"Phrasal Verb",expression:"cut in",meaning_en:"to interrupt; to move in front",meaning_th:"แทรก",example:"He cut in while I was speaking.",example_translation:"เขาแทรกขึ้นมาขณะที่ฉันกำลังพูด"},
+  {type:"Phrasal Verb",expression:"cut off",meaning_en:"to disconnect; to stop supply",meaning_th:"ตัด / หยุดให้ / ไม่ให้มรดก",example:"The power was cut off during the storm.",example_translation:"ไฟฟ้าถูกตัดระหว่างพายุ"},
+  // DROP
+  {type:"Phrasal Verb",expression:"drop in/by/over",meaning_en:"to visit without an appointment",meaning_th:"ไปแบบไม่นัด",example:"Feel free to drop in anytime.",example_translation:"แวะมาได้เลยเมื่อไหรก็ได้"},
+  {type:"Phrasal Verb",expression:"drop off",meaning_en:"to take someone somewhere; to fall asleep",meaning_th:"ส่ง / หลับไป",example:"I'll drop you off at school.",example_translation:"ฉันจะส่งคุณที่โรงเรียน"},
+  {type:"Phrasal Verb",expression:"drop out",meaning_en:"to quit school or a course",meaning_th:"ลาออกจากโรงเรียน",example:"He dropped out of university.",example_translation:"เขาออกจากมหาวิทยาลัย"},
+  // FILL
+  {type:"Phrasal Verb",expression:"fill in",meaning_en:"to complete a form; to substitute",meaning_th:"กรอกข้อมูล",example:"Please fill in your name and address.",example_translation:"กรุณากรอกชื่อและที่อยู่ของคุณ"},
+  {type:"Phrasal Verb",expression:"fill out",meaning_en:"to complete a form",meaning_th:"กรอกข้อมูล",example:"You need to fill out this application form.",example_translation:"คุณต้องกรอกแบบฟอร์มใบสมัครนี้"},
+  {type:"Phrasal Verb",expression:"fill up",meaning_en:"to make completely full",meaning_th:"เติมให้เต็ม",example:"Fill up the tank before the trip.",example_translation:"เติมน้ำมันให้เต็มก่อนออกเดินทาง"},
+  // GET
+  {type:"Phrasal Verb",expression:"get ahead",meaning_en:"to progress or be more successful",meaning_th:"ก้าวหน้า",example:"Hard work helps you get ahead in life.",example_translation:"การทำงานหนักช่วยให้คุณก้าวหน้าในชีวิต"},
+  {type:"Phrasal Verb",expression:"get along",meaning_en:"to have a good relationship with someone",meaning_th:"เข้ากันได้ดี",example:"She gets along with everyone at work.",example_translation:"เธอเข้ากันได้ดีกับทุกคนในที่ทำงาน"},
+  {type:"Phrasal Verb",expression:"get around",meaning_en:"to travel or move from place to place",meaning_th:"เดินทางไปไหนมาไหน",example:"It's easy to get around the city by BTS.",example_translation:"การเดินทางในเมืองสะดวกมากด้วย BTS"},
+  {type:"Phrasal Verb",expression:"get away with",meaning_en:"to avoid punishment for doing something wrong",meaning_th:"หลบหนีจากความผิด",example:"He got away with cheating on the test.",example_translation:"เขาหลบหนีจากการโกงข้อสอบได้"},
+  {type:"Phrasal Verb",expression:"get back at",meaning_en:"to take revenge on someone",meaning_th:"แก้แค้นเอาคืน",example:"She wanted to get back at him for lying.",example_translation:"เธออยากแก้แค้นเขาที่โกหก"},
+  {type:"Phrasal Verb",expression:"get back on track",meaning_en:"to return to the right path or plan",meaning_th:"กลับมาอยู่ในร่องในรอย",example:"After the setback, she got back on track.",example_translation:"หลังจากพบอุปสรรค เธอก็กลับมาอยู่ในร่องในรอย"},
+  {type:"Phrasal Verb",expression:"get behind",meaning_en:"to fall behind schedule or others",meaning_th:"เรียนรู้หรือทำงานได้ช้ากว่าคนอื่น",example:"Don't get behind on your assignments.",example_translation:"อย่าให้งานที่ได้รับมอบหมายล้าหลัง"},
+  {type:"Phrasal Verb",expression:"get hold of",meaning_en:"to obtain; to contact someone",meaning_th:"ได้มาซึ่ง",example:"Can you get hold of that report?",example_translation:"คุณสามารถหารายงานนั้นมาได้ไหม"},
+  {type:"Phrasal Verb",expression:"get something out of the way",meaning_en:"to complete or deal with something",meaning_th:"ทำให้เสร็จ",example:"Let's get the paperwork out of the way first.",example_translation:"มาจัดการเรื่องเอกสารให้เสร็จก่อนเลย"},
+  {type:"Phrasal Verb",expression:"get out of hand",meaning_en:"to become uncontrollable",meaning_th:"ควบคุมไม่ได้",example:"The party got completely out of hand.",example_translation:"งานปาร์ตี้ควบคุมไม่ได้เลย"},
+  {type:"Phrasal Verb",expression:"get over",meaning_en:"to recover from something difficult",meaning_th:"ก้าวข้ามผ่านสิ่งไม่ดีมาได้",example:"It took months to get over the breakup.",example_translation:"ใช้เวลาหลายเดือนกว่าจะก้าวข้ามผ่านการเลิกรา"},
+  {type:"Phrasal Verb",expression:"get together",meaning_en:"to meet up socially",meaning_th:"มาเจอและใช้เวลาร่วมกัน",example:"Let's get together this weekend.",example_translation:"มาเจอกันสุดสัปดาห์นี้เถอะ"},
+  {type:"Phrasal Verb",expression:"get up",meaning_en:"to rise from bed",meaning_th:"ตื่น",example:"I get up at six every morning.",example_translation:"ฉันตื่นนอนตอนหกโมงทุกเช้า"},
+  {type:"Phrasal Verb",expression:"get your act together",meaning_en:"to organize yourself and behave properly",meaning_th:"ตั้งสติ",example:"You need to get your act together before the exam.",example_translation:"คุณต้องตั้งสติก่อนสอบ"},
+  // GIVE
+  {type:"Phrasal Verb",expression:"give away",meaning_en:"to give something for free",meaning_th:"แจกฟรี",example:"The store is giving away free samples today.",example_translation:"ร้านแจกตัวอย่างฟรีวันนี้"},
+  {type:"Phrasal Verb",expression:"give in",meaning_en:"to surrender or yield",meaning_th:"ยอมแพ้",example:"Don't give in to peer pressure.",example_translation:"อย่ายอมแพ้ต่อแรงกดดันจากเพื่อน"},
+  {type:"Phrasal Verb",expression:"give out",meaning_en:"to distribute; to run out of energy",meaning_th:"แจก",example:"She gave out flyers in the park.",example_translation:"เธอแจกใบปลิวในสวนสาธารณะ"},
+  {type:"Phrasal Verb",expression:"give someone a call/ring",meaning_en:"to phone someone",meaning_th:"โทรหาใครสักคน",example:"Give me a call when you arrive.",example_translation:"โทรหาฉันเมื่อคุณมาถึง"},
+  {type:"Phrasal Verb",expression:"give someone a hand",meaning_en:"to help someone",meaning_th:"ช่วยเหลือใครสักคน",example:"Can you give me a hand with these boxes?",example_translation:"ช่วยฉันหน่อยได้ไหมกับกล่องเหล่านี้"},
+  {type:"Phrasal Verb",expression:"give something a try",meaning_en:"to attempt something",meaning_th:"ลองทำบางสิ่ง",example:"Just give it a try — you might like it.",example_translation:"ลองดูสิ คุณอาจจะชอบก็ได้"},
+  {type:"Phrasal Verb",expression:"give something another thought",meaning_en:"to reconsider something",meaning_th:"ลองคิดพิจารณาถึงบางสิ่งอีกที",example:"Give the plan another thought before deciding.",example_translation:"ลองคิดพิจารณาแผนอีกครั้งก่อนตัดสินใจ"},
+  {type:"Phrasal Verb",expression:"give up",meaning_en:"to stop trying; to quit",meaning_th:"ยอมแพ้ / เลิกทำ",example:"Never give up on your dreams.",example_translation:"อย่ายอมแพ้ต่อความฝัน"},
+  // GO
+  {type:"Phrasal Verb",expression:"go after",meaning_en:"to pursue; to chase",meaning_th:"ตาม / พยายามไขว่คว้ามา",example:"She went after her dream job.",example_translation:"เธอพยายามไขว่คว้างานในฝัน"},
+  {type:"Phrasal Verb",expression:"go against",meaning_en:"to oppose; to act contrary to",meaning_th:"ต่อต้าน / แข่งกับ",example:"This goes against my principles.",example_translation:"สิ่งนี้ขัดกับหลักการของฉัน"},
+  {type:"Phrasal Verb",expression:"go ahead",meaning_en:"to proceed with something",meaning_th:"เริ่มต้น / ดำเนินต่อไป",example:"Go ahead and start without me.",example_translation:"เริ่มได้เลยโดยไม่ต้องรอฉัน"},
+  {type:"Phrasal Verb",expression:"go beyond",meaning_en:"to exceed expectations or limits",meaning_th:"เยอะหรือดีกว่าที่คาดไว้",example:"She went beyond what was expected.",example_translation:"เธอทำได้เกินกว่าที่คาดไว้"},
+  {type:"Phrasal Verb",expression:"go for",meaning_en:"to try to achieve; to choose",meaning_th:"พยายามที่จะได้มา",example:"Go for it! You have nothing to lose.",example_translation:"ลองเลย! คุณไม่มีอะไรต้องเสีย"},
+  {type:"Phrasal Verb",expression:"go out with",meaning_en:"to date someone",meaning_th:"ออกเดตกับ",example:"Are they going out with each other?",example_translation:"พวกเขาคบหากันอยู่ไหม"},
+  {type:"Phrasal Verb",expression:"go over",meaning_en:"to review or examine",meaning_th:"ทบทวน",example:"Let's go over the notes before the test.",example_translation:"มาทบทวนโน้ตก่อนสอบ"},
+  {type:"Phrasal Verb",expression:"go through with",meaning_en:"to complete something difficult",meaning_th:"ลงมือทำตามแผน",example:"He went through with the surgery.",example_translation:"เขาทำการผ่าตัดตามที่วางแผนไว้"},
+  {type:"Phrasal Verb",expression:"go without",meaning_en:"to manage without something",meaning_th:"อยู่โดยปราศจาก",example:"We can't go without water for long.",example_translation:"เราอยู่โดยไม่มีน้ำได้ไม่นาน"},
+  {type:"Phrasal Verb",expression:"go wrong",meaning_en:"to fail or have a problem",meaning_th:"ผิดพลาดไป",example:"Something went wrong with the plan.",example_translation:"บางอย่างผิดพลาดกับแผน"},
+  // HANG
+  {type:"Phrasal Verb",expression:"hang around",meaning_en:"to wait; to spend time idly",meaning_th:"เตร็ดเตร่",example:"Stop hanging around and do something useful.",example_translation:"หยุดเตร็ดเตร่แล้วทำอะไรที่มีประโยชน์บ้าง"},
+  {type:"Phrasal Verb",expression:"hang on",meaning_en:"to wait; to hold tightly",meaning_th:"รอเดี๋ยว",example:"Hang on, I'll be right there.",example_translation:"รอเดี๋ยวนะ ฉันจะไปถึงเดี๋ยวนี้"},
+  {type:"Phrasal Verb",expression:"hang out",meaning_en:"to spend time relaxing with others",meaning_th:"ใช้เวลาร่วมกัน",example:"We hung out at the mall all afternoon.",example_translation:"เราใช้เวลาร่วมกันที่ห้างตลอดบ่าย"},
+  {type:"Phrasal Verb",expression:"hang up",meaning_en:"to end a phone call; to put on a hook",meaning_th:"วางสาย",example:"She hung up before I could explain.",example_translation:"เธอวางสายก่อนที่ฉันจะอธิบายได้"},
+  // HAND
+  {type:"Phrasal Verb",expression:"hand down",meaning_en:"to pass on traditions or possessions",meaning_th:"ส่งต่อของที่ใช้แล้ว",example:"This recipe was handed down from my grandmother.",example_translation:"สูตรนี้ถูกส่งต่อมาจากยาย"},
+  {type:"Phrasal Verb",expression:"hand in",meaning_en:"to submit work or documents",meaning_th:"ส่งงาน / ยื่น",example:"Please hand in your assignment by Friday.",example_translation:"กรุณาส่งงานภายในวันศุกร์"},
+  {type:"Phrasal Verb",expression:"hand out",meaning_en:"to distribute to many people",meaning_th:"แจกจ่าย",example:"Volunteers handed out blankets to the homeless.",example_translation:"อาสาสมัครแจกผ้าห่มให้คนไร้บ้าน"},
+  {type:"Phrasal Verb",expression:"hand over",meaning_en:"to give control or possession to someone",meaning_th:"มอบหมาย",example:"The suspect was handed over to the police.",example_translation:"ผู้ต้องสงสัยถูกส่งมอบให้ตำรวจ"},
+  // HOLD
+  {type:"Phrasal Verb",expression:"hold against",meaning_en:"to blame someone and feel negatively",meaning_th:"ถือโทษ",example:"Don't hold that mistake against her.",example_translation:"อย่าถือโทษเธอเรื่องความผิดพลาดนั้น"},
+  {type:"Phrasal Verb",expression:"hold back",meaning_en:"to restrain; to prevent from happening",meaning_th:"เก็บอารมณ์ / ห้ามไม่ให้ทำ",example:"He held back his tears.",example_translation:"เขาอดกลั้นน้ำตา"},
+  {type:"Phrasal Verb",expression:"hold off",meaning_en:"to delay or postpone",meaning_th:"เลื่อนออกไป",example:"Can you hold off the meeting until Monday?",example_translation:"เลื่อนการประชุมออกไปถึงวันจันทร์ได้ไหม"},
+  {type:"Phrasal Verb",expression:"hold on",meaning_en:"to wait; to grip tightly",meaning_th:"รอสักครู่",example:"Hold on — let me check that for you.",example_translation:"รอสักครู่นะ ฉันจะตรวจสอบให้"},
+  // LET
+  {type:"Phrasal Verb",expression:"let someone down",meaning_en:"to disappoint someone",meaning_th:"ทำให้ผิดหวัง",example:"Don't let your team down.",example_translation:"อย่าทำให้ทีมผิดหวัง"},
+  {type:"Phrasal Verb",expression:"let go of",meaning_en:"to release; to stop holding on emotionally",meaning_th:"ปล่อยไป",example:"You need to let go of the past.",example_translation:"คุณต้องปล่อยวางอดีต"},
+  {type:"Phrasal Verb",expression:"let someone in",meaning_en:"to allow someone to enter",meaning_th:"ให้เข้ามา",example:"Please let them in — they're guests.",example_translation:"กรุณาให้พวกเขาเข้ามา พวกเขาเป็นแขก"},
+  {type:"Phrasal Verb",expression:"let someone know",meaning_en:"to inform someone",meaning_th:"บอกให้รู้",example:"Let me know if you need anything.",example_translation:"บอกฉันด้วยถ้าคุณต้องการอะไร"},
+  // KEEP
+  {type:"Phrasal Verb",expression:"keep company with",meaning_en:"to spend time with someone as a companion",meaning_th:"คบค้าสมาคมกับ",example:"He keeps company with hardworking people.",example_translation:"เขาคบค้าสมาคมกับคนขยัน"},
+  {type:"Phrasal Verb",expression:"keep from",meaning_en:"to prevent; to hide information from",meaning_th:"กีดกันไม่ให้รู้",example:"They kept the news from her.",example_translation:"พวกเขาปิดบังข่าวจากเธอ"},
+  {type:"Phrasal Verb",expression:"keep it a secret",meaning_en:"to not tell others",meaning_th:"เก็บเป็นความลับ",example:"Can you keep it a secret just between us?",example_translation:"เก็บเป็นความลับระหว่างเราได้ไหม"},
+  {type:"Phrasal Verb",expression:"keep it to oneself",meaning_en:"to not share with others",meaning_th:"ไม่บอกใคร",example:"If you know, just keep it to yourself.",example_translation:"ถ้าคุณรู้ก็เก็บเอาไว้กับตัวเอง"},
+  {type:"Phrasal Verb",expression:"keep on doing something",meaning_en:"to continue doing something persistently",meaning_th:"ทำสิ่งนั้นต่อเนื่อง",example:"Keep on practising and you'll improve.",example_translation:"ฝึกต่อไปแล้วคุณจะดีขึ้น"},
+  {type:"Phrasal Verb",expression:"keep someone posted",meaning_en:"to update someone with the latest news",meaning_th:"แจ้งให้รับทราบ",example:"Keep me posted on the project updates.",example_translation:"แจ้งให้ฉันทราบเรื่องอัปเดตของโครงการ"},
+  {type:"Phrasal Verb",expression:"keep someone's voice down",meaning_en:"to ask someone to speak quietly",meaning_th:"ลดเสียงลง",example:"Please keep your voice down in the library.",example_translation:"กรุณาลดเสียงลงในห้องสมุด"},
+  {type:"Phrasal Verb",expression:"keep up with",meaning_en:"to stay at the same level as someone",meaning_th:"ทันกับ / ตามทัน",example:"It's hard to keep up with all the news.",example_translation:"ยากที่จะตามทันข่าวสารทั้งหมด"},
+  // LEAVE
+  {type:"Phrasal Verb",expression:"leave it to someone",meaning_en:"to let someone handle something",meaning_th:"ปล่อยให้จัดการ",example:"Leave it to me — I'll sort it out.",example_translation:"ปล่อยให้ฉันจัดการ ฉันจะจัดการให้"},
+  {type:"Phrasal Verb",expression:"leave something here",meaning_en:"to put something down in this place",meaning_th:"ทิ้งบางสิ่งไว้ที่นี่",example:"Just leave your bag here.",example_translation:"วางกระเป๋าของคุณไว้ที่นี่ก็ได้"},
+  {type:"Phrasal Verb",expression:"leave out",meaning_en:"to not include; to omit",meaning_th:"ไม่รวมเข้าไป",example:"Don't leave out any important details.",example_translation:"อย่าละเว้นรายละเอียดสำคัญ"},
+  // LOOK
+  {type:"Phrasal Verb",expression:"look after",meaning_en:"to take care of someone or something",meaning_th:"ดูแล",example:"Can you look after my dog this weekend?",example_translation:"คุณดูแลสุนัขของฉันสุดสัปดาห์นี้ได้ไหม"},
+  {type:"Phrasal Verb",expression:"look down on",meaning_en:"to think less of someone; to feel superior",meaning_th:"ดูถูก",example:"Never look down on others.",example_translation:"อย่าดูถูกคนอื่น"},
+  {type:"Phrasal Verb",expression:"look for",meaning_en:"to search for something",meaning_th:"หา",example:"I've been looking for my keys all morning.",example_translation:"ฉันหากุญแจมาตลอดเช้า"},
+  {type:"Phrasal Verb",expression:"look forward to",meaning_en:"to anticipate with excitement",meaning_th:"ตั้งตารอ",example:"I look forward to seeing you soon.",example_translation:"ฉันตั้งตารอที่จะได้พบคุณเร็ว ๆ นี้"},
+  {type:"Phrasal Verb",expression:"look into",meaning_en:"to investigate or examine",meaning_th:"ตรวจสอบ",example:"We need to look into this issue.",example_translation:"เราต้องตรวจสอบปัญหานี้"},
+  {type:"Phrasal Verb",expression:"look out",meaning_en:"to be careful; to watch for danger",meaning_th:"ระวัง",example:"Look out! There's ice on the road.",example_translation:"ระวัง! มีน้ำแข็งบนถนน"},
+  {type:"Phrasal Verb",expression:"look something over",meaning_en:"to review or check something",meaning_th:"ตรวจสอบ",example:"Can you look this report over before I send it?",example_translation:"คุณตรวจรายงานนี้ก่อนที่ฉันจะส่งได้ไหม"},
+  {type:"Phrasal Verb",expression:"look up",meaning_en:"to search for information; to improve",meaning_th:"ค้นหาข้อมูล",example:"Look up that word in the dictionary.",example_translation:"ค้นหาคำนั้นในพจนานุกรม"},
+  {type:"Phrasal Verb",expression:"look up to",meaning_en:"to admire and respect someone",meaning_th:"เคารพชื่นชม",example:"She looks up to her mentor.",example_translation:"เธอเคารพชื่นชมพี่เลี้ยงของเธอ"},
+  // MAKE
+  {type:"Phrasal Verb",expression:"make fun of",meaning_en:"to mock or tease someone",meaning_th:"ล้อเลียน",example:"Stop making fun of others.",example_translation:"หยุดล้อเลียนคนอื่น"},
+  {type:"Phrasal Verb",expression:"make something up",meaning_en:"to invent a story; to compensate",meaning_th:"สร้างเรื่อง",example:"She made up an excuse for being late.",example_translation:"เธอสร้างข้ออ้างขึ้นมาสำหรับการมาสาย"},
+  {type:"Phrasal Verb",expression:"make up",meaning_en:"to reconcile; to apply cosmetics",meaning_th:"แต่งหน้า / คืนดีกัน",example:"They argued but made up quickly.",example_translation:"พวกเขาเถียงกันแต่ก็คืนดีกันเร็ว"},
+  // PASS
+  {type:"Phrasal Verb",expression:"pass away",meaning_en:"to die (polite expression)",meaning_th:"จากไป / เสียชีวิต",example:"His grandfather passed away last year.",example_translation:"ปู่ของเขาจากไปเมื่อปีที่แล้ว"},
+  {type:"Phrasal Verb",expression:"pass by",meaning_en:"to go past something or someone",meaning_th:"แวะไป / ผ่านไป",example:"I passed by your house yesterday.",example_translation:"ฉันผ่านบ้านคุณเมื่อวาน"},
+  {type:"Phrasal Verb",expression:"pass on",meaning_en:"to transmit; to die",meaning_th:"ส่งต่อ / เสียชีวิต",example:"Please pass on my message to her.",example_translation:"กรุณาส่งต่อข้อความของฉันให้เธอด้วย"},
+  // PUT
+  {type:"Phrasal Verb",expression:"put away",meaning_en:"to store in the proper place",meaning_th:"เก็บของ",example:"Put away your toys after playing.",example_translation:"เก็บของเล่นหลังจากเล่นเสร็จ"},
+  {type:"Phrasal Verb",expression:"put down",meaning_en:"to place down; to criticize; to euthanize",meaning_th:"วางลง",example:"She put her bag down and sat.",example_translation:"เธอวางกระเป๋าแล้วนั่งลง"},
+  {type:"Phrasal Verb",expression:"put off",meaning_en:"to postpone; to discourage",meaning_th:"เลื่อน / ผัดผ่อน",example:"Don't put off things you can do today.",example_translation:"อย่าเลื่อนสิ่งที่ทำได้วันนี้"},
+  {type:"Phrasal Verb",expression:"put out",meaning_en:"to extinguish; to bother someone",meaning_th:"ดับไฟ",example:"Please put out that cigarette.",example_translation:"กรุณาดับบุหรี่นั้นด้วย"},
+  {type:"Phrasal Verb",expression:"put someone through",meaning_en:"to make someone experience difficulty",meaning_th:"ทำให้พบเจอสิ่งไม่ดี / ต่อสาย",example:"She put him through a lot of pain.",example_translation:"เธอทำให้เขาเจ็บปวดมาก"},
+  {type:"Phrasal Verb",expression:"put up with",meaning_en:"to tolerate something unpleasant",meaning_th:"อดทนกับ",example:"I can't put up with this noise anymore.",example_translation:"ฉันทนเสียงนี้ไม่ไหวอีกแล้ว"},
+  // SEE
+  {type:"Phrasal Verb",expression:"see about",meaning_en:"to deal with or arrange something",meaning_th:"จัดการ",example:"I'll see about getting you a refund.",example_translation:"ฉันจะจัดการเรื่องการคืนเงินให้คุณ"},
+  {type:"Phrasal Verb",expression:"see through",meaning_en:"to detect deception; to complete something",meaning_th:"เห็นใส้ใน",example:"I can see through his lies.",example_translation:"ฉันมองเห็นว่าเขาโกหก"},
+  {type:"Phrasal Verb",expression:"see to",meaning_en:"to take care of or deal with",meaning_th:"จัดการกับสิ่งที่ต้องทำ",example:"I'll see to the arrangements.",example_translation:"ฉันจะจัดการเรื่องการเตรียมงาน"},
+  // TURN
+  {type:"Phrasal Verb",expression:"turn around",meaning_en:"to face the other way; to improve",meaning_th:"กลับหลังหัน",example:"Turn around — someone is calling you.",example_translation:"กลับหลังหัน — มีคนเรียกคุณ"},
+  {type:"Phrasal Verb",expression:"turn down",meaning_en:"to refuse; to lower volume",meaning_th:"ปฏิเสธ / ลดเสียง",example:"She turned down the job offer.",example_translation:"เธอปฏิเสธข้อเสนองาน"},
+  {type:"Phrasal Verb",expression:"turn in",meaning_en:"to submit; to go to bed",meaning_th:"ส่งงาน / มอบตัว",example:"Turn in your homework by Monday.",example_translation:"ส่งการบ้านภายในวันจันทร์"},
+  {type:"Phrasal Verb",expression:"turn on/off",meaning_en:"to switch on or off",meaning_th:"เปิด/ปิด",example:"Turn off the lights when you leave.",example_translation:"ปิดไฟเมื่อคุณออกไป"},
+  {type:"Phrasal Verb",expression:"turn out",meaning_en:"to result in; to appear",meaning_th:"ปรากฏว่า",example:"The event turned out to be a great success.",example_translation:"งานนั้นปรากฏว่าประสบความสำเร็จอย่างยิ่ง"},
+  {type:"Phrasal Verb",expression:"turn up",meaning_en:"to appear unexpectedly; to increase volume",meaning_th:"ปรากฏตัว / เร่งเสียงหรืออุณหภูมิ",example:"He turned up late without any explanation.",example_translation:"เขามาสายโดยไม่มีคำอธิบาย"},
+  // TAKE
+  {type:"Phrasal Verb",expression:"take a risk",meaning_en:"to do something dangerous or uncertain",meaning_th:"ลองเสี่ยง",example:"Sometimes you have to take a risk to succeed.",example_translation:"บางครั้งคุณต้องเสี่ยงเพื่อความสำเร็จ"},
+  {type:"Phrasal Verb",expression:"take after",meaning_en:"to resemble a family member",meaning_th:"หน้าตาคล้าย (คนในครอบครัว)",example:"She takes after her mother.",example_translation:"เธอหน้าตาเหมือนแม่"},
+  {type:"Phrasal Verb",expression:"take it easy",meaning_en:"to relax; to not stress",meaning_th:"ใจเย็น ๆ",example:"Take it easy — there's no rush.",example_translation:"ใจเย็น ๆ ไม่ต้องรีบ"},
+  {type:"Phrasal Verb",expression:"take something for granted",meaning_en:"to not appreciate something",meaning_th:"ไม่เห็นคุณค่า",example:"Don't take your health for granted.",example_translation:"อย่าไม่เห็นคุณค่าของสุขภาพ"},
+  {type:"Phrasal Verb",expression:"take off",meaning_en:"to leave the ground; to remove clothing; to become popular",meaning_th:"(เครื่องบิน) ออกตัว / ถอดเสื้อผ้า",example:"The plane takes off at noon.",example_translation:"เครื่องบินจะออกตอนเที่ยง"},
+  {type:"Phrasal Verb",expression:"take in",meaning_en:"to absorb information; to deceive",meaning_th:"รับเข้ามา / หลอกลวง",example:"There's a lot to take in at once.",example_translation:"มีสิ่งมากมายที่ต้องรับเข้ามาในคราวเดียว"},
+  {type:"Phrasal Verb",expression:"take someone's word for",meaning_en:"to believe what someone says",meaning_th:"เชื่อในสิ่งที่คนนั้นพูด",example:"I'll take your word for it.",example_translation:"ฉันเชื่อในสิ่งที่คุณพูด"},
+  {type:"Phrasal Verb",expression:"take someone's temperature",meaning_en:"to measure body temperature",meaning_th:"วัดไข้",example:"The nurse took his temperature.",example_translation:"พยาบาลวัดไข้ให้เขา"},
+  {type:"Phrasal Verb",expression:"take something all in",meaning_en:"to fully absorb or appreciate something",meaning_th:"เข้าใจทั้งหมด",example:"He took it all in before responding.",example_translation:"เขาเข้าใจทุกอย่างก่อนตอบ"},
+  {type:"Phrasal Verb",expression:"take the point",meaning_en:"to understand an argument",meaning_th:"เห็นด้วย / ถูกโน้มน้าวแล้ว",example:"I take your point — let's adjust the plan.",example_translation:"ฉันเข้าใจประเด็นของคุณ มาปรับแผนกัน"},
+  // MISCELLANEOUS
+  {type:"Phrasal Verb",expression:"accompany oneself with",meaning_en:"to go somewhere with someone as a companion",meaning_th:"ไปเป็นเพื่อน",example:"She accompanied herself with her best friend.",example_translation:"เธอไปกับเพื่อนสนิท"},
+  {type:"Phrasal Verb",expression:"account for",meaning_en:"to explain; to make up a proportion",meaning_th:"อธิบาย / ให้เหตุผล",example:"Can you account for your actions?",example_translation:"คุณอธิบายการกระทำของคุณได้ไหม"},
+  {type:"Phrasal Verb",expression:"add up",meaning_en:"to make sense; to calculate a total",meaning_th:"มีเหตุผล / คำนวณ",example:"The numbers don't add up.",example_translation:"ตัวเลขเหล่านี้ไม่สมเหตุสมผล"},
+  {type:"Phrasal Verb",expression:"aim at",meaning_en:"to target or direct towards",meaning_th:"มุ่งเป้าไปที่",example:"The campaign aims at young adults.",example_translation:"แคมเปญมุ่งเป้าไปที่ผู้ใหญ่วัยหนุ่มสาว"},
+  {type:"Phrasal Verb",expression:"allow for",meaning_en:"to consider or include in plans",meaning_th:"พิจารณาถึง",example:"Allow for delays when travelling.",example_translation:"พิจารณาถึงความล่าช้าเมื่อเดินทาง"},
+  {type:"Phrasal Verb",expression:"apply for",meaning_en:"to make a formal request for something",meaning_th:"สมัคร / ยื่นขอ",example:"She applied for a scholarship.",example_translation:"เธอสมัครขอทุนการศึกษา"},
+  {type:"Phrasal Verb",expression:"back down",meaning_en:"to withdraw from a position or argument",meaning_th:"ถอนตัว",example:"He backed down from his demand.",example_translation:"เขาถอนตัวจากข้อเรียกร้องของเขา"},
+  {type:"Phrasal Verb",expression:"back off",meaning_en:"to retreat or stop pressuring someone",meaning_th:"ถอยไป",example:"Back off! I need some space.",example_translation:"ถอยออกไป! ฉันต้องการพื้นที่"},
+  {type:"Phrasal Verb",expression:"back up",meaning_en:"to support; to make a copy of data",meaning_th:"สำรองข้อมูล / หาหลักฐานมาสนับสนุน",example:"Always back up your files.",example_translation:"สำรองข้อมูลไฟล์ของคุณเสมอ"},
+  {type:"Phrasal Verb",expression:"black out",meaning_en:"to lose consciousness; to cover with black",meaning_th:"หมดสติ / ไฟดับ",example:"He blacked out from exhaustion.",example_translation:"เขาหมดสติเพราะเหนื่อยมาก"},
+  {type:"Phrasal Verb",expression:"behind schedule",meaning_en:"to be late or delayed from the planned time",meaning_th:"ช้ากว่าที่วางแผนไว้",example:"The project is behind schedule.",example_translation:"โครงการล่าช้ากว่าที่วางแผนไว้"},
+  {type:"Phrasal Verb",expression:"blow up",meaning_en:"to explode; to become very popular",meaning_th:"ระเบิด / ได้รับความนิยมมาก",example:"The video blew up overnight.",example_translation:"วิดีโอได้รับความนิยมชั่วข้ามคืน"},
+  {type:"Phrasal Verb",expression:"bring someone home",meaning_en:"to take someone to your home",meaning_th:"พากลับบ้าน",example:"He brought her home after dinner.",example_translation:"เขาพาเธอกลับบ้านหลังอาหารเย็น"},
+  {type:"Phrasal Verb",expression:"bump into",meaning_en:"to meet someone by accident",meaning_th:"บังเอิญเจอ",example:"I bumped into my teacher at the market.",example_translation:"ฉันบังเอิญเจอครูที่ตลาด"},
+  {type:"Phrasal Verb",expression:"burn out",meaning_en:"to become exhausted from overwork",meaning_th:"หมดไฟ",example:"She burned out after working 80-hour weeks.",example_translation:"เธอหมดไฟหลังจากทำงาน 80 ชั่วโมงต่อสัปดาห์"},
+  {type:"Phrasal Verb",expression:"calm down",meaning_en:"to become less upset or excited",meaning_th:"ใจเย็นลง",example:"Please calm down and listen.",example_translation:"กรุณาใจเย็นลงแล้วฟัง"},
+  {type:"Phrasal Verb",expression:"carry on",meaning_en:"to continue doing something",meaning_th:"ทำต่อไป",example:"Carry on with your work.",example_translation:"ทำงานต่อไปได้เลย"},
+  {type:"Phrasal Verb",expression:"carry out",meaning_en:"to perform or complete a task",meaning_th:"ทำงานหรือหน้าที่",example:"The researchers carried out a survey.",example_translation:"นักวิจัยดำเนินการสำรวจ"},
+  {type:"Phrasal Verb",expression:"check in/out",meaning_en:"to register at a hotel or confirm arrival/departure",meaning_th:"ลงทะเบียนเข้าพัก/ออกจากโรงแรม",example:"We check in at noon.",example_translation:"เราเช็กอินตอนเที่ยง"},
+  {type:"Phrasal Verb",expression:"chip in",meaning_en:"to contribute money; to interrupt",meaning_th:"ลงเงินร่วมกัน / ขัดจังหวะ",example:"Everyone chipped in for the gift.",example_translation:"ทุกคนร่วมกันออกเงินซื้อของขวัญ"},
+  {type:"Phrasal Verb",expression:"count on",meaning_en:"to rely on someone",meaning_th:"พึ่งพา",example:"You can count on me.",example_translation:"คุณพึ่งพาฉันได้"},
+  {type:"Phrasal Verb",expression:"deal with",meaning_en:"to handle or manage a problem",meaning_th:"จัดการกับ",example:"How do you deal with stress?",example_translation:"คุณจัดการกับความเครียดอย่างไร"},
+  {type:"Phrasal Verb",expression:"dress up",meaning_en:"to wear formal or fancy clothes",meaning_th:"แต่งตัวแบบจัดเต็ม",example:"They dressed up for the party.",example_translation:"พวกเขาแต่งตัวจัดเต็มไปงานปาร์ตี้"},
+  {type:"Phrasal Verb",expression:"end up",meaning_en:"to eventually reach a place or state",meaning_th:"ลงเอย",example:"We ended up at a nice café.",example_translation:"เราลงเอยที่คาเฟ่สวย ๆ"},
+  {type:"Phrasal Verb",expression:"figure out",meaning_en:"to understand or solve something",meaning_th:"คิดออก / หาคำตอบ",example:"I can't figure out this puzzle.",example_translation:"ฉันคิดไม่ออกว่าปริศนานี้ตอบอะไร"},
+  {type:"Phrasal Verb",expression:"find out",meaning_en:"to discover information",meaning_th:"ค้นพบ / ได้รู้",example:"Did you find out the results?",example_translation:"คุณรู้ผลลัพธ์แล้วหรือยัง"},
+  {type:"Phrasal Verb",expression:"grow apart",meaning_en:"to slowly become less close to someone",meaning_th:"เติบโตกันไปคนละทาง",example:"Old friends can grow apart over time.",example_translation:"เพื่อนเก่าอาจเติบโตกันไปคนละทางได้"},
+  {type:"Phrasal Verb",expression:"grow up",meaning_en:"to become an adult; to mature",meaning_th:"เติบโต",example:"Where did you grow up?",example_translation:"คุณเติบโตมาที่ไหน"},
+  {type:"Phrasal Verb",expression:"hurry up",meaning_en:"to move or act more quickly",meaning_th:"เร็วเข้า",example:"Hurry up or we'll miss the bus!",example_translation:"เร็วเข้า yoksa เราจะตกรถเมล์"},
+  {type:"Phrasal Verb",expression:"join in",meaning_en:"to participate in an activity",meaning_th:"เข้าร่วม",example:"Feel free to join in the game.",example_translation:"เข้าร่วมเกมได้เลย"},
+  {type:"Phrasal Verb",expression:"kick out",meaning_en:"to force someone to leave",meaning_th:"ไล่ออก",example:"He was kicked out of the team.",example_translation:"เขาถูกไล่ออกจากทีม"},
+  {type:"Phrasal Verb",expression:"kill time",meaning_en:"to do something while waiting",meaning_th:"ฆ่าเวลา",example:"I read a book to kill time.",example_translation:"ฉันอ่านหนังสือเพื่อฆ่าเวลา"},
+  {type:"Phrasal Verb",expression:"lay off",meaning_en:"to dismiss from work due to economics",meaning_th:"ไล่ออกเพราะเหตุเศรษฐกิจ",example:"The company laid off 200 employees.",example_translation:"บริษัทไล่พนักงานออก 200 คน"},
+  {type:"Phrasal Verb",expression:"mind someone's business",meaning_en:"to focus on your own affairs",meaning_th:"ยุ่งเรื่องของตัวเอง",example:"Mind your own business, please.",example_translation:"กรุณายุ่งเรื่องของตัวเองก็พอ"},
+  {type:"Phrasal Verb",expression:"move in/out",meaning_en:"to start or stop living somewhere",meaning_th:"ย้ายเข้า / ออก",example:"They moved into their new apartment.",example_translation:"พวกเขาย้ายเข้าอพาร์ตเมนต์ใหม่"},
+  {type:"Phrasal Verb",expression:"pay back",meaning_en:"to repay money; to take revenge",meaning_th:"จ่ายคืน / แก้แค้นเอาคืน",example:"I'll pay you back by Friday.",example_translation:"ฉันจะคืนเงินให้ภายในวันศุกร์"},
+  {type:"Phrasal Verb",expression:"pay off",meaning_en:"to be successful; to repay a debt fully",meaning_th:"คุ้มค่า / ใช้หนี้หมด",example:"Hard work will pay off in the end.",example_translation:"การทำงานหนักจะคุ้มค่าในที่สุด"},
+  {type:"Phrasal Verb",expression:"pick on",meaning_en:"to bully or tease unfairly",meaning_th:"แกล้งหรือล้อเลียน",example:"Stop picking on younger students.",example_translation:"หยุดแกล้งนักเรียนที่เด็กกว่า"},
+  {type:"Phrasal Verb",expression:"pick up",meaning_en:"to collect; to learn casually; to improve",meaning_th:"ไปรับ",example:"Can you pick me up from the airport?",example_translation:"คุณไปรับฉันที่สนามบินได้ไหม"},
+  {type:"Phrasal Verb",expression:"plan on",meaning_en:"to intend to do something",meaning_th:"วางแผนทำบางสิ่ง",example:"I plan on visiting Japan next year.",example_translation:"ฉันวางแผนจะไปเที่ยวญี่ปุ่นปีหน้า"},
+  {type:"Phrasal Verb",expression:"rely on",meaning_en:"to depend on someone or something",meaning_th:"พึ่งพา / วางใจ",example:"You can rely on him to help.",example_translation:"คุณพึ่งพาเขาให้ช่วยเหลือได้"},
+  {type:"Phrasal Verb",expression:"ring up",meaning_en:"to call someone by phone",meaning_th:"โทรไปหา",example:"Ring up the office and confirm.",example_translation:"โทรไปที่ออฟฟิศและยืนยัน"},
+  {type:"Phrasal Verb",expression:"rule out",meaning_en:"to eliminate a possibility",meaning_th:"ตัดออกไป",example:"The doctors ruled out infection.",example_translation:"แพทย์ตัดความเป็นไปได้ของการติดเชื้อออก"},
+  {type:"Phrasal Verb",expression:"run for",meaning_en:"to campaign for a political position",meaning_th:"ลงสมัคร",example:"She's running for class president.",example_translation:"เธอลงสมัครเป็นประธานนักเรียน"},
+  {type:"Phrasal Verb",expression:"run into",meaning_en:"to meet unexpectedly; to crash into",meaning_th:"วิ่งชน / บังเอิญ",example:"I ran into my old teacher today.",example_translation:"ฉันบังเอิญเจอครูเก่าวันนี้"},
+  {type:"Phrasal Verb",expression:"run out of ideas",meaning_en:"to have no more ideas",meaning_th:"คิดไม่ออกแล้ว",example:"I've run out of ideas for the project.",example_translation:"ฉันคิดไม่ออกแล้วสำหรับโครงการนี้"},
+  {type:"Phrasal Verb",expression:"run over",meaning_en:"to hit with a vehicle; to overflow",meaning_th:"ทับ",example:"Be careful not to run over the cable.",example_translation:"ระวังอย่าทับสายไฟ"},
+  {type:"Phrasal Verb",expression:"set off",meaning_en:"to begin a journey; to trigger",meaning_th:"ออกเดินทาง",example:"We set off early to avoid traffic.",example_translation:"เราออกเดินทางแต่เช้าเพื่อเลี่ยงการจราจร"},
+  {type:"Phrasal Verb",expression:"set up",meaning_en:"to establish or arrange something",meaning_th:"ติดตั้ง / ตั้ง",example:"They set up a new company.",example_translation:"พวกเขาตั้งบริษัทใหม่"},
+  {type:"Phrasal Verb",expression:"show off",meaning_en:"to display skills or possessions boastfully",meaning_th:"อวด",example:"Stop showing off and just help.",example_translation:"หยุดอวดแล้วช่วยด้วย"},
+  {type:"Phrasal Verb",expression:"shut off",meaning_en:"to switch off or stop the flow",meaning_th:"ปิดเครื่อง",example:"Shut off the engine before leaving.",example_translation:"ปิดเครื่องยนต์ก่อนออกไป"},
+  {type:"Phrasal Verb",expression:"sneak in/out",meaning_en:"to enter or exit secretly",meaning_th:"แอบเข้าไป/ออกมา",example:"He sneaked out without anyone noticing.",example_translation:"เขาแอบออกไปโดยไม่มีใครสังเกต"},
+  {type:"Phrasal Verb",expression:"sort out",meaning_en:"to organize; to resolve a problem",meaning_th:"จัดเรียง / คัดแยก",example:"Let's sort out this misunderstanding.",example_translation:"มาจัดการความเข้าใจผิดนี้กัน"},
+  {type:"Phrasal Verb",expression:"stand for",meaning_en:"to represent; to tolerate",meaning_th:"ย่อมาจาก / เป็นสัญลักษณ์ของ",example:"What does 'UN' stand for?",example_translation:"UN ย่อมาจากอะไร"},
+  {type:"Phrasal Verb",expression:"stick up for",meaning_en:"to defend or support someone",meaning_th:"ปกป้อง",example:"She sticks up for her friends.",example_translation:"เธอปกป้องเพื่อนของเธอ"},
+  {type:"Phrasal Verb",expression:"talk down to",meaning_en:"to speak to someone in a condescending way",meaning_th:"พูดจาดูถูก",example:"Don't talk down to your teammates.",example_translation:"อย่าพูดจาดูถูกสมาชิกในทีม"},
+  {type:"Phrasal Verb",expression:"talk into",meaning_en:"to persuade someone to do something",meaning_th:"โน้มน้าวให้ทำบางสิ่ง",example:"She talked him into joining the club.",example_translation:"เธอโน้มน้าวให้เขาเข้าร่วมชมรม"},
+  {type:"Phrasal Verb",expression:"talk out of",meaning_en:"to persuade someone not to do something",meaning_th:"โน้มน้าวไม่ให้ทำบางสิ่ง",example:"He talked her out of quitting.",example_translation:"เขาโน้มน้าวไม่ให้เธอลาออก"},
+  {type:"Phrasal Verb",expression:"tell off",meaning_en:"to scold or rebuke someone",meaning_th:"ตำหนิวิจารณ์",example:"The teacher told him off for being late.",example_translation:"ครูตำหนิเขาที่มาสาย"},
+  {type:"Phrasal Verb",expression:"think over",meaning_en:"to consider carefully",meaning_th:"คิดพิจารณา",example:"Think it over before you decide.",example_translation:"คิดพิจารณาให้รอบคอบก่อนตัดสินใจ"},
+  {type:"Phrasal Verb",expression:"throw away",meaning_en:"to discard something",meaning_th:"ทิ้ง",example:"Don't throw away useful things.",example_translation:"อย่าทิ้งสิ่งที่ยังมีประโยชน์"},
+  {type:"Phrasal Verb",expression:"throw up",meaning_en:"to vomit",meaning_th:"อาเจียน",example:"He threw up after eating bad food.",example_translation:"เขาอาเจียนหลังกินอาหารเสีย"},
+  {type:"Phrasal Verb",expression:"try on",meaning_en:"to put on clothing to check the fit",meaning_th:"ลอง",example:"Can I try on this jacket?",example_translation:"ฉันลองเสื้อแจ็คเก็ตนี้ได้ไหม"},
+  {type:"Phrasal Verb",expression:"use up",meaning_en:"to consume all of something",meaning_th:"ใช้หมด",example:"We used up all the milk.",example_translation:"เราใช้นมหมดแล้ว"},
+  {type:"Phrasal Verb",expression:"watch out",meaning_en:"to be careful",meaning_th:"ระวัง",example:"Watch out for pickpockets.",example_translation:"ระวังขโมยล้วงกระเป๋า"},
+  {type:"Phrasal Verb",expression:"wear out",meaning_en:"to exhaust; to become unusable from use",meaning_th:"เหนื่อยมาก / สึกหรอ",example:"These shoes have worn out.",example_translation:"รองเท้าคู่นี้สึกหรอแล้ว"},
+  {type:"Phrasal Verb",expression:"work out",meaning_en:"to exercise; to solve; to succeed",meaning_th:"ออกกำลังกาย / หาคำตอบ",example:"Everything will work out fine.",example_translation:"ทุกอย่างจะออกมาดี"},
+  {type:"Phrasal Verb",expression:"wrap up",meaning_en:"to finish; to cover with wrapping",meaning_th:"ห่อ / สรุปจบ",example:"Let's wrap up the meeting.",example_translation:"มาสรุปจบการประชุมกันเถอะ"},
+  // IDIOMS
+  {type:"Idiom",expression:"24/7",meaning_en:"all the time, without stopping",meaning_th:"ตลอดเวลา",example:"The store is open 24/7.",example_translation:"ร้านเปิดตลอด 24 ชั่วโมง"},
+  {type:"Idiom",expression:"a blessing in disguise",meaning_en:"something that seems bad but turns out good",meaning_th:"เรื่องดี ๆ ที่ตอนแรกดูเหมือนจะแย่",example:"Losing that job was a blessing in disguise.",example_translation:"การสูญเสียงานนั้นเป็นเรื่องดีที่แฝงอยู่"},
+  {type:"Idiom",expression:"a perfect storm",meaning_en:"the worst possible combination of events",meaning_th:"สิ่งที่แย่ที่สุดเท่าที่จะเป็นไปได้",example:"The flood was a perfect storm of failures.",example_translation:"น้ำท่วมครั้งนั้นคือสิ่งที่แย่ที่สุดที่เกิดขึ้น"},
+  {type:"Idiom",expression:"A picture is worth a thousand words.",meaning_en:"a visual image conveys more than words",meaning_th:"ทำให้เห็นออกมาเลยดีกว่าพูดอย่างเดียว",example:"Show them a chart — a picture is worth a thousand words.",example_translation:"แสดงกราฟให้พวกเขาดู ภาพหนึ่งภาพบอกได้มากกว่าคำพูด"},
+  {type:"Idiom",expression:"Action speaks louder than words.",meaning_en:"what you do is more important than what you say",meaning_th:"การกระทำสำคัญกว่าคำพูด",example:"He said he'd help, but action speaks louder than words.",example_translation:"เขาบอกว่าจะช่วย แต่การกระทำสำคัญกว่าคำพูด"},
+  {type:"Idiom",expression:"all ears",meaning_en:"listening attentively and eagerly",meaning_th:"รับฟัง",example:"Tell me what happened — I'm all ears.",example_translation:"เล่าให้ฟังสิว่าเกิดอะไรขึ้น ฉันรับฟัง"},
+  {type:"Idiom",expression:"as you wish",meaning_en:"as you prefer or desire",meaning_th:"ตามใจคุณ",example:"As you wish, I'll stay.",example_translation:"ตามใจคุณ ฉันจะอยู่"},
+  {type:"Idiom",expression:"back and forth",meaning_en:"moving in one direction and then the other repeatedly",meaning_th:"ไป ๆ มา ๆ",example:"We went back and forth over the decision.",example_translation:"เราตัดสินใจไป ๆ มา ๆ"},
+  {type:"Idiom",expression:"back on someone's feet",meaning_en:"recovered from a difficulty",meaning_th:"กลับมาดีขึ้นหลังจากเจอกับเหตุการณ์ไม่ดี",example:"She's back on her feet after surgery.",example_translation:"เธอฟื้นตัวหลังผ่าตัด"},
+  {type:"Idiom",expression:"back to square one",meaning_en:"having to start again from the beginning",meaning_th:"กลับไปเริ่มต้นใหม่",example:"The plan failed; we're back to square one.",example_translation:"แผนล้มเหลว เราต้องเริ่มต้นใหม่"},
+  {type:"Idiom",expression:"beat around the bush",meaning_en:"to avoid the main topic",meaning_th:"พูดอ้อมไปมา",example:"Stop beating around the bush and tell me the truth.",example_translation:"หยุดพูดอ้อมค้อมแล้วบอกความจริงฉัน"},
+  {type:"Idiom",expression:"better late than never",meaning_en:"it's better to do something late than not at all",meaning_th:"สายดีกว่าไม่ได้มาเลย",example:"You finally finished — better late than never!",example_translation:"คุณเสร็จในที่สุด สายดีกว่าไม่มา"},
+  {type:"Idiom",expression:"blow someone's mind",meaning_en:"to greatly impress or amaze someone",meaning_th:"ทำให้รู้สึกตื่นเต้นหรือทึ่งมาก",example:"That concert blew my mind.",example_translation:"คอนเสิร์ตนั้นทำให้ฉันประทับใจมาก"},
+  {type:"Idiom",expression:"break a leg",meaning_en:"good luck (used especially in performing arts)",meaning_th:"ขอให้โชคดี",example:"Break a leg in tonight's performance!",example_translation:"ขอให้โชคดีในการแสดงคืนนี้"},
+  {type:"Idiom",expression:"butterflies in my stomach",meaning_en:"a nervous or excited feeling",meaning_th:"ตื่นเต้นกังวล",example:"I had butterflies in my stomach before the exam.",example_translation:"ฉันตื่นเต้นกังวลก่อนสอบ"},
+  {type:"Idiom",expression:"call in sick",meaning_en:"to phone work to say you are ill",meaning_th:"ลาป่วย",example:"She called in sick on Monday.",example_translation:"เธอลาป่วยวันจันทร์"},
+  {type:"Idiom",expression:"call it a day",meaning_en:"to stop working for the day",meaning_th:"วันนี้พอแค่นี้",example:"It's getting late — let's call it a day.",example_translation:"เริ่มดึกแล้ว วันนี้พอแค่นี้ก่อนนะ"},
+  {type:"Idiom",expression:"call the shots",meaning_en:"to be in charge; to make decisions",meaning_th:"ตัดสินใจ",example:"She calls the shots in the company.",example_translation:"เธอเป็นคนตัดสินใจในบริษัท"},
+  {type:"Idiom",expression:"can't believe my eyes/ears",meaning_en:"to be very surprised by what you see or hear",meaning_th:"ไม่อยากจะเชื่อสิ่งที่เห็น/ได้ยิน",example:"I couldn't believe my eyes when I saw the prize.",example_translation:"ฉันไม่อยากจะเชื่อตาตัวเองเมื่อเห็นรางวัล"},
+  {type:"Idiom",expression:"come to a dead end",meaning_en:"to reach a point where there is no way forward",meaning_th:"มาถึงทางตัน",example:"The investigation came to a dead end.",example_translation:"การสอบสวนมาถึงทางตัน"},
+  {type:"Idiom",expression:"cost an arm and a leg",meaning_en:"to be very expensive",meaning_th:"แพงมาก",example:"That handbag costs an arm and a leg.",example_translation:"กระเป๋าใบนั้นแพงมาก"},
+  {type:"Idiom",expression:"couch potato",meaning_en:"a person who spends too much time watching TV",meaning_th:"คนที่ไม่ชอบขยับตัว ชอบนอนดูทีวีอยู่เฉย ๆ",example:"Don't be a couch potato all weekend.",example_translation:"อย่าเป็นคนขี้เกียจนอนดูทีวีตลอดสุดสัปดาห์"},
+  {type:"Idiom",expression:"cup of tea",meaning_en:"something that suits one's taste or interest",meaning_th:"ตรงตามความชอบ",example:"Horror films aren't really my cup of tea.",example_translation:"หนังสยองขวัญไม่ใช่สิ่งที่ฉันชอบ"},
+  {type:"Idiom",expression:"cut to the chase",meaning_en:"to get to the point without delay",meaning_th:"พูดตรง ๆ มาเลย",example:"Cut to the chase — what do you want?",example_translation:"พูดตรง ๆ มาเลย คุณต้องการอะไร"},
+  {type:"Idiom",expression:"cutting corners",meaning_en:"doing something the quick or easy way, sacrificing quality",meaning_th:"ทำแบบลวก ๆ เพื่อประหยัดเงินและเวลา",example:"They cut corners on safety measures.",example_translation:"พวกเขาทำแบบลวก ๆ ในเรื่องมาตรการความปลอดภัย"},
+  {type:"Idiom",expression:"Don't cry over spilt milk.",meaning_en:"don't be upset over something that has already happened",meaning_th:"อย่าร้องให้กับสิ่งที่เปลี่ยนกลับคืนไม่ได้แล้ว",example:"It's done now — don't cry over spilt milk.",example_translation:"มันเกิดขึ้นแล้ว อย่าเสียใจกับสิ่งที่แก้ไขไม่ได้"},
+  {type:"Idiom",expression:"Don't put all our eggs in one basket.",meaning_en:"don't risk everything on a single plan",meaning_th:"อย่าทุ่มทุกอย่างเพื่อสิ่งเดียว",example:"Invest in different assets — don't put all your eggs in one basket.",example_translation:"ลงทุนในสินทรัพย์ต่าง ๆ อย่าทุ่มทุกอย่างในที่เดียว"},
+  {type:"Idiom",expression:"down to earth",meaning_en:"practical and realistic; not pretentious",meaning_th:"ติดดิน",example:"Despite being famous, she's very down to earth.",example_translation:"แม้จะดังแต่เธอก็ยังติดดินมาก"},
+  {type:"Idiom",expression:"Easy does it.",meaning_en:"do it slowly and carefully",meaning_th:"ใจเย็น ๆ ค่อย ๆ ทำ",example:"Easy does it — carry that box gently.",example_translation:"ค่อย ๆ ทำนะ แบกกล่องนั้นเบา ๆ"},
+  {type:"Idiom",expression:"easier said than done",meaning_en:"more difficult to do than to talk about",meaning_th:"พูดง่ายกว่าทำ",example:"Waking up early is easier said than done.",example_translation:"การตื่นเช้าพูดง่ายกว่าทำ"},
+  {type:"Idiom",expression:"Every cloud has a silver lining.",meaning_en:"every negative situation has a positive aspect",meaning_th:"ทุกเรื่องร้ายมีเรื่องดี ๆ ซ่อนอยู่",example:"I failed but learned — every cloud has a silver lining.",example_translation:"ฉันล้มเหลวแต่ก็ได้เรียนรู้ ทุกเรื่องร้ายมีเรื่องดีซ่อนอยู่"},
+  {type:"Idiom",expression:"fish out of water",meaning_en:"someone in an unfamiliar or uncomfortable situation",meaning_th:"แกะดำ",example:"He felt like a fish out of water at the party.",example_translation:"เขารู้สึกเหมือนแกะดำในงานปาร์ตี้"},
+  {type:"Idiom",expression:"fit as a fiddle",meaning_en:"in very good health",meaning_th:"แข็งแรง",example:"She's eighty but fit as a fiddle.",example_translation:"เธออายุแปดสิบแต่แข็งแรงมาก"},
+  {type:"Idiom",expression:"get a taste of your own medicine",meaning_en:"to experience the same bad treatment you give others",meaning_th:"กรรมตามสนอง",example:"He got a taste of his own medicine.",example_translation:"เขาได้รับกรรมตามสนองจากการกระทำของตัวเอง"},
+  {type:"Idiom",expression:"give someone the benefit of the doubt",meaning_en:"to trust someone without proof",meaning_th:"ยอมปล่อยไปก่อน",example:"Give her the benefit of the doubt.",example_translation:"ให้โอกาสเธอก่อนก็แล้วกัน"},
+  {type:"Idiom",expression:"give someone the cold shoulder",meaning_en:"to deliberately ignore someone",meaning_th:"เมิน",example:"She gave him the cold shoulder all week.",example_translation:"เธอเมินเขาทั้งสัปดาห์"},
+  {type:"Idiom",expression:"get something off your chest",meaning_en:"to tell someone what is troubling you",meaning_th:"ระบายสิ่งที่ติดอยู่ในใจ",example:"I need to get this off my chest.",example_translation:"ฉันต้องระบายสิ่งที่ค้างใจออกมา"},
+  {type:"Idiom",expression:"go down in flames",meaning_en:"to fail spectacularly",meaning_th:"พังไม่เป็นท่า",example:"The startup went down in flames.",example_translation:"สตาร์ทอัพนั้นพังไม่เป็นท่า"},
+  {type:"Idiom",expression:"go Dutch",meaning_en:"to split the bill equally",meaning_th:"หารกัน",example:"Let's go Dutch tonight.",example_translation:"คืนนี้หารกันนะ"},
+  {type:"Idiom",expression:"go the extra miles",meaning_en:"to make more effort than expected",meaning_th:"ทุ่มสุดตัว",example:"She always goes the extra mile for her students.",example_translation:"เธอทุ่มสุดตัวเพื่อนักเรียนของเธอเสมอ"},
+  {type:"Idiom",expression:"go with the flow",meaning_en:"to do what others are doing; to be relaxed",meaning_th:"ไปตามน้ำ",example:"Just go with the flow and enjoy.",example_translation:"ไปตามน้ำแล้วสนุกเลย"},
+  {type:"Idiom",expression:"Hang in there.",meaning_en:"keep trying and don't give up",meaning_th:"คิดในแง่บวกไว้ก่อน",example:"Hang in there — things will get better.",example_translation:"อย่าท้อแท้ สิ่งต่าง ๆ จะดีขึ้นเอง"},
+  {type:"Idiom",expression:"Haste makes waste.",meaning_en:"rushing causes mistakes",meaning_th:"ช้า ๆ ได้พร้าเล่มงาม",example:"Don't rush — haste makes waste.",example_translation:"อย่ารีบ ช้า ๆ ได้พร้าเล่มงาม"},
+  {type:"Idiom",expression:"have your head in the clouds",meaning_en:"to be daydreaming or unrealistic",meaning_th:"เหม่อลอย",example:"Stop having your head in the clouds.",example_translation:"หยุดเหม่อลอยได้แล้ว"},
+  {type:"Idiom",expression:"Here goes nothing.",meaning_en:"said before starting something uncertain",meaning_th:"เอาล่ะ (พูดก่อนเริ่มทำสิ่งที่ไม่น่าจะสำเร็จ)",example:"Here goes nothing — let's try this recipe.",example_translation:"เอาล่ะ ลองทำสูตรนี้ดู"},
+  {type:"Idiom",expression:"hit the sack",meaning_en:"to go to bed",meaning_th:"เข้านอน",example:"I'm exhausted — time to hit the sack.",example_translation:"ฉันเหนื่อยมาก ถึงเวลาเข้านอนแล้ว"},
+  {type:"Idiom",expression:"in the mood",meaning_en:"feeling like doing something",meaning_th:"มีอารมณ์จะทำบางสิ่ง",example:"I'm not in the mood for jokes right now.",example_translation:"ตอนนี้ฉันไม่มีอารมณ์ฟังเรื่องตลก"},
+  {type:"Idiom",expression:"in the nick of time",meaning_en:"just in time; at the last possible moment",meaning_th:"ทันเวลาพอดี",example:"We arrived in the nick of time.",example_translation:"เราไปถึงทันเวลาพอดี"},
+  {type:"Idiom",expression:"It's a piece of cake.",meaning_en:"it's very easy",meaning_th:"ง่ายมาก ๆ",example:"This quiz is a piece of cake.",example_translation:"แบบทดสอบนี้ง่ายมาก"},
+  {type:"Idiom",expression:"It's not rocket science.",meaning_en:"it's not very difficult",meaning_th:"มันไม่ได้ยากเกินที่จะทำความเข้าใจ",example:"Come on, it's not rocket science!",example_translation:"มาเลย มันไม่ได้ยากอะไรเลย"},
+  {type:"Idiom",expression:"It's raining cats and dogs.",meaning_en:"it's raining very heavily",meaning_th:"ฝนตกหนักมาก",example:"Don't go out — it's raining cats and dogs.",example_translation:"อย่าออกไปข้างนอก ฝนตกหนักมาก"},
+  {type:"Idiom",expression:"keep a low profile",meaning_en:"to avoid drawing attention to yourself",meaning_th:"ไม่ทำตัวเด่น",example:"Keep a low profile until the situation calms down.",example_translation:"อย่าทำตัวเด่นจนกว่าสถานการณ์จะสงบ"},
+  {type:"Idiom",expression:"keep a straight face",meaning_en:"to not laugh despite finding something funny",meaning_th:"ทำหน้านิ่ง",example:"He couldn't keep a straight face.",example_translation:"เขาทำหน้านิ่งไม่ได้เลย"},
+  {type:"Idiom",expression:"keep someone's fingers crossed",meaning_en:"to hope for good luck",meaning_th:"ขอให้โชคดี",example:"Keep your fingers crossed for me!",example_translation:"ขอให้โชคดีให้ฉันด้วยนะ"},
+  {type:"Idiom",expression:"kill two birds with one stone",meaning_en:"to accomplish two things with one action",meaning_th:"ยิงปืนนัดเดียวได้นกสองตัว",example:"I'll visit the bank and post office — kill two birds with one stone.",example_translation:"ฉันจะไปธนาคารและไปรษณีย์ ยิงปืนนัดเดียวได้นกสองตัว"},
+  {type:"Idiom",expression:"let the cat out of the bag",meaning_en:"to reveal a secret accidentally",meaning_th:"เผลอเปิดเผยความลับ",example:"He let the cat out of the bag about the surprise.",example_translation:"เขาเผลอเปิดเผยความลับเรื่องของขวัญเซอร์ไพรส์"},
+  {type:"Idiom",expression:"like two peas in a pod",meaning_en:"very similar in appearance or behaviour",meaning_th:"เหมือนอย่างกับแฝด",example:"They're like two peas in a pod.",example_translation:"พวกเขาเหมือนกันราวกับฝาแฝด"},
+  {type:"Idiom",expression:"live up to something",meaning_en:"to be as good as expected",meaning_th:"ใช้ชีวิตให้เป็นไปตามบางสิ่ง",example:"The movie lived up to its hype.",example_translation:"หนังเรื่องนั้นดีอย่างที่ทุกคนคาดหวัง"},
+  {type:"Idiom",expression:"make a long story short",meaning_en:"to summarize; to tell the main point briefly",meaning_th:"เล่ามาสั้น ๆ",example:"To make a long story short, we succeeded.",example_translation:"พูดสั้น ๆ คือ เราสำเร็จ"},
+  {type:"Idiom",expression:"make ends meet",meaning_en:"to have just enough money to live on",meaning_th:"มีเงินใช้เดือนชนเดือน",example:"It's hard to make ends meet these days.",example_translation:"ทุกวันนี้ยากที่จะมีเงินพอใช้"},
+  {type:"Idiom",expression:"make matters worse",meaning_en:"to worsen a difficult situation",meaning_th:"ทำให้เรื่องมันแย่ลง",example:"Apologizing late made matters worse.",example_translation:"การขอโทษช้าทำให้สถานการณ์แย่ลง"},
+  {type:"Idiom",expression:"make sense",meaning_en:"to be logical or understandable",meaning_th:"มีเหตุผล",example:"Does this explanation make sense?",example_translation:"คำอธิบายนี้มีเหตุผลไหม"},
+  {type:"Idiom",expression:"meet someone halfway",meaning_en:"to compromise with someone",meaning_th:"มาเจอกันคนละครึ่งทาง",example:"Let's meet halfway on this deal.",example_translation:"มาหาข้อตกลงกันคนละครึ่งทางเถอะ"},
+  {type:"Idiom",expression:"no pain, no gain",meaning_en:"hard work is necessary for success",meaning_th:"ถ้าไม่เจ็บปวดก็จะไม่ได้อะไร",example:"No pain, no gain — keep training!",example_translation:"ไม่เจ็บก็ไม่ได้ ฝึกต่อไป"},
+  {type:"Idiom",expression:"on cloud nine",meaning_en:"extremely happy",meaning_th:"มีความสุขมาก ๆ",example:"She was on cloud nine after the proposal.",example_translation:"เธอมีความสุขมากหลังจากรับข้อเสนอแต่งงาน"},
+  {type:"Idiom",expression:"on thin ice",meaning_en:"in a risky situation",meaning_th:"อยู่บนความเสี่ยง (ที่จะเกิดปัญหาเพิ่ม)",example:"He's on thin ice with the boss.",example_translation:"เขาอยู่ในสถานการณ์เสี่ยงกับเจ้านาย"},
+  {type:"Idiom",expression:"once in a blue moon",meaning_en:"very rarely",meaning_th:"นาน ๆ ที",example:"We only go there once in a blue moon.",example_translation:"เราไปที่นั่นนาน ๆ ครั้ง"},
+  {type:"Idiom",expression:"one way or another",meaning_en:"by some means; regardless of how",meaning_th:"ไม่ทางใดก็ทางหนึ่ง",example:"We'll get it done one way or another.",example_translation:"เราจะทำมันให้สำเร็จไม่ทางใดก็ทางหนึ่ง"},
+  {type:"Idiom",expression:"over the moon",meaning_en:"extremely happy and excited",meaning_th:"ดีใจมาก ๆ",example:"She was over the moon about her promotion.",example_translation:"เธอดีใจมากกับการเลื่อนตำแหน่ง"},
+  {type:"Idiom",expression:"pass with flying colors",meaning_en:"to succeed very well",meaning_th:"ผ่านฉลุย",example:"He passed the exam with flying colors.",example_translation:"เขาผ่านการสอบได้อย่างยอดเยี่ยม"},
+  {type:"Idiom",expression:"pave the way",meaning_en:"to make it easier for something to happen",meaning_th:"ปูทางให้",example:"Her research paved the way for new treatments.",example_translation:"งานวิจัยของเธอปูทางให้การรักษาใหม่"},
+  {type:"Idiom",expression:"pull someone's leg",meaning_en:"to joke or tease someone",meaning_th:"ล้อเล่น",example:"Are you serious or just pulling my leg?",example_translation:"คุณจริงจังหรือแค่ล้อเล่น"},
+  {type:"Idiom",expression:"pull yourself together",meaning_en:"to regain control of emotions",meaning_th:"สงบสติอารมณ์ตัวเองหน่อย",example:"Pull yourself together before the presentation.",example_translation:"สงบสติอารมณ์ก่อนนำเสนองาน"},
+  {type:"Idiom",expression:"ring a bell",meaning_en:"to sound familiar",meaning_th:"คุ้น ๆ เลยนึกออก",example:"That name rings a bell.",example_translation:"ชื่อนั้นฟังดูคุ้น ๆ"},
+  {type:"Idiom",expression:"saving for a rainy day",meaning_en:"saving money for future hard times",meaning_th:"เก็บไว้ใช้ยามจำเป็น",example:"Always save something for a rainy day.",example_translation:"เก็บเงินไว้ยามจำเป็นเสมอ"},
+  {type:"Idiom",expression:"see eye to eye",meaning_en:"to agree with someone",meaning_th:"เห็นตรงกัน",example:"They rarely see eye to eye.",example_translation:"พวกเขาไม่ค่อยเห็นตรงกัน"},
+  {type:"Idiom",expression:"sell like hot cakes",meaning_en:"to sell very quickly",meaning_th:"ขายดีเป็นเทน้ำเทท่า",example:"His new book sells like hot cakes.",example_translation:"หนังสือเล่มใหม่ของเขาขายดีเป็นเทน้ำเทท่า"},
+  {type:"Idiom",expression:"sit on the fence",meaning_en:"to be undecided or neutral",meaning_th:"สองจิตสองใจ",example:"Don't sit on the fence — choose a side.",example_translation:"อย่าลังเล เลือกข้างได้แล้ว"},
+  {type:"Idiom",expression:"sit tight",meaning_en:"to wait patiently without taking action",meaning_th:"อดทนรอหน่อย",example:"Sit tight — help is on the way.",example_translation:"รอสักครู่ ความช่วยเหลือกำลังมา"},
+  {type:"Idiom",expression:"Slow and steady wins the race.",meaning_en:"being consistent is better than rushing",meaning_th:"ช้า ๆ ได้พร้าเล่มงาม",example:"Keep practising — slow and steady wins the race.",example_translation:"ฝึกต่อไป ช้า ๆ ได้พร้าเล่มงาม"},
+  {type:"Idiom",expression:"so far so good",meaning_en:"things are going well up to this point",meaning_th:"จนตอนนี้ก็ราบรื่นดี",example:"So far so good with the new project.",example_translation:"จนถึงตอนนี้โครงการใหม่ก็ราบรื่นดี"},
+  {type:"Idiom",expression:"speak of the devil",meaning_en:"said when someone you were talking about appears",meaning_th:"พูดถึงก็มาพอดีเลย",example:"Speak of the devil — here comes Tom!",example_translation:"พูดถึงก็มาพอดี ทอมมานี่แล้ว"},
+  {type:"Idiom",expression:"spill the beans",meaning_en:"to reveal secret information",meaning_th:"บอกความลับ",example:"Who spilled the beans about the party?",example_translation:"ใครบอกความลับเรื่องงานปาร์ตี้"},
+  {type:"Idiom",expression:"stab someone in the back",meaning_en:"to betray a friend",meaning_th:"หักหลัง เล่นทีเผลอ",example:"I trusted her, but she stabbed me in the back.",example_translation:"ฉันไว้ใจเธอ แต่เธอหักหลังฉัน"},
+  {type:"Idiom",expression:"take a rain check",meaning_en:"to postpone a plan to a later date",meaning_th:"เอาไว้คราวหน้า",example:"I can't come tonight — can I take a rain check?",example_translation:"ฉันไปไม่ได้คืนนี้ เอาไว้คราวหน้าได้ไหม"},
+  {type:"Idiom",expression:"take it with a grain of salt",meaning_en:"to be sceptical about something",meaning_th:"ฟังหูไว้หู",example:"Take the rumours with a grain of salt.",example_translation:"ฟังข่าวลือไว้หูหน่อย"},
+  {type:"Idiom",expression:"That's the last straw.",meaning_en:"the final problem that makes you give up",meaning_th:"ฟางเส้นสุดท้าย",example:"That's the last straw — I quit!",example_translation:"นั่นคือฟางเส้นสุดท้าย ฉันลาออก"},
+  {type:"Idiom",expression:"the apple of someone's eyes",meaning_en:"someone who is greatly loved",meaning_th:"แก้วตาดวงใจ",example:"She's the apple of her father's eyes.",example_translation:"เธอเป็นแก้วตาดวงใจของพ่อ"},
+  {type:"Idiom",expression:"the best of both worlds",meaning_en:"enjoying two advantages at the same time",meaning_th:"สิ่งที่ดีที่สุดเท่าที่จะเป็นไปได้",example:"Working from home gives the best of both worlds.",example_translation:"การทำงานจากบ้านให้ทั้งสองอย่าง"},
+  {type:"Idiom",expression:"the elephant in the room",meaning_en:"an obvious problem no one wants to talk about",meaning_th:"เรื่องใหญ่ที่ไม่มีใครอยากพูดถึง",example:"Debt is the elephant in the room.",example_translation:"หนี้สินคือเรื่องที่ไม่มีใครอยากพูดถึง"},
+  {type:"Idiom",expression:"There are plenty of fish in the sea.",meaning_en:"there are many other opportunities or people",meaning_th:"ยังมีเหลืออีกมากมาย",example:"Don't worry — plenty of fish in the sea.",example_translation:"ไม่ต้องเป็นห่วง ยังมีโอกาสอีกมาก"},
+  {type:"Idiom",expression:"There's no such thing as a free lunch.",meaning_en:"nothing is truly free; everything has a cost",meaning_th:"ไม่มีของฟรีบนโลก",example:"Be careful — there's no such thing as a free lunch.",example_translation:"ระวังไว้ ไม่มีของฟรีบนโลกนี้"},
+  {type:"Idiom",expression:"through thick and thin",meaning_en:"through all difficulties and good times",meaning_th:"ผ่านร้อนผ่านหนาว",example:"True friends stay through thick and thin.",example_translation:"เพื่อนแท้อยู่กับเราผ่านร้อนผ่านหนาว"},
+  {type:"Idiom",expression:"tip of the iceberg",meaning_en:"a small visible part of a larger problem",meaning_th:"ส่วนหนึ่งของปัญหาขนาดใหญ่",example:"This loss is just the tip of the iceberg.",example_translation:"การสูญเสียนี้เป็นเพียงส่วนหนึ่งของปัญหาใหญ่"},
+  {type:"Idiom",expression:"weather the storm",meaning_en:"to survive a difficult period",meaning_th:"ผ่านสถานการณ์ที่ยากลำบาก",example:"We weathered the storm together.",example_translation:"เราผ่านพายุครั้งนั้นมาด้วยกัน"},
+  {type:"Idiom",expression:"When it rains, it pours.",meaning_en:"bad things happen all at once",meaning_th:"เรื่องแย่ ๆ มักเกิดขึ้นทีเดียว",example:"I lost my job and got sick — when it rains, it pours.",example_translation:"ฉันตกงานและยังป่วยอีก เรื่องแย่ ๆ มาพร้อมกัน"},
+  {type:"Idiom",expression:"under the weather",meaning_en:"feeling ill",meaning_th:"ไม่สบาย",example:"I'm feeling a bit under the weather today.",example_translation:"วันนี้ฉันรู้สึกไม่ค่อยสบาย"},
+  {type:"Idiom",expression:"You can't have your cake and eat it too.",meaning_en:"you can't have everything",meaning_th:"เลือกอย่างก็ต้องเสียอย่าง",example:"You can't have your cake and eat it too.",example_translation:"ไม่สามารถได้ทุกอย่างได้"},
+  {type:"Idiom",expression:"You can't judge a book by its cover.",meaning_en:"don't judge by appearances alone",meaning_th:"อย่าตัดสินบางอย่างด้วยรูปลักษณ์ภายนอก",example:"Give him a chance — you can't judge a book by its cover.",example_translation:"ให้โอกาสเขาก่อน อย่าตัดสินจากภายนอก"},
+  {type:"Idiom",expression:"Your guess is as good as mine.",meaning_en:"I don't know either",meaning_th:"ฉันก็ไม่รู้เหมือนกัน",example:"Where is she? Your guess is as good as mine.",example_translation:"เธออยู่ที่ไหน ฉันก็ไม่รู้เหมือนกัน"},
+];
+
+// ============================================================
+// STATE
+// ============================================================
+let state = {
+  filter: 'all',
+  search: '',
+  fcIndex: 0,
+  fcFlipped: false,
+  fcList: [...DB],
+  autoplay: false,
+  autoTimer: null,
+  studied: new Set(),
+  difficult: new Set(),
+  quizSession: [],
+  quizIndex: 0,
+  quizCorrect: 0,
+  quizIncorrect: [],
+  examSession: [],
+  examIndex: 0,
+  examCorrect: 0,
+  examIncorrect: [],
+  studyIndex: 0,
+  studyList: [],
+  totalCorrect: 0,
+  totalAnswered: 0,
+  bestScore: 0,
+  streak: 0,
+  lastDate: '',
+};
+
+function loadState() {
+  try {
+    const s = localStorage.getItem('m4vocab_state');
+    if (s) {
+      const p = JSON.parse(s);
+      state.studied = new Set(p.studied || []);
+      state.difficult = new Set(p.difficult || []);
+      state.quizIncorrect = p.quizIncorrect || [];
+      state.examIncorrect = p.examIncorrect || [];
+      state.totalCorrect = p.totalCorrect || 0;
+      state.totalAnswered = p.totalAnswered || 0;
+      state.bestScore = p.bestScore || 0;
+      state.streak = p.streak || 0;
+      state.lastDate = p.lastDate || '';
+    }
+  } catch(e){}
+}
+
+function saveState() {
+  try {
+    localStorage.setItem('m4vocab_state', JSON.stringify({
+      studied: [...state.studied],
+      difficult: [...state.difficult],
+      quizIncorrect: state.quizIncorrect,
+      examIncorrect: state.examIncorrect,
+      totalCorrect: state.totalCorrect,
+      totalAnswered: state.totalAnswered,
+      bestScore: state.bestScore,
+      streak: state.streak,
+      lastDate: state.lastDate,
+    }));
+  } catch(e){}
+}
+
+function updateStreak() {
+  const today = new Date().toDateString();
+  if (state.lastDate !== today) {
+    const yesterday = new Date(Date.now() - 86400000).toDateString();
+    if (state.lastDate === yesterday) state.streak++;
+    else state.streak = 1;
+    state.lastDate = today;
+    saveState();
+  }
+}
+
+// ============================================================
+// FILTERED DATA
+// ============================================================
+function getFiltered() {
+  let list = DB;
+  if (state.filter !== 'all') list = list.filter(x => x.type === state.filter);
+  if (state.search.trim()) {
+    const q = state.search.toLowerCase();
+    list = list.filter(x =>
+      x.expression.toLowerCase().includes(q) ||
+      x.meaning_en.toLowerCase().includes(q) ||
+      x.meaning_th.includes(q)
+    );
+  }
+  return list;
+}
+
+// ============================================================
+// NAV
+// ============================================================
+function showMode(mode) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('section-' + mode).classList.add('active');
+  const btns = document.querySelectorAll('.nav-btn');
+  btns.forEach(b => { if (b.textContent.toLowerCase().includes(mode)) b.classList.add('active'); });
+
+  if (mode === 'browse') renderBrowse();
+  if (mode === 'quiz') renderQuiz();
+  if (mode === 'difficult') renderDifficult();
+  if (mode === 'study') initStudy();
+  if (mode === 'review') renderReview();
+  updateDashboard();
+}
+
+// ============================================================
+// SEARCH / FILTER
+// ============================================================
+function setFilter(f, btn) {
+  state.filter = f;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  state.fcList = getFiltered();
+  state.fcIndex = 0;
+  renderCard();
+  const currentSection = document.querySelector('.section.active');
+  if (currentSection && currentSection.id === 'section-browse') renderBrowse();
+}
+
+function onSearch() {
+  state.search = document.getElementById('search-input').value;
+  state.fcList = getFiltered();
+  state.fcIndex = Math.min(state.fcIndex, state.fcList.length - 1);
+  renderCard();
+  const currentSection = document.querySelector('.section.active');
+  if (currentSection && currentSection.id === 'section-browse') renderBrowse();
+}
+
+// ============================================================
+// FLASHCARD
+// ============================================================
+function renderCard() {
+  const list = state.fcList;
+  if (!list.length) return;
+  const idx = ((state.fcIndex % list.length) + list.length) % list.length;
+  const card = list[idx];
+  document.getElementById('fc-inner').classList.remove('flipped');
+  state.fcFlipped = false;
+  setTimeout(() => {
+    document.getElementById('fc-expression').textContent = card.expression;
+    document.getElementById('fc-type-badge').textContent = card.type;
+    document.getElementById('fc-type-back').textContent = card.type;
+    document.getElementById('fc-en').textContent = card.meaning_en;
+    document.getElementById('fc-th').textContent = card.meaning_th;
+    document.getElementById('fc-ex').textContent = card.example;
+    document.getElementById('fc-tr').textContent = card.example_translation;
+    const starBtn = document.getElementById('fc-star');
+    starBtn.classList.toggle('starred', state.difficult.has(card.expression));
+    document.getElementById('card-counter').textContent = `Card ${idx + 1} / ${list.length}`;
+    state.studied.add(card.expression);
+    saveState();
+    updateDashboard();
+  }, state.fcFlipped ? 300 : 0);
+}
+
+function flipCard() {
+  state.fcFlipped = !state.fcFlipped;
+  document.getElementById('fc-inner').classList.toggle('flipped', state.fcFlipped);
+}
+
+function nextCard() {
+  stopAutoplay();
+  state.fcIndex++;
+  if (state.fcIndex >= state.fcList.length) state.fcIndex = 0;
+  renderCard();
+}
+
+function prevCard() {
+  stopAutoplay();
+  state.fcIndex--;
+  if (state.fcIndex < 0) state.fcIndex = state.fcList.length - 1;
+  renderCard();
+}
+
+function shuffleCards() {
+  for (let i = state.fcList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [state.fcList[i], state.fcList[j]] = [state.fcList[j], state.fcList[i]];
+  }
+  state.fcIndex = 0;
+  renderCard();
+}
+
+function randomCard() {
+  stopAutoplay();
+  state.fcIndex = Math.floor(Math.random() * state.fcList.length);
+  renderCard();
+}
+
+function toggleAutoplay() {
+  if (state.autoplay) stopAutoplay();
+  else startAutoplay();
+}
+
+function startAutoplay() {
+  state.autoplay = true;
+  document.getElementById('autoplay-btn').classList.add('active');
+  document.getElementById('autoplay-btn').textContent = '⏸ Pause';
+  runAutoplay();
+}
+
+function stopAutoplay() {
+  state.autoplay = false;
+  clearTimeout(state.autoTimer);
+  document.getElementById('autoplay-btn').classList.remove('active');
+  document.getElementById('autoplay-btn').textContent = '▶️ Auto Play';
+  document.getElementById('autoplay-bar').classList.remove('running');
+}
+
+function runAutoplay() {
+  if (!state.autoplay) return;
+  const bar = document.getElementById('autoplay-bar');
+  bar.classList.remove('running');
+  void bar.offsetWidth;
+  const fill = document.getElementById('autoplay-fill');
+  fill.style.animation = 'none';
+  void fill.offsetWidth;
+  fill.style.animation = 'autoplayProgress 3s linear forwards';
+  bar.classList.add('running');
+  state.autoTimer = setTimeout(() => {
+    if (!state.fcFlipped) {
+      flipCard();
+      state.autoTimer = setTimeout(() => {
+        nextCard();
+        runAutoplay();
+      }, 2000);
+    } else {
+      nextCard();
+      runAutoplay();
+    }
+  }, 3000);
+}
+
+function toggleStarCurrent() {
+  const list = state.fcList;
+  if (!list.length) return;
+  const idx = ((state.fcIndex % list.length) + list.length) % list.length;
+  const expr = list[idx].expression;
+  if (state.difficult.has(expr)) state.difficult.delete(expr);
+  else state.difficult.add(expr);
+  saveState();
+  document.getElementById('fc-star').classList.toggle('starred', state.difficult.has(expr));
+  updateDashboard();
+}
+
+// ============================================================
+// BROWSE
+// ============================================================
+function renderBrowse() {
+  const list = getFiltered();
+  const grid = document.getElementById('browse-grid');
+  if (!list.length) { grid.innerHTML = '<div class="empty-state"><div class="empty-icon">🔍</div><p>No results found.</p></div>'; return; }
+  grid.innerHTML = list.map(card => `
+    <div class="word-card">
+      <div class="wc-top">
+        <div class="wc-expr">${card.expression}</div>
+        <div class="wc-type ${card.type==='Phrasal Verb'?'phrasal':'idiom'}">${card.type}</div>
+      </div>
+      <div class="wc-en">${card.meaning_en}</div>
+      <div class="wc-th">${card.meaning_th}</div>
+      <div class="wc-ex">"${card.example}"</div>
+      <button class="star-small ${state.difficult.has(card.expression)?'starred':''}" onclick="toggleStar('${card.expression.replace(/'/g,"\\'")}',this)">★</button>
+    </div>
+  `).join('');
+}
+
+function toggleStar(expr, btn) {
+  if (state.difficult.has(expr)) state.difficult.delete(expr);
+  else state.difficult.add(expr);
+  btn.classList.toggle('starred', state.difficult.has(expr));
+  saveState();
+  updateDashboard();
+}
+
+// ============================================================
+// QUIZ ENGINE
+// ============================================================
+let quizPool = [];
+let quizTotal = 10;
+
+function renderQuiz() {
+  const hasMistakes = state.quizIncorrect.length > 0;
+  document.getElementById('review-mistakes-btn').style.display = hasMistakes ? 'inline-flex' : 'none';
+  startQuiz('normal');
+}
+
+function startQuiz(mode) {
+  document.getElementById('quiz-result').classList.remove('show');
+  document.getElementById('quiz-card').style.display = '';
+
+  let pool;
+  if (mode === 'review') {
+    const allMistakes = [...new Set([...state.quizIncorrect, ...state.examIncorrect])];
+    pool = DB.filter(x => allMistakes.includes(x.expression));
+    if (!pool.length) { alert('No mistakes to review! Keep quizzing.'); return; }
+  } else {
+    pool = getFiltered();
+  }
+
+  quizPool = shuffle([...pool]).slice(0, Math.min(quizTotal, pool.length));
+  state.quizSession = quizPool;
+  state.quizIndex = 0;
+  state.quizCorrect = 0;
+  document.getElementById('quiz-score-display').textContent = '✅ 0';
+  showQuestion();
+}
+
+function showQuestion() {
+  const q = state.quizSession[state.quizIndex];
+  if (!q) return;
+  updateQuizHeader();
+  const qType = Math.floor(Math.random() * 4);
+  document.getElementById('quiz-feedback').classList.remove('show', 'correct', 'wrong');
+  document.getElementById('quiz-next-btn').classList.remove('show');
+
+  let questionText, wordText, options, correctAnswer;
+  const wrongPool = DB.filter(x => x.expression !== q.expression);
+
+  if (qType === 0) {
+    // EN → TH
+    document.getElementById('quiz-q-type').textContent = '🇬🇧 English → Thai';
+    questionText = 'What is the Thai meaning of:';
+    wordText = q.expression;
+    correctAnswer = q.meaning_th;
+    options = [q.meaning_th, ...shuffle(wrongPool).slice(0,3).map(x=>x.meaning_th)];
+  } else if (qType === 1) {
+    // TH → EN
+    document.getElementById('quiz-q-type').textContent = '🇹🇭 Thai → English';
+    questionText = 'What is the English meaning of:';
+    wordText = q.meaning_th;
+    correctAnswer = q.meaning_en;
+    options = [q.meaning_en, ...shuffle(wrongPool).slice(0,3).map(x=>x.meaning_en)];
+  } else if (qType === 2) {
+    // Meaning → Expression
+    document.getElementById('quiz-q-type').textContent = '💬 Meaning → Expression';
+    questionText = 'Which expression matches this meaning?';
+    wordText = q.meaning_en;
+    correctAnswer = q.expression;
+    options = [q.expression, ...shuffle(wrongPool).slice(0,3).map(x=>x.expression)];
+  } else {
+    // Fill in
+    document.getElementById('quiz-q-type').textContent = '✍️ Complete the Sentence';
+    questionText = 'Fill in the blank:';
+    const blank = q.example.replace(new RegExp(q.expression, 'i'), '______');
+    wordText = blank;
+    correctAnswer = q.expression;
+    options = [q.expression, ...shuffle(wrongPool).slice(0,3).map(x=>x.expression)];
+  }
+
+  document.getElementById('quiz-question').textContent = questionText;
+  document.getElementById('quiz-word').textContent = wordText;
+  options = shuffle(options);
+  const letters = ['A','B','C','D'];
+  document.getElementById('quiz-options').innerHTML = options.map((opt, i) => `
+    <button class="quiz-option" onclick="answerQuiz(this,'${escQ(opt)}','${escQ(correctAnswer)}','${escQ(q.expression)}')">
+      <span class="option-letter">${letters[i]}</span>${opt}
+    </button>
+  `).join('');
+}
+
+function escQ(s) { return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'"); }
+
+function answerQuiz(btn, chosen, correct, expr) {
+  document.querySelectorAll('.quiz-option').forEach(b => b.disabled = true);
+  const isCorrect = chosen === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.querySelectorAll('.quiz-option').forEach(b => {
+    if (b.textContent.trim().slice(1).trim() === correct) b.classList.add('correct');
+  });
+  const fb = document.getElementById('quiz-feedback');
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = isCorrect
+    ? `✅ Correct! "${expr}" = ${correct}`
+    : `❌ Incorrect. Correct answer: ${correct}`;
+
+  state.totalAnswered++;
+  if (isCorrect) {
+    state.quizCorrect++;
+    state.totalCorrect++;
+    state.quizIncorrect = state.quizIncorrect.filter(x => x !== expr);
+  } else {
+    if (!state.quizIncorrect.includes(expr)) state.quizIncorrect.push(expr);
+  }
+  document.getElementById('quiz-score-display').textContent = `✅ ${state.quizCorrect}`;
+  saveState();
+
+  if (state.quizIndex + 1 >= state.quizSession.length) {
+    setTimeout(showQuizResult, 1000);
+  } else {
+    document.getElementById('quiz-next-btn').classList.add('show');
+  }
+}
+
+function nextQuestion() {
+  state.quizIndex++;
+  showQuestion();
+}
+
+function updateQuizHeader() {
+  const total = state.quizSession.length;
+  const curr = state.quizIndex + 1;
+  document.getElementById('quiz-q-num').textContent = `Q ${curr}/${total}`;
+  document.getElementById('quiz-progress-fill').style.width = `${((curr-1)/total)*100}%`;
+}
+
+function showQuizResult() {
+  document.getElementById('quiz-card').style.display = 'none';
+  const res = document.getElementById('quiz-result');
+  res.classList.add('show');
+  const pct = Math.round((state.quizCorrect / state.quizSession.length) * 100);
+  if (pct > state.bestScore) { state.bestScore = pct; saveState(); }
+  document.getElementById('result-score').textContent = `${state.quizCorrect}/${state.quizSession.length}`;
+  document.getElementById('result-label').textContent = `${pct}% accuracy`;
+  document.getElementById('result-emoji').textContent = pct >= 80 ? '🎉' : pct >= 50 ? '😊' : '💪';
+  updateDashboard();
+}
+
+// ============================================================
+// EXAM MODE
+// ============================================================
+function startExam() {
+  document.getElementById('exam-setup').style.display = 'none';
+  document.getElementById('exam-quiz-area').style.display = '';
+  document.getElementById('exam-result').classList.remove('show');
+  document.getElementById('exam-card').style.display = '';
+
+  const pool = shuffle([...DB]).slice(0, 50);
+  state.examSession = pool;
+  state.examIndex = 0;
+  state.examCorrect = 0;
+  document.getElementById('exam-score-display').textContent = '✅ 0';
+  showExamQuestion();
+}
+
+function showExamQuestion() {
+  const q = state.examSession[state.examIndex];
+  if (!q) return;
+  const total = state.examSession.length;
+  const curr = state.examIndex + 1;
+  document.getElementById('exam-q-num').textContent = `Q ${curr}/${total}`;
+  document.getElementById('exam-progress-fill').style.width = `${((curr-1)/total)*100}%`;
+  document.getElementById('exam-feedback').classList.remove('show','correct','wrong');
+  document.getElementById('exam-next-btn').classList.remove('show');
+
+  const qType = Math.floor(Math.random() * 4);
+  const wrongPool = DB.filter(x => x.expression !== q.expression);
+  let questionText, wordText, options, correctAnswer;
+
+  if (qType === 0) {
+    document.getElementById('exam-q-type').textContent = '🇬🇧 English → Thai';
+    questionText = 'What is the Thai meaning of:';
+    wordText = q.expression;
+    correctAnswer = q.meaning_th;
+    options = [q.meaning_th, ...shuffle(wrongPool).slice(0,3).map(x=>x.meaning_th)];
+  } else if (qType === 1) {
+    document.getElementById('exam-q-type').textContent = '🇹🇭 Thai → English';
+    questionText = 'What is the English meaning of:';
+    wordText = q.meaning_th;
+    correctAnswer = q.meaning_en;
+    options = [q.meaning_en, ...shuffle(wrongPool).slice(0,3).map(x=>x.meaning_en)];
+  } else if (qType === 2) {
+    document.getElementById('exam-q-type').textContent = '💬 Meaning → Expression';
+    questionText = 'Which expression matches this meaning?';
+    wordText = q.meaning_en;
+    correctAnswer = q.expression;
+    options = [q.expression, ...shuffle(wrongPool).slice(0,3).map(x=>x.expression)];
+  } else {
+    document.getElementById('exam-q-type').textContent = '✍️ Complete the Sentence';
+    questionText = 'Fill in the blank:';
+    const blank = q.example.replace(new RegExp(q.expression.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'i'), '______');
+    wordText = blank;
+    correctAnswer = q.expression;
+    options = [q.expression, ...shuffle(wrongPool).slice(0,3).map(x=>x.expression)];
+  }
+
+  document.getElementById('exam-question').textContent = questionText;
+  document.getElementById('exam-word').textContent = wordText;
+  options = shuffle(options);
+  const letters = ['A','B','C','D'];
+  document.getElementById('exam-options').innerHTML = options.map((opt,i) => `
+    <button class="quiz-option" onclick="answerExam(this,'${escQ(opt)}','${escQ(correctAnswer)}','${escQ(q.expression)}')">
+      <span class="option-letter">${letters[i]}</span>${opt}
+    </button>
+  `).join('');
+}
+
+function answerExam(btn, chosen, correct, expr) {
+  document.querySelectorAll('#exam-options .quiz-option').forEach(b => b.disabled = true);
+  const isCorrect = chosen === correct;
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  document.querySelectorAll('#exam-options .quiz-option').forEach(b => {
+    if (b.textContent.trim().slice(1).trim() === correct) b.classList.add('correct');
+  });
+  const fb = document.getElementById('exam-feedback');
+  fb.className = 'quiz-feedback show ' + (isCorrect ? 'correct' : 'wrong');
+  fb.innerHTML = isCorrect ? `✅ Correct!` : `❌ Correct: ${correct}`;
+
+  state.totalAnswered++;
+  if (isCorrect) {
+    state.examCorrect++;
+    state.totalCorrect++;
+    state.examIncorrect = state.examIncorrect.filter(x => x !== expr);
+  } else {
+    if (!state.examIncorrect.includes(expr)) state.examIncorrect.push(expr);
+    if (!state.quizIncorrect.includes(expr)) state.quizIncorrect.push(expr);
+  }
+  document.getElementById('exam-score-display').textContent = `✅ ${state.examCorrect}`;
+  saveState();
+
+  if (state.examIndex + 1 >= state.examSession.length) {
+    setTimeout(showExamResult, 1000);
+  } else {
+    document.getElementById('exam-next-btn').classList.add('show');
+  }
+}
+
+function nextExamQuestion() {
+  state.examIndex++;
+  showExamQuestion();
+}
+
+function showExamResult() {
+  document.getElementById('exam-card').style.display = 'none';
+  const res = document.getElementById('exam-result');
+  res.classList.add('show');
+  const pct = Math.round((state.examCorrect / state.examSession.length) * 100);
+  if (pct > state.bestScore) { state.bestScore = pct; saveState(); }
+  document.getElementById('exam-result-score').textContent = `${state.examCorrect}/50`;
+  document.getElementById('exam-result-label').textContent = `${pct}% accuracy`;
+  document.getElementById('exam-result-emoji').textContent = pct >= 80 ? '🏆' : pct >= 50 ? '🎯' : '💪';
+  updateDashboard();
+}
+
+// ============================================================
+// STUDY MODE
+// ============================================================
+function initStudy() {
+  state.studyList = getFiltered();
+  state.studyIndex = 0;
+  renderStudy();
+}
+
+function renderStudy() {
+  const list = state.studyList;
+  if (!list.length) { document.getElementById('study-area').innerHTML = '<div class="empty-state"><div class="empty-icon">📚</div><p>No items.</p></div>'; return; }
+  const idx = ((state.studyIndex % list.length) + list.length) % list.length;
+  const c = list[idx];
+  state.studied.add(c.expression);
+  saveState();
+  document.getElementById('study-area').innerHTML = `
+    <div class="study-card">
+      <div class="s-expr">${c.expression}</div>
+      <span class="s-type ${c.type==='Phrasal Verb'?'phrasal':'idiom'}">${c.type}</span>
+      <div class="s-en"><strong>🇬🇧</strong> ${c.meaning_en}</div>
+      <div class="s-th"><strong>🇹🇭</strong> ${c.meaning_th}</div>
+      <div class="s-ex">📝 "${c.example}"</div>
+      <div class="s-tr">🔤 ${c.example_translation}</div>
+    </div>
+    <div style="text-align:center;color:var(--gray-muted);font-size:.85rem;margin-bottom:8px">${idx+1} / ${list.length}</div>
+  `;
+  updateDashboard();
+}
+
+function studyPrev() { state.studyIndex--; renderStudy(); }
+function studyNext() { state.studyIndex++; renderStudy(); }
+
+// ============================================================
+// DIFFICULT
+// ============================================================
+function renderDifficult() {
+  const list = DB.filter(x => state.difficult.has(x.expression));
+  const grid = document.getElementById('difficult-grid');
+  if (!list.length) {
+    grid.innerHTML = '<div class="empty-state"><div class="empty-icon">⭐</div><p>No difficult expressions yet. Star words to add them here!</p></div>';
+    return;
+  }
+  grid.innerHTML = list.map(card => `
+    <div class="word-card">
+      <div class="wc-top">
+        <div class="wc-expr">${card.expression}</div>
+        <div class="wc-type ${card.type==='Phrasal Verb'?'phrasal':'idiom'}">${card.type}</div>
+      </div>
+      <div class="wc-en">${card.meaning_en}</div>
+      <div class="wc-th">${card.meaning_th}</div>
+      <div class="wc-ex">"${card.example}"</div>
+      <button class="star-small starred" onclick="toggleStar('${card.expression.replace(/'/g,"\\'")}',this);renderDifficult()">★</button>
+    </div>
+  `).join('');
+}
+
+function clearDifficult() {
+  if (confirm('Clear all difficult expressions?')) {
+    state.difficult.clear();
+    saveState();
+    renderDifficult();
+    updateDashboard();
+  }
+}
+
+// ============================================================
+// REVIEW MISTAKES
+// ============================================================
+function renderReview() {
+  const allMistakes = [...new Set([...state.quizIncorrect, ...state.examIncorrect])];
+  const content = document.getElementById('review-content');
+  if (!allMistakes.length) {
+    content.innerHTML = '<div class="empty-state"><div class="empty-icon">🔥</div><p>No mistakes yet! Take a quiz first.</p></div>';
+    return;
+  }
+  const list = DB.filter(x => allMistakes.includes(x.expression));
+  content.innerHTML = `
+    <p style="margin-bottom:12px;color:var(--gray-muted);font-weight:700">${list.length} expression(s) to review:</p>
+    <div class="browse-grid">
+      ${list.map(card => `
+        <div class="word-card">
+          <div class="wc-top">
+            <div class="wc-expr">${card.expression}</div>
+            <div class="wc-type ${card.type==='Phrasal Verb'?'phrasal':'idiom'}">${card.type}</div>
+          </div>
+          <div class="wc-en">${card.meaning_en}</div>
+          <div class="wc-th">${card.meaning_th}</div>
+          <div class="wc-ex">"${card.example}"</div>
+        </div>
+      `).join('')}
+    </div>
+    <div style="margin-top:20px;text-align:center">
+      <button class="start-exam-btn" onclick="startQuiz('review');showMode('quiz')">Quiz on Mistakes</button>
+    </div>
+  `;
+}
+
+// ============================================================
+// DASHBOARD
+// ============================================================
+function updateDashboard() {
+  const allMistakes = [...new Set([...state.quizIncorrect, ...state.examIncorrect])];
+  document.getElementById('d-total').textContent = DB.length;
+  document.getElementById('d-studied').textContent = state.studied.size;
+  const pct = state.totalAnswered ? Math.round((state.totalCorrect/state.totalAnswered)*100) : 0;
+  document.getElementById('d-score').textContent = pct + '%';
+  document.getElementById('d-incorrect').textContent = allMistakes.length;
+  document.getElementById('d-difficult').textContent = state.difficult.size;
+  document.getElementById('d-best').textContent = state.bestScore + '%';
+  document.getElementById('d-streak').textContent = state.streak + '🔥';
+  renderBadges();
+}
+
+function renderBadges() {
+  const badges = [];
+  if (state.studied.size >= 10) badges.push({e:'🌱',n:'Beginner'});
+  if (state.studied.size >= 50) badges.push({e:'📖',n:'Reader'});
+  if (state.studied.size >= 100) badges.push({e:'🎓',n:'Scholar'});
+  if (state.totalCorrect >= 10) badges.push({e:'✅',n:'Correct x10'});
+  if (state.totalCorrect >= 50) badges.push({e:'🏅',n:'Correct x50'});
+  if (state.bestScore >= 80) badges.push({e:'⭐',n:'High Score'});
+  if (state.streak >= 3) badges.push({e:'🔥',n:'Streak 3+'});
+  if (state.difficult.size >= 10) badges.push({e:'💪',n:'Challenger'});
+  document.getElementById('badge-list').innerHTML = badges.map(b =>
+    `<span class="badge earned">${b.e} ${b.n}</span>`
+  ).join('') || '<span style="color:var(--gray-muted);font-size:.85rem">Complete quizzes to earn badges!</span>';
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+// ============================================================
+// INIT
+// ============================================================
+loadState();
+updateStreak();
+state.fcList = [...DB];
+renderCard();
+updateDashboard();
+</script>
+</body>
+</html>
