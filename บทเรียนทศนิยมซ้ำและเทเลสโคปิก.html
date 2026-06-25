@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ทศนิยมซ้ำ &amp; เทเลสโคปิก</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #ffffff;
+    font-family: "Sarabun", "Segoe UI", Tahoma, sans-serif;
+    color: #1f2937;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .wrap {
+    width: 100%;
+    max-width: 860px;
+    padding: 2rem 1.25rem 1.5rem;
+  }
+  .section-label {
+    text-align: center;
+    font-size: 13px;
+    letter-spacing: .04em;
+    color: #9ca3af;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .stage-title {
+    text-align: center;
+    font-size: 17px;
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 1.6rem;
+    min-height: 24px;
+  }
+  .stage {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    gap: 18px;
+  }
+  .stage.active { display: flex; }
+
+  .formula-card {
+    border: 1.5px dashed #e9a8d0;
+    background: #fdf2f8;
+    border-radius: 16px;
+    padding: 1.4rem 1.6rem;
+    text-align: center;
+    font-size: 19px;
+    line-height: 2.1;
+  }
+  .formula-card .top { border-bottom: 2px solid #831843; padding-bottom: 6px; margin-bottom: 6px; color:#831843; font-weight:600;}
+  .formula-card .bottom { color: #9d174d; font-size: 16px; }
+  .formula-card b.nine { color:#c2410c; }
+  .formula-card b.zero { color:#1d4ed8; }
+
+  .decimal-display { font-size: 56px; font-weight: 600; letter-spacing: 2px; }
+  .d { display: inline-block; padding: 0 2px; border-radius: 6px; transition: background .3s, color .3s; }
+  .nonrep { color: #1d4ed8; }
+  .rep { color: #c2410c; }
+  .repwrap { position: relative; display: inline-block; }
+  .vinculum { position: absolute; top: -12px; left: 4px; right: 4px; height: 3px; background: #c2410c; border-radius: 2px; }
+
+  .callouts { display: flex; gap: 60px; font-size: 14px; }
+  .callout { display: flex; flex-direction: column; align-items: center; gap: 4px; max-width: 150px; text-align: center;}
+  .callout .arrow { font-size: 20px; }
+  .callout.blue { color: #1d4ed8; }
+  .callout.orange { color: #c2410c; }
+  .callout .badge { background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 4px 10px; }
+  .callout.orange .badge { background: #fff7ed; border-color: #fed7aa; }
+
+  .calc-row { font-size: 30px; font-weight: 600; display:flex; align-items:center; gap:14px; opacity:0; transform: translateY(8px); animation: rise .5s ease forwards; }
+  .calc-row.r2 { animation-delay: .25s; }
+  .calc-row.r3 { animation-delay: .5s; font-size: 34px; }
+  @keyframes rise { to { opacity:1; transform:translateY(0); } }
+  .pop { display:inline-block; animation: pop .45s ease .15s both; }
+  @keyframes pop { 0%{ transform: scale(.4); opacity:0;} 70%{ transform: scale(1.15);} 100%{ transform: scale(1); opacity:1;} }
+
+  .denom-build { font-size: 30px; font-weight:600; display:flex; align-items:center; gap:10px; }
+  .denom-build span.dnine { color:#c2410c; opacity:0; animation: pop .4s ease .1s forwards; }
+  .denom-build span.dzero { color:#1d4ed8; opacity:0; animation: pop .4s ease .55s forwards; }
+  .hint-line { font-size: 14px; color:#6b7280; }
+
+  .fraction { display:inline-flex; flex-direction:column; align-items:center; line-height:1.15; }
+  .fraction .bar { width:100%; height:3px; background:#1f2937; margin:4px 0; }
+  .final-box { border: 2px solid #15803d; background:#f0fdf4; border-radius:16px; padding:1.2rem 2rem; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .final-box .answer { font-size:42px; font-weight:700; color:#15803d; opacity:0; transform: scale(.6); animation: drop .55s cubic-bezier(.34,1.56,.64,1) .3s forwards; }
+  @keyframes drop { to { opacity:1; transform: scale(1); } }
+  .sub-note { font-size:13px; color:#9ca3af; }
+
+  .terms-row { display:flex; flex-wrap:wrap; justify-content:center; gap:8px; font-size:17px; font-weight:600; max-width: 780px; }
+  .term { padding:6px 10px; border-radius:8px; background:#f3f4f6; transition: opacity .5s, transform .5s; }
+  .term.pos { color:#0f766e; background:#ecfdf5; }
+  .term.neg { color:#b45309; background:#fff7ed; }
+  .term.survivor { font-size:20px; box-shadow: 0 0 0 2px currentColor inset; }
+  .term.dots { color:#9ca3af; background:transparent; }
+  .term.cancel-out { opacity:0; transform: scale(.5); }
+
+  .plain-eq { font-size: 20px; text-align:center; max-width: 800px; line-height: 1.8; }
+  .plain-eq .frac { display:inline-flex; flex-direction:column; align-items:center; margin:0 4px; vertical-align:middle; font-size:0.85em; }
+  .plain-eq .frac .bar { width:100%; height:2px; background:currentColor; margin:1px 0; }
+
+  .result-line { font-size: 26px; font-weight:700; color:#15803d; opacity:0; animation: rise .5s ease .9s forwards; }
+
+  .controls { display:flex; align-items:center; justify-content:center; gap:18px; margin-top: 2rem; }
+  button.nav {
+    background: #ffffff; border: 1.5px solid #d1d5db; border-radius: 10px;
+    padding: 10px 22px; font-size: 15px; cursor: pointer; color:#374151;
+    transition: background .15s, border-color .15s;
+  }
+  button.nav:hover:not(:disabled) { background:#f3f4f6; border-color:#9ca3af; }
+  button.nav:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:6px; align-items:center; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#e5e7eb; }
+  .dot.active { background:#374151; }
+  .dot.gap { width:14px; }
+
+  .tele-svg-wrap { width: 100%; display:flex; justify-content:center; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="section-label" id="sectionLabel"></div>
+  <div class="stage-title" id="stageTitle"></div>
+
+  <!-- ============ ส่วนที่ 1: ทศนิยมซ้ำ ============ -->
+  <div class="stage" data-stage="0">
+    <div class="formula-card">
+      <div class="top">เลขทศนิยมทั้งหมด &minus; ตัวไม่ซ้ำ</div>
+      <div class="bottom">เลข <b class="nine">9</b> ใส่ตามจำนวนที่ซ้ำ&nbsp;&nbsp;เลข <b class="zero">0</b> ใส่ตามจำนวนที่ไม่ซ้ำ</div>
+    </div>
+    <div class="hint-line">โจทย์: เปลี่ยน 0.9&#772;3&#772; (9 ไม่ซ้ำ, 3 ซ้ำตลอด) ให้เป็นเศษส่วน</div>
+  </div>
+
+  <div class="stage" data-stage="1">
+    <div class="decimal-display">0.<span class="d nonrep">9</span><span class="repwrap"><span class="vinculum"></span><span class="d rep">3</span></span></div>
+    <div class="callouts">
+      <div class="callout blue">
+        <div class="badge">9</div>
+        <div class="arrow">&#8593;</div>
+        <div>ตัวไม่ซ้ำ<br>(ไม่มีขีดบนหัว)</div>
+      </div>
+      <div class="callout orange">
+        <div class="badge">3</div>
+        <div class="arrow">&#8593;</div>
+        <div>ตัวซ้ำ<br>(มีขีดบนหัว)</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage" data-stage="2">
+    <div class="calc-row r1">เลขทศนิยมทั้งหมด&nbsp;=&nbsp;<span class="pop"><span class="nonrep">9</span><span class="rep">3</span></span></div>
+    <div class="calc-row r2">ตัวไม่ซ้ำ&nbsp;=&nbsp;<span class="nonrep">9</span></div>
+    <div class="calc-row r3">93 &minus; 9&nbsp;=&nbsp;<span class="pop" style="color:#15803d">84</span> &nbsp;&larr; ตัวเศษ</div>
+  </div>
+
+  <div class="stage" data-stage="3">
+    <div class="hint-line">ตัวซ้ำมี 1 ตัว &rarr; ใส่เลข 9 จำนวน 1 ตัว &nbsp;&nbsp;|&nbsp;&nbsp; ตัวไม่ซ้ำมี 1 ตัว &rarr; ใส่เลข 0 จำนวน 1 ตัว</div>
+    <div class="denom-build">ตัวส่วน&nbsp;=&nbsp;<span class="dnine">9</span><span class="dzero">0</span> &nbsp;&larr; (9 จากตัวซ้ำ, 0 จากตัวไม่ซ้ำ)</div>
+  </div>
+
+  <div class="stage" data-stage="4">
+    <div class="final-box">
+      <div class="fraction" style="font-size:40px;">
+        <span>84</span>
+        <span class="bar"></span>
+        <span>90</span>
+      </div>
+      <div class="answer">= 84⁄90</div>
+      <div class="sub-note">(ถ้าทำเป็นเศษส่วนอย่างต่ำ จะได้ 14/15 ซึ่งเท่ากับ 0.9333...)</div>
+    </div>
+  </div>
+
+  <!-- ============ ส่วนที่ 2: เทเลสโคปิก ============ -->
+  <div class="stage" data-stage="5">
+    <div class="plain-eq">
+      1/20 + 1/30 + 1/42 + ... + 1/380 + 1/420
+    </div>
+    <div class="hint-line">ผลรวมของเศษส่วนชุดนี้ ดูเหมือนไม่เกี่ยวข้องกัน... แต่จริงๆ แล้วซ่อนรูปแบบไว้</div>
+  </div>
+
+  <div class="stage" data-stage="6">
+    <div class="plain-eq">
+      1/(4&times;5) + 1/(5&times;6) + 1/(6&times;7) + ... + 1/(19&times;20) + 1/(20&times;21)
+    </div>
+    <div class="hint-line">ตัวส่วนแต่ละพจน์ คือผลคูณของจำนวนเต็มสองตัวที่ติดกัน n &times; (n+1)</div>
+  </div>
+
+  <div class="stage" data-stage="7">
+    <div class="terms-row" id="termsRow"></div>
+    <div class="hint-line">เพราะ 1/(n(n+1)) = 1/n &minus; 1/(n+1) เราจึงแยกแต่ละพจน์เป็นผลต่างได้</div>
+  </div>
+
+  <div class="stage" data-stage="8">
+    <div class="terms-row" id="termsRowCancel"></div>
+    <div class="result-line">= 1/4 &minus; 1/21 = 17/84</div>
+  </div>
+
+  <div class="controls">
+    <button class="nav" id="prevBtn">&larr; ก่อนหน้า</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav" id="nextBtn">ถัดไป &rarr;</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  var sectionLabels = [
+    "ส่วนที่ 1 — เปลี่ยนทศนิยมซ้ำเป็นเศษส่วน",
+    "ส่วนที่ 2 — ผลรวมเศษส่วนแบบเทเลสโคปิก"
+  ];
+  var titles = [
+    "ขั้นที่ 1: สูตรการแปลง",
+    "ขั้นที่ 2: แยกตัวไม่ซ้ำ กับ ตัวซ้ำ",
+    "ขั้นที่ 3: คำนวณตัวเศษ",
+    "ขั้นที่ 4: สร้างตัวส่วน",
+    "ขั้นที่ 5: คำตอบ",
+    "ขั้นที่ 1: โจทย์ผลรวม",
+    "ขั้นที่ 2: แยกตัวส่วนเป็นผลคูณ",
+    "ขั้นที่ 3: แตกเป็นผลต่างของเศษส่วน",
+    "ขั้นที่ 4: ตัดกันไปเรื่อยๆ จนเหลือตัวแรกกับตัวสุดท้าย"
+  ];
+  var sectionOf = [0,0,0,0,0,1,1,1,1];
+  var stages = document.querySelectorAll('.stage');
+  var total = stages.length;
+  var stage = 0;
+
+  var dotsWrap = document.getElementById('dots');
+  for (var i=0;i<total;i++){
+    if (i===5){ var gap=document.createElement('div'); gap.style.width='10px'; dotsWrap.appendChild(gap); }
+    var dot=document.createElement('div'); dot.className='dot'; dotsWrap.appendChild(dot);
+  }
+
+  function buildTerms(rowId, withCancelClasses){
+    var row = document.getElementById(rowId);
+    if (!row) return;
+    var data = [
+      {t:'1/4', c:'pos survivor'},
+      {t:'&minus;1/5', c:'neg'},
+      {t:'1/5', c:'pos'},
+      {t:'&minus;1/6', c:'neg'},
+      {t:'1/6', c:'pos'},
+      {t:'...', c:'dots'},
+      {t:'&minus;1/20', c:'neg'},
+      {t:'1/20', c:'pos'},
+      {t:'&minus;1/21', c:'neg survivor'}
+    ];
+    row.innerHTML = '';
+    data.forEach(function(d, idx){
+      var span = document.createElement('span');
+      span.className = 'term ' + d.c;
+      span.innerHTML = d.t;
+      if (withCancelClasses && d.c.indexOf('survivor')===-1 && d.c!=='dots'){
+        span.classList.add('will-cancel');
+      }
+      row.appendChild(span);
+    });
+  }
+  buildTerms('termsRow', false);
+  buildTerms('termsRowCancel', true);
+
+  function render(){
+    stages.forEach(function(s){ s.classList.remove('active'); });
+    var current = document.querySelector('.stage[data-stage="'+stage+'"]');
+    current.classList.add('active');
+    document.getElementById('sectionLabel').textContent = sectionLabels[sectionOf[stage]];
+    document.getElementById('stageTitle').textContent = titles[stage];
+
+    if (stage === 8){
+      var cancelEls = current.querySelectorAll('.will-cancel');
+      cancelEls.forEach(function(){});
+      setTimeout(function(){
+        cancelEls.forEach(function(el, i){
+          setTimeout(function(){ el.classList.add('cancel-out'); }, i*180);
+        });
+      }, 350);
+    }
+
+    var dotEls = document.querySelectorAll('.dot');
+    dotEls.forEach(function(d,i){ d.classList.toggle('active', i===stage); });
+
+    document.getElementById('prevBtn').disabled = (stage===0);
+    document.getElementById('nextBtn').disabled = (stage===total-1);
+
+    var anims = current.querySelectorAll('[style*="animation"], .calc-row, .pop, .answer, .result-line, .dnine, .dzero');
+    anims.forEach(function(el){
+      var clone = el.cloneNode(true);
+      el.parentNode.replaceChild(clone, el);
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', function(){
+    if (stage>0){ stage--; render(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', function(){
+    if (stage<total-1){ stage++; render(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

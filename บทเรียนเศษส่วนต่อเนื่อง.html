@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>เศษส่วนต่อเนื่อง — วิธีเตะใส่ 1</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    background: #ffffff;
+    font-family: "Sarabun", "Segoe UI", Tahoma, sans-serif;
+    color: #1f2937;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  .wrap { width: 100%; max-width: 860px; padding: 2rem 1.25rem 1.5rem; }
+  .section-label {
+    text-align: center; font-size: 13px; letter-spacing: .04em;
+    color: #9ca3af; text-transform: uppercase; margin-bottom: 4px;
+  }
+  .stage-title {
+    text-align: center; font-size: 16px; font-weight: 600; color: #374151;
+    margin-bottom: 1.6rem; min-height: 24px; padding: 0 1rem;
+  }
+  .stage {
+    display: none; flex-direction: column; align-items: center; justify-content: center;
+    min-height: 280px; gap: 18px;
+  }
+  .stage.active { display: flex; }
+
+  .formula-card {
+    border: 1.5px dashed #e9a8d0; background: #fdf2f8; border-radius: 16px;
+    padding: 1.2rem 1.6rem; text-align: center; font-size: 19px; line-height: 1.9;
+  }
+  .formula-card b { color:#831843; }
+
+  .frac { display:inline-flex; flex-direction:column; align-items:center; vertical-align:middle; margin:0 6px; line-height:1.2; }
+  .frac .bar { width:100%; height:2px; background:currentColor; margin:3px 0; }
+  .frac.sub { font-size:0.72em; }
+
+  .kicked { color:#c2410c; display:inline-block; }
+  .appear1 { color:#1d4ed8; display:inline-block; font-weight:600; }
+  @keyframes dropIn {
+    0%   { transform: translateY(-18px) rotate(-18deg); opacity:0; }
+    60%  { transform: translateY(5px) rotate(6deg); opacity:1; }
+    100% { transform: translateY(0) rotate(0); opacity:1; }
+  }
+  .kick-play { animation: dropIn .6s ease; }
+
+  .main-display { font-size: 32px; display:flex; align-items:center; gap:6px; }
+  .division-line { font-size: 16px; color:#6b7280; margin-bottom: 4px; }
+
+  .sumcard { display:flex; gap:18px; font-size:20px; flex-wrap:wrap; justify-content:center; }
+  .badge { background:#f3f4f6; border-radius:10px; padding:8px 18px; }
+  .badge.c { background:#fff7ed; }
+
+  .final-line { font-size:19px; text-align:center; line-height:2.1; }
+  .final-line .frac { font-size: 0.9em; }
+  .final-answer { color:#15803d; font-weight:700; }
+
+  .note { font-size: 13px; color:#9ca3af; max-width: 560px; text-align:center; }
+
+  .controls { display:flex; align-items:center; justify-content:center; gap:18px; margin-top: 2rem; }
+  button.nav {
+    background: #ffffff; border: 1.5px solid #d1d5db; border-radius: 10px;
+    padding: 10px 22px; font-size: 15px; cursor: pointer; color:#374151;
+    transition: background .15s, border-color .15s;
+  }
+  button.nav:hover:not(:disabled) { background:#f3f4f6; border-color:#9ca3af; }
+  button.nav:disabled { opacity:.35; cursor:default; }
+  .dots { display:flex; gap:6px; align-items:center; }
+  .dot { width:8px; height:8px; border-radius:50%; background:#e5e7eb; }
+  .dot.active { background:#374151; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="section-label">เศษส่วนต่อเนื่อง (Continued Fraction)</div>
+  <div class="stage-title" id="stageTitle"></div>
+
+  <div class="stage" data-stage="0">
+    <div class="formula-card">
+      เขียน <b>53/12</b> ให้อยู่ในรูป<br>
+      <b>A&nbsp;+&nbsp;1/(B&nbsp;+&nbsp;1/C)</b>
+    </div>
+    <div class="note">วิธีทำ: หาร &rarr; บวก &rarr; เตะใส่ 1 (สลับเศษส่วนให้ตัวเศษกลายเป็น 1 แล้วเตะตัวเศษเดิมลงไปเป็นส่วน) ทำซ้ำจนจบ</div>
+  </div>
+
+  <div class="stage" data-stage="1">
+    <div class="division-line">53 &divide; 12 = 4 เศษ 5</div>
+    <div class="main-display">4&nbsp;<span class="frac"><span>5</span><span class="bar"></span><span>12</span></span></div>
+  </div>
+
+  <div class="stage" data-stage="2">
+    <div class="main-display">4&nbsp;+&nbsp;<span class="frac"><span>5</span><span class="bar"></span><span>12</span></span></div>
+    <div class="note">เขียนเศษเป็นรูปบวก: A + เศษส่วน</div>
+  </div>
+
+  <div class="stage" data-stage="3">
+    <div class="main-display" id="kick1"></div>
+    <div class="note">เตะใส่ 1: สลับ 5/12 ให้เป็น 1/(12/5) — เลข 5 (ตัวเศษเดิม) ถูกเตะลงไปเป็นส่วนของเศษส่วนใหม่ 12/5</div>
+  </div>
+
+  <div class="stage" data-stage="4">
+    <div class="division-line">12 &divide; 5 = 2 เศษ 2</div>
+    <div class="main-display" id="div2"></div>
+  </div>
+
+  <div class="stage" data-stage="5">
+    <div class="main-display" id="add2"></div>
+    <div class="note">เขียนเศษ 2/5 เป็นรูปบวกอีกครั้ง</div>
+  </div>
+
+  <div class="stage" data-stage="6">
+    <div class="main-display" id="kick2"></div>
+    <div class="note">เตะใส่ 1 อีกครั้ง: สลับ 2/5 ให้เป็น 1/(5/2) — เลข 2 ถูกเตะลงไปเป็นส่วน</div>
+  </div>
+
+  <div class="stage" data-stage="7">
+    <div class="sumcard">
+      <div class="badge">A&nbsp;=&nbsp;4</div>
+      <div class="badge">B&nbsp;=&nbsp;2</div>
+      <div class="badge c">C&nbsp;=&nbsp;<span class="frac sub"><span>5</span><span class="bar"></span><span>2</span></span></div>
+    </div>
+    <div class="note">ข้อนี้ไม่ได้บังคับว่า A, B, C ต้องเป็นจำนวนเต็มบวก จึงหยุดที่ C = 5/2 ได้ (ไม่ต้องหารต่อ)</div>
+  </div>
+
+  <div class="stage" data-stage="8">
+    <div class="final-line" id="finalCalc"></div>
+  </div>
+
+  <div class="controls">
+    <button class="nav" id="prevBtn">&larr; ก่อนหน้า</button>
+    <div class="dots" id="dots"></div>
+    <button class="nav" id="nextBtn">ถัดไป &rarr;</button>
+  </div>
+</div>
+
+<script>
+(function(){
+  function frac(n,d,cls){
+    return '<span class="frac'+(cls?(' '+cls):'')+'"><span class="num">'+n+'</span><span class="bar"></span><span class="den">'+d+'</span></span>';
+  }
+
+  document.getElementById('kick1').innerHTML =
+    '4&nbsp;+&nbsp;' + frac('<span class="appear1 kick-play">1</span>', frac('12','<span class="kicked kick-play">5</span>','sub'));
+
+  document.getElementById('div2').innerHTML =
+    '4&nbsp;+&nbsp;' + frac('1', '2&nbsp;'+frac('2','5','sub'));
+
+  document.getElementById('add2').innerHTML =
+    '4&nbsp;+&nbsp;' + frac('1', '2&nbsp;+&nbsp;'+frac('2','5','sub'));
+
+  document.getElementById('kick2').innerHTML =
+    '4&nbsp;+&nbsp;' + frac('1', '2&nbsp;+&nbsp;' + frac('<span class="appear1 kick-play">1</span>', frac('5','<span class="kicked kick-play">2</span>','sub'), 'sub'));
+
+  document.getElementById('finalCalc').innerHTML =
+    '2A + B &minus; C&nbsp;=&nbsp;2(4) + 2 &minus; ' + frac('5','2','sub') +
+    '&nbsp;=&nbsp;8 + 2 &minus; ' + frac('5','2','sub') +
+    '&nbsp;=&nbsp;' + frac('16 + 4 &minus; 5','2','sub') +
+    '&nbsp;=&nbsp;<span class="final-answer">' + frac('15','2','sub') + '</span>';
+
+  var titles = [
+    "ขั้นที่ 1: โจทย์",
+    "ขั้นที่ 2: หาร",
+    "ขั้นที่ 3: บวก",
+    "ขั้นที่ 4: เตะใส่ 1",
+    "ขั้นที่ 5: หารต่อ",
+    "ขั้นที่ 6: บวก",
+    "ขั้นที่ 7: เตะใส่ 1 อีกครั้ง",
+    "ขั้นที่ 8: อ่านค่า A, B, C",
+    "ขั้นที่ 9: คำตอบ 2A + B − C"
+  ];
+
+  var stages = document.querySelectorAll('.stage');
+  var total = stages.length;
+  var stage = 0;
+
+  var dotsWrap = document.getElementById('dots');
+  for (var i=0;i<total;i++){
+    var dot = document.createElement('div');
+    dot.className = 'dot';
+    dotsWrap.appendChild(dot);
+  }
+
+  function render(){
+    stages.forEach(function(s){ s.classList.remove('active'); });
+    var current = document.querySelector('.stage[data-stage="'+stage+'"]');
+    current.classList.add('active');
+    document.getElementById('stageTitle').textContent = titles[stage];
+
+    var dotEls = document.querySelectorAll('.dot');
+    dotEls.forEach(function(d,i){ d.classList.toggle('active', i===stage); });
+
+    document.getElementById('prevBtn').disabled = (stage===0);
+    document.getElementById('nextBtn').disabled = (stage===total-1);
+
+    var kickEls = current.querySelectorAll('.kick-play');
+    kickEls.forEach(function(el){
+      var clone = el.cloneNode(true);
+      el.parentNode.replaceChild(clone, el);
+    });
+  }
+
+  document.getElementById('prevBtn').addEventListener('click', function(){
+    if (stage>0){ stage--; render(); }
+  });
+  document.getElementById('nextBtn').addEventListener('click', function(){
+    if (stage<total-1){ stage++; render(); }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
