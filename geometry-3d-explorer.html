@@ -1,0 +1,964 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>พื้นที่ vs พื้นที่ผิว vs ปริมาตร</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap');
+
+  :root{
+    --bg: #0f1420;
+    --panel: #161d2e;
+    --panel-2: #1d2740;
+    --line: #2a3552;
+    --ink: #eef1fb;
+    --ink-dim: #9aa6c4;
+    --area: #4fd1c5;     /* teal - พื้นที่ (ฐาน) */
+    --lateral: #f6ad55;  /* orange - พื้นที่ผิวข้าง */
+    --surface: #fc8181;  /* coral/red - พื้นที่ผิว (รวม) */
+    --volume: #9f7aea;   /* purple - ปริมาตร */
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;height:100%;background:var(--bg);color:var(--ink);font-family:'Sarabun',sans-serif;overflow:hidden;}
+
+  #app{display:flex;flex-direction:column;height:100%;}
+
+  header{
+    padding:18px 24px 12px;
+    border-bottom:1px solid var(--line);
+    flex-shrink:0;
+  }
+  header h1{
+    margin:0 0 2px;
+    font-size:20px;
+    font-weight:700;
+    letter-spacing:.2px;
+  }
+  header p{margin:0;color:var(--ink-dim);font-size:13.5px;}
+
+  #main{flex:1;display:flex;min-height:0;}
+
+  #canvas-wrap{flex:1;position:relative;min-width:0;}
+  #canvas-wrap canvas{display:block;width:100%;height:100%;}
+
+  .formula-box{
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:12px 16px;
+    text-align:center;
+    margin:16px 16px 0;
+    transition:border-color .25s ease;
+  }
+  .formula-box .label{
+    font-size:11.5px;
+    color:var(--ink-dim);
+    letter-spacing:.06em;
+    margin-bottom:4px;
+  }
+  .formula-box .formula{
+    font-family:'JetBrains Mono',monospace;
+    font-size:17px;
+    font-weight:700;
+  }
+  .formula-box .value{
+    font-family:'JetBrains Mono',monospace;
+    font-size:12.5px;
+    color:var(--ink-dim);
+    margin-top:3px;
+  }
+
+  #side{
+    width:340px;
+    flex-shrink:0;
+    border-left:1px solid var(--line);
+    background:var(--panel);
+    display:flex;
+    flex-direction:column;
+    overflow-y:auto;
+  }
+
+  .shape-picker{
+    display:flex;
+    gap:6px;
+    padding:14px 16px 10px;
+    border-bottom:1px solid var(--line);
+  }
+  .shape-btn{
+    flex:1;
+    background:var(--panel-2);
+    border:1px solid var(--line);
+    color:var(--ink-dim);
+    border-radius:8px;
+    padding:8px 4px;
+    font-family:'Sarabun',sans-serif;
+    font-size:12.5px;
+    cursor:pointer;
+    transition:.15s;
+  }
+  .shape-btn:hover{color:var(--ink);border-color:#3a4666;}
+  .shape-btn.active{
+    background:#26315000;
+    border-color:#5b6dff;
+    color:#fff;
+    box-shadow:0 0 0 1px #5b6dff inset;
+  }
+
+  .modes{
+    padding:14px 16px;
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    border-bottom:1px solid var(--line);
+  }
+  .mode-btn{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    padding:11px 12px;
+    border-radius:10px;
+    border:1px solid var(--line);
+    background:var(--panel-2);
+    cursor:pointer;
+    transition:.15s;
+    text-align:left;
+  }
+  .mode-btn:hover{border-color:#3a4666;}
+  .swatch{
+    width:14px;height:14px;border-radius:4px;flex-shrink:0;
+  }
+  .mode-text{flex:1;}
+  .mode-title{font-size:14px;font-weight:600;line-height:1.3;}
+  .mode-sub{font-size:11.5px;color:var(--ink-dim);margin-top:1px;}
+  .mode-btn.active{background:rgba(255,255,255,.04);}
+  .mode-btn[data-mode="area"].active{border-color:var(--area);box-shadow:0 0 0 1px var(--area) inset;}
+  .mode-btn[data-mode="lateral"].active{border-color:var(--lateral);box-shadow:0 0 0 1px var(--lateral) inset;}
+  .mode-btn[data-mode="surface"].active{border-color:var(--surface);box-shadow:0 0 0 1px var(--surface) inset;}
+  .mode-btn[data-mode="volume"].active{border-color:var(--volume);box-shadow:0 0 0 1px var(--volume) inset;}
+
+  .explain{
+    padding:16px;
+    font-size:13.5px;
+    line-height:1.65;
+    color:var(--ink-dim);
+    flex:1;
+  }
+  .explain b{color:var(--ink);font-weight:600;}
+  .explain .tag{
+    display:inline-block;
+    font-size:11px;
+    font-weight:700;
+    padding:2px 8px;
+    border-radius:99px;
+    margin-bottom:8px;
+    letter-spacing:.03em;
+  }
+
+  .controls{
+    padding:12px 16px 18px;
+    border-top:1px solid var(--line);
+  }
+  .ctrl-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;}
+  .ctrl-row:last-child{margin-bottom:0;}
+  .ctrl-row label{font-size:12px;color:var(--ink-dim);width:46px;flex-shrink:0;}
+  .ctrl-row input[type=range]{flex:1;accent-color:#5b6dff;}
+  .ctrl-row .val{font-family:'JetBrains Mono',monospace;font-size:12px;width:34px;text-align:right;color:var(--ink);}
+
+  .hint{
+    font-size:11.5px;
+    color:#5f6a8c;
+    padding:0 16px 14px;
+  }
+
+  /* Net (คลี่รูป) popup */
+  #netPopup{
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:240px;
+    background:rgba(22,29,46,.96);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px;
+    backdrop-filter:blur(6px);
+    display:none;
+    box-shadow:0 8px 24px rgba(0,0,0,.35);
+  }
+  #netPopup.show{display:block;}
+  #netPopup .net-title{
+    font-size:12px;
+    font-weight:700;
+    letter-spacing:.04em;
+    margin-bottom:8px;
+    color:var(--ink);
+  }
+  #netPopup .net-sub{
+    font-size:11px;
+    color:var(--ink-dim);
+    margin-top:8px;
+    line-height:1.5;
+  }
+  #netPopup svg{display:block;width:100%;height:auto;}
+  #netPopup .net-close{
+    position:absolute;
+    top:8px;
+    right:10px;
+    cursor:pointer;
+    color:var(--ink-dim);
+    font-size:16px;
+    line-height:1;
+    background:none;
+    border:none;
+    padding:2px 4px;
+  }
+  #netPopup .net-close:hover{color:var(--ink);}
+
+  @media (max-width:880px){
+    #main{flex-direction:column;}
+    #side{width:100%;border-left:none;border-top:1px solid var(--line);max-height:54%;}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>พื้นที่ · พื้นที่ผิวข้าง · พื้นที่ผิว · ปริมาตร</h1>
+    <p>หมุนรูปด้วยเมาส์ (ลาก = หมุน, สกอลล์ = ซูม) แล้วกดปุ่มด้านขวาเพื่อดูว่าแต่ละคำหมายถึงส่วนไหนของรูปทรง</p>
+  </header>
+  <div id="main">
+    <div id="canvas-wrap">
+      <div id="netPopup">
+        <button class="net-close" id="netClose">✕</button>
+        <div class="net-title" id="netTitle">รูปคลี่ (NET)</div>
+        <div id="netSvgHolder"></div>
+        <div class="net-sub" id="netSub"></div>
+      </div>
+    </div>
+    <div id="side">
+      <div class="formula-box" id="formulaBox">
+        <div class="label" id="fLabel">พื้นที่ฐาน (BASE AREA)</div>
+        <div class="formula" id="fFormula">A = π r²</div>
+        <div class="value" id="fValue">= 3.14 × 2² = 12.57 ตร.หน่วย</div>
+      </div>
+      <div class="shape-picker" id="shapePicker">
+        <button class="shape-btn active" data-shape="cylinder">ทรงกระบอก</button>
+        <button class="shape-btn" data-shape="cone">กรวย</button>
+        <button class="shape-btn" data-shape="box">ทรงสี่เหลี่ยม</button>
+        <button class="shape-btn" data-shape="sphere">ทรงกลม</button>
+      </div>
+
+      <div class="modes" id="modes">
+        <button class="mode-btn active" data-mode="area">
+          <span class="swatch" style="background:var(--area)"></span>
+          <span class="mode-text">
+            <div class="mode-title">พื้นที่ (Area)</div>
+            <div class="mode-sub">หน้าตัด 2 มิติ เช่น พื้นฐานวงกลม</div>
+          </span>
+        </button>
+        <button class="mode-btn" data-mode="lateral" id="lateralModeBtn">
+          <span class="swatch" style="background:var(--lateral)"></span>
+          <span class="mode-text">
+            <div class="mode-title">พื้นที่ผิวข้าง (Lateral)</div>
+            <div class="mode-sub">ผิวรอบข้าง ไม่รวมฐานบน-ล่าง</div>
+          </span>
+        </button>
+        <button class="mode-btn" data-mode="surface">
+          <span class="swatch" style="background:var(--surface)"></span>
+          <span class="mode-text">
+            <div class="mode-title">พื้นที่ผิว (Surface)</div>
+            <div class="mode-sub">ผิวข้าง + ฐานทุกด้าน รวมทั้งหมด</div>
+          </span>
+        </button>
+        <button class="mode-btn" data-mode="volume">
+          <span class="swatch" style="background:var(--volume)"></span>
+          <span class="mode-text">
+            <div class="mode-title">ปริมาตร (Volume)</div>
+            <div class="mode-sub">เนื้อที่ภายใน 3 มิติทั้งก้อน</div>
+          </span>
+        </button>
+      </div>
+
+      <div class="explain" id="explainBox"></div>
+
+      <div class="controls">
+        <div class="ctrl-row">
+          <label id="dim1Label">รัศมี r</label>
+          <input type="range" id="dim1" min="0.5" max="3.5" step="0.1" value="2">
+          <span class="val" id="dim1Val">2.0</span>
+        </div>
+        <div class="ctrl-row" id="dim2Row">
+          <label id="dim2Label">สูง h</label>
+          <input type="range" id="dim2" min="0.5" max="5" step="0.1" value="4">
+          <span class="val" id="dim2Val">4.0</span>
+        </div>
+        <div class="ctrl-row" id="dim3Row">
+          <label id="dim3Label">ลึก d</label>
+          <input type="range" id="dim3" min="0.5" max="3.5" step="0.1" value="2.5">
+          <span class="val" id="dim3Val">2.5</span>
+        </div>
+      </div>
+      <div class="hint">ลองลากแถบเลื่อนแล้วสังเกตว่าตัวเลขสูตรเปลี่ยนตามจริง</div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const colors = {
+  area: 0x4fd1c5,
+  lateral: 0xf6ad55,
+  surface: 0xfc8181,
+  volume: 0x9f7aea,
+  base: 0x3a4666,
+  baseLine: 0x5a6890
+};
+
+let scene, camera, renderer, group;
+let dragging=false, lastX=0, lastY=0, rotY=0.6, rotX=-0.25, dist=9.5;
+let currentShape = 'cylinder';
+let currentMode = 'area';
+let dims = { cylinder:{r:2,h:4}, cone:{r:2,h:4}, box:{w:3,h:4,d:2.5}, sphere:{r:2.2} };
+
+function initThree(){
+  const wrap = document.getElementById('canvas-wrap');
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color(0x0f1420);
+
+  camera = new THREE.PerspectiveCamera(40, wrap.clientWidth/wrap.clientHeight, 0.1, 100);
+
+  renderer = new THREE.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio,2));
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  wrap.appendChild(renderer.domElement);
+
+  const amb = new THREE.AmbientLight(0xffffff, 0.55);
+  scene.add(amb);
+  const dir1 = new THREE.DirectionalLight(0xffffff, 0.8);
+  dir1.position.set(5,8,6);
+  scene.add(dir1);
+  const dir2 = new THREE.DirectionalLight(0x6a7cff, 0.35);
+  dir2.position.set(-6,-3,-4);
+  scene.add(dir2);
+
+  group = new THREE.Group();
+  scene.add(group);
+
+  // grid floor
+  const grid = new THREE.GridHelper(14, 14, 0x2a3552, 0x1b2438);
+  grid.position.y = -2.6;
+  scene.add(grid);
+
+  updateCamera();
+  buildShape();
+
+  renderer.domElement.addEventListener('mousedown', e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;});
+  window.addEventListener('mouseup', ()=>dragging=false);
+  window.addEventListener('mousemove', e=>{
+    if(!dragging) return;
+    rotY += (e.clientX-lastX)*0.008;
+    rotX += (e.clientY-lastY)*0.008;
+    rotX = Math.max(-1.3, Math.min(1.3, rotX));
+    lastX=e.clientX; lastY=e.clientY;
+  });
+  renderer.domElement.addEventListener('wheel', e=>{
+    e.preventDefault();
+    dist += e.deltaY*0.01;
+    dist = Math.max(4, Math.min(20, dist));
+  }, {passive:false});
+
+  // touch support
+  renderer.domElement.addEventListener('touchstart', e=>{
+    dragging=true; lastX=e.touches[0].clientX; lastY=e.touches[0].clientY;
+  }, {passive:true});
+  renderer.domElement.addEventListener('touchend', ()=>dragging=false);
+  renderer.domElement.addEventListener('touchmove', e=>{
+    if(!dragging) return;
+    const t = e.touches[0];
+    rotY += (t.clientX-lastX)*0.008;
+    rotX += (t.clientY-lastY)*0.008;
+    rotX = Math.max(-1.3, Math.min(1.3, rotX));
+    lastX=t.clientX; lastY=t.clientY;
+  }, {passive:true});
+
+  window.addEventListener('resize', ()=>{
+    camera.aspect = wrap.clientWidth/wrap.clientHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  });
+
+  animate();
+}
+
+function updateCamera(){
+  camera.position.x = dist*Math.sin(rotY)*Math.cos(rotX);
+  camera.position.y = dist*Math.sin(rotX)+1.0;
+  camera.position.z = dist*Math.cos(rotY)*Math.cos(rotX);
+  camera.lookAt(0,0,0);
+}
+
+function animate(){
+  requestAnimationFrame(animate);
+  updateCamera();
+  renderer.render(scene, camera);
+}
+
+function clearGroup(){
+  while(group.children.length) group.remove(group.children[0]);
+}
+
+function matFor(hex, opts={}){
+  return new THREE.MeshStandardMaterial(Object.assign({
+    color:hex, transparent:true, opacity:0.92, roughness:0.45, metalness:0.05,
+    side:THREE.DoubleSide
+  }, opts));
+}
+function lineMat(hex){
+  return new THREE.LineBasicMaterial({color:hex, linewidth:2});
+}
+function wireGhost(){
+  return new THREE.MeshStandardMaterial({color:0x26314f, transparent:true, opacity:0.18, roughness:0.7, side:THREE.DoubleSide});
+}
+
+function addEdges(geo, color, parent){
+  const edges = new THREE.EdgesGeometry(geo);
+  const lines = new THREE.LineSegments(edges, lineMat(color));
+  parent.add(lines);
+}
+
+// ---------- CYLINDER ----------
+function buildCylinder(){
+  const {r,h} = dims.cylinder;
+  const segs = 48;
+
+  // full ghost body always present (faint) except when mode needs solid body
+  if(currentMode === 'volume'){
+    const geo = new THREE.CylinderGeometry(r,r,h,segs);
+    const mesh = new THREE.Mesh(geo, matFor(colors.volume, {opacity:0.55}));
+    group.add(mesh);
+    addEdges(geo, 0xc4b5fd, group);
+  } else {
+    // ghost wireframe body for context
+    const ghostGeo = new THREE.CylinderGeometry(r,r,h,segs);
+    const ghost = new THREE.Mesh(ghostGeo, wireGhost());
+    group.add(ghost);
+    addEdges(ghostGeo, colors.baseLine, group);
+  }
+
+  if(currentMode === 'area'){
+    // highlight bottom circle disk
+    const diskGeo = new THREE.CircleGeometry(r, segs);
+    const disk = new THREE.Mesh(diskGeo, matFor(colors.area, {opacity:0.85, side:THREE.DoubleSide}));
+    disk.rotation.x = -Math.PI/2;
+    disk.position.y = -h/2 - 0.02;
+    group.add(disk);
+    const ringGeo = new THREE.RingGeometry(r-0.01, r, segs);
+    const ring = new THREE.Mesh(ringGeo, matFor(colors.area, {opacity:1}));
+    ring.rotation.x = -Math.PI/2;
+    ring.position.y = -h/2-0.01;
+    group.add(ring);
+  }
+
+  if(currentMode === 'lateral'){
+    const lat = new THREE.CylinderGeometry(r,r,h,segs, 1, true);
+    const mesh = new THREE.Mesh(lat, matFor(colors.lateral, {opacity:0.85}));
+    group.add(mesh);
+    // rim circles
+    [h/2,-h/2].forEach(y=>{
+      const curve = new THREE.EllipseCurve(0,0,r,r,0,Math.PI*2,false,0);
+      const pts = curve.getPoints(64).map(p=>new THREE.Vector3(p.x,y,p.y));
+      const geo = new THREE.BufferGeometry().setFromPoints(pts);
+      group.add(new THREE.Line(geo, lineMat(colors.lateral)));
+    });
+  }
+
+  if(currentMode === 'surface'){
+    const lat = new THREE.CylinderGeometry(r,r,h,segs,1,true);
+    group.add(new THREE.Mesh(lat, matFor(colors.surface, {opacity:0.7})));
+    [h/2,-h/2].forEach(y=>{
+      const diskGeo = new THREE.CircleGeometry(r, segs);
+      const disk = new THREE.Mesh(diskGeo, matFor(colors.surface, {opacity:0.85}));
+      disk.rotation.x = -Math.PI/2;
+      disk.position.y = y;
+      group.add(disk);
+    });
+    addEdges(new THREE.CylinderGeometry(r,r,h,segs), 0xffd9c2, group);
+  }
+
+  return {
+    area:{label:'พื้นที่ฐาน (วงกลม)', formula:'A = π r²', val: Math.PI*r*r, unit:'ตร.หน่วย'},
+    lateral:{label:'พื้นที่ผิวข้าง', formula:'A_ข้าง = 2π r h', val: 2*Math.PI*r*h, unit:'ตร.หน่วย'},
+    surface:{label:'พื้นที่ผิวทั้งหมด', formula:'A_ผิว = 2π r h + 2π r²', val: 2*Math.PI*r*h + 2*Math.PI*r*r, unit:'ตร.หน่วย'},
+    volume:{label:'ปริมาตร', formula:'V = π r² h', val: Math.PI*r*r*h, unit:'ลบ.หน่วย'}
+  };
+}
+
+// ---------- CONE ----------
+function buildCone(){
+  const {r,h} = dims.cone;
+  const segs = 48;
+  const slant = Math.sqrt(r*r+h*h);
+
+  if(currentMode === 'volume'){
+    const geo = new THREE.ConeGeometry(r,h,segs);
+    group.add(new THREE.Mesh(geo, matFor(colors.volume, {opacity:0.55})));
+    addEdges(geo, 0xc4b5fd, group);
+  } else {
+    const ghostGeo = new THREE.ConeGeometry(r,h,segs);
+    const ghost = new THREE.Mesh(ghostGeo, wireGhost());
+    group.add(ghost);
+    addEdges(ghostGeo, colors.baseLine, group);
+  }
+
+  if(currentMode === 'area'){
+    const diskGeo = new THREE.CircleGeometry(r, segs);
+    const disk = new THREE.Mesh(diskGeo, matFor(colors.area, {opacity:0.85}));
+    disk.rotation.x = -Math.PI/2;
+    disk.position.y = -h/2 - 0.02;
+    group.add(disk);
+  }
+
+  if(currentMode === 'lateral'){
+    const lat = new THREE.ConeGeometry(r,h,segs,1,true);
+    group.add(new THREE.Mesh(lat, matFor(colors.lateral, {opacity:0.85})));
+    const curve = new THREE.EllipseCurve(0,0,r,r,0,Math.PI*2,false,0);
+    const pts = curve.getPoints(64).map(p=>new THREE.Vector3(p.x,-h/2,p.y));
+    const geo = new THREE.BufferGeometry().setFromPoints(pts);
+    group.add(new THREE.Line(geo, lineMat(colors.lateral)));
+  }
+
+  if(currentMode === 'surface'){
+    const lat = new THREE.ConeGeometry(r,h,segs,1,true);
+    group.add(new THREE.Mesh(lat, matFor(colors.surface, {opacity:0.75})));
+    const diskGeo = new THREE.CircleGeometry(r, segs);
+    const disk = new THREE.Mesh(diskGeo, matFor(colors.surface, {opacity:0.85}));
+    disk.rotation.x = -Math.PI/2;
+    disk.position.y = -h/2;
+    group.add(disk);
+    addEdges(new THREE.ConeGeometry(r,h,segs), 0xffd9c2, group);
+  }
+
+  return {
+    area:{label:'พื้นที่ฐาน (วงกลม)', formula:'A = π r²', val: Math.PI*r*r, unit:'ตร.หน่วย'},
+    lateral:{label:'พื้นที่ผิวข้าง', formula:'A_ข้าง = π r l  (l=เอียง)', val: Math.PI*r*slant, unit:'ตร.หน่วย'},
+    surface:{label:'พื้นที่ผิวทั้งหมด', formula:'A_ผิว = π r l + π r²', val: Math.PI*r*slant + Math.PI*r*r, unit:'ตร.หน่วย'},
+    volume:{label:'ปริมาตร', formula:'V = (1/3) π r² h', val: (1/3)*Math.PI*r*r*h, unit:'ลบ.หน่วย'}
+  };
+}
+
+// ---------- BOX ----------
+function buildBox(){
+  const {w,h,d} = dims.box;
+
+  if(currentMode === 'volume'){
+    const geo = new THREE.BoxGeometry(w,h,d);
+    group.add(new THREE.Mesh(geo, matFor(colors.volume, {opacity:0.55})));
+    addEdges(geo, 0xc4b5fd, group);
+  } else {
+    const ghostGeo = new THREE.BoxGeometry(w,h,d);
+    const ghost = new THREE.Mesh(ghostGeo, wireGhost());
+    group.add(ghost);
+    addEdges(ghostGeo, colors.baseLine, group);
+  }
+
+  if(currentMode === 'area'){
+    const geo = new THREE.PlaneGeometry(w,d);
+    const plane = new THREE.Mesh(geo, matFor(colors.area, {opacity:0.85}));
+    plane.rotation.x = -Math.PI/2;
+    plane.position.y = -h/2-0.02;
+    group.add(plane);
+  }
+
+  if(currentMode === 'lateral'){
+    // 4 side faces, no top/bottom
+    const faces = [
+      {w:w, h:h, pos:[0,0,d/2], rot:[0,0,0]},
+      {w:w, h:h, pos:[0,0,-d/2], rot:[0,Math.PI,0]},
+      {w:d, h:h, pos:[w/2,0,0], rot:[0,Math.PI/2,0]},
+      {w:d, h:h, pos:[-w/2,0,0], rot:[0,-Math.PI/2,0]},
+    ];
+    faces.forEach(f=>{
+      const geo = new THREE.PlaneGeometry(f.w,f.h);
+      const m = new THREE.Mesh(geo, matFor(colors.lateral, {opacity:0.82}));
+      m.position.set(...f.pos);
+      m.rotation.set(...f.rot);
+      group.add(m);
+    });
+  }
+
+  if(currentMode === 'surface'){
+    const geo = new THREE.BoxGeometry(w,h,d);
+    group.add(new THREE.Mesh(geo, matFor(colors.surface, {opacity:0.8})));
+    addEdges(geo, 0xffd9c2, group);
+  }
+
+  return {
+    area:{label:'พื้นที่ฐาน (สี่เหลี่ยม)', formula:'A = w × d', val: w*d, unit:'ตร.หน่วย'},
+    lateral:{label:'พื้นที่ผิวข้าง (4 ด้าน)', formula:'A_ข้าง = 2h(w+d)', val: 2*h*(w+d), unit:'ตร.หน่วย'},
+    surface:{label:'พื้นที่ผิวทั้งหมด', formula:'A_ผิว = 2(wd+wh+dh)', val: 2*(w*d+w*h+d*h), unit:'ตร.หน่วย'},
+    volume:{label:'ปริมาตร', formula:'V = w × h × d', val: w*h*d, unit:'ลบ.หน่วย'}
+  };
+}
+
+// ---------- SPHERE ----------
+function buildSphere(){
+  const {r} = dims.sphere;
+  const segs = 40;
+
+  if(currentMode === 'volume'){
+    const geo = new THREE.SphereGeometry(r, segs, segs);
+    group.add(new THREE.Mesh(geo, matFor(colors.volume, {opacity:0.55})));
+    addEdges(geo, 0xc4b5fd, group);
+  } else if(currentMode === 'surface'){
+    const geo = new THREE.SphereGeometry(r, segs, segs);
+    group.add(new THREE.Mesh(geo, matFor(colors.surface, {opacity:0.85})));
+    addEdges(geo, 0xffd9c2, group);
+  } else {
+    // area mode: ghost sphere + highlighted great-circle cross-section disk
+    const ghostGeo = new THREE.SphereGeometry(r, segs, segs);
+    const ghost = new THREE.Mesh(ghostGeo, wireGhost());
+    group.add(ghost);
+    addEdges(ghostGeo, colors.baseLine, group);
+
+    const diskGeo = new THREE.CircleGeometry(r, segs);
+    const disk = new THREE.Mesh(diskGeo, matFor(colors.area, {opacity:0.85}));
+    group.add(disk);
+    const curve = new THREE.EllipseCurve(0,0,r,r,0,Math.PI*2,false,0);
+    const pts = curve.getPoints(64).map(p=>new THREE.Vector3(p.x,p.y,0));
+    const lineGeo = new THREE.BufferGeometry().setFromPoints(pts);
+    group.add(new THREE.Line(lineGeo, lineMat(colors.area)));
+  }
+
+  return {
+    area:{label:'พื้นที่หน้าตัด (วงกลมใหญ่)', formula:'A = π r²', val: Math.PI*r*r, unit:'ตร.หน่วย'},
+    surface:{label:'พื้นที่ผิวทั้งหมด', formula:'A_ผิว = 4π r²', val: 4*Math.PI*r*r, unit:'ตร.หน่วย'},
+    volume:{label:'ปริมาตร', formula:'V = (4/3) π r³', val: (4/3)*Math.PI*r*r*r, unit:'ลบ.หน่วย'}
+  };
+}
+
+function buildShape(){
+  clearGroup();
+  let formulas;
+  if(currentShape === 'cylinder') formulas = buildCylinder();
+  else if(currentShape === 'cone') formulas = buildCone();
+  else if(currentShape === 'sphere') formulas = buildSphere();
+  else formulas = buildBox();
+
+  const data = formulas[currentMode];
+  document.getElementById('fLabel').textContent = data.label.toUpperCase();
+  document.getElementById('fFormula').textContent = data.formula;
+  document.getElementById('fValue').textContent = `= ${data.val.toFixed(2)} ${data.unit}`;
+
+  const colorMap = {area:'--area', lateral:'--lateral', surface:'--surface', volume:'--volume'};
+  document.getElementById('formulaBox').style.borderColor = getComputedStyle(document.documentElement).getPropertyValue(colorMap[currentMode]);
+
+  updateExplain();
+  updateNetPopup();
+}
+
+function updateExplain(){
+  const explainData = {
+    area: {
+      tag:'พื้นที่', color:'var(--area)',
+      cylinder:`<b>พื้นที่</b> ในที่นี้หมายถึงพื้นที่ของ <b>หน้าตัดวงกลม</b> ที่ฐาน — เป็นรูปแบนๆ 2 มิติ มีหน่วยเป็น <b>ตารางหน่วย</b> (เช่น ตร.ซม.) เราใช้สูตรวงกลมธรรมดา A = πr² เพราะมองแค่ "หน้า" เดียวของรูปทรง ไม่เกี่ยวกับความสูงเลย`,
+      cone:`<b>พื้นที่</b> ของกรวยคือพื้นที่ฐานวงกลมด้านล่าง เหมือนเรามองจากด้านบนลงไปแล้วเห็นแค่วงกลมแบนๆ ไม่สนใจส่วนปลายแหลมข้างบนเลย`,
+      box:`<b>พื้นที่</b> ของฐานกล่องคือพื้นที่สี่เหลี่ยมผืนผ้าด้านล่าง (กว้าง × ลึก) เป็นรูปแบน 2 มิติ ไม่เกี่ยวกับความสูงของกล่อง`,
+      sphere:`<b>พื้นที่</b> ของทรงกลมในที่นี้คือพื้นที่หน้าตัดวงกลมใหญ่ที่สุด (ถ้าผ่ากลางลูกบอลพอดี) — เป็นรูปแบนๆ 2 มิติ ใช้สูตรวงกลม A = πr² เหมือนเดิม คนละความหมายกับพื้นที่ผิวทั้งลูก`
+    },
+    lateral: {
+      tag:'พื้นที่ผิวข้าง', color:'var(--lateral)',
+      cylinder:`<b>พื้นที่ผิวข้าง</b> คือผิวรอบๆ ด้านข้างของทรงกระบอกเท่านั้น — ลองนึกภาพลอกฉลากกระป๋องออกมาแล้วคลี่เป็นแผ่นสี่เหลี่ยมผืนผ้า ความกว้าง = เส้นรอบวง (2πr) ความสูง = h <b>ไม่รวม</b> ฝาบนกับฝาล่าง`,
+      cone:`<b>พื้นที่ผิวข้าง</b> ของกรวยคือผิวเอียงรอบนอก (เหมือนกรวยไอศกรีมไม่มีฐาน) คำนวณจากรัศมีคูณ "ความเอียง" (slant height) ซึ่งยาวกว่าความสูงตรง เพราะมันเฉียง`,
+      box:`<b>พื้นที่ผิวข้าง</b> ของกล่องคือ 4 หน้าด้านข้าง (ไม่รวมฝาบน-ฝาล่าง) เหมือนผ้าที่พันรอบกล่องแนวตั้ง`
+    },
+    surface: {
+      tag:'พื้นที่ผิว', color:'var(--surface)',
+      cylinder:`<b>พื้นที่ผิว</b> (ทั้งหมด) คือผิวข้าง <b>บวก</b> ฐานบนและฐานล่างด้วย — ทาสีรูปทรงนี้ทั้งใบจะต้องใช้สีตามพื้นที่นี้พอดี เป็นผลรวมของทุกหน้าที่สัมผัสอากาศภายนอก`,
+      cone:`<b>พื้นที่ผิว</b> ของกรวยคือผิวเอียงรอบนอก บวกกับฐานวงกลมด้านล่างอีก 1 วง รวมเป็นพื้นที่ทั้งหมดที่ห่อหุ้มรูปทรงนี้`,
+      box:`<b>พื้นที่ผิว</b> ของกล่องคือผลรวมทั้ง 6 หน้า (บน-ล่าง-ซ้าย-ขวา-หน้า-หลัง) เป็นพื้นที่กระดาษที่ต้องใช้ห่อกล่องใบนี้พอดี`,
+      sphere:`<b>พื้นที่ผิว</b> ของทรงกลมคือพื้นที่เปลือกนอกทั้งลูก ไม่มี "ฐาน" แยกต่างหากเหมือนทรงอื่น เพราะทรงกลมไม่มีหน้าแบนเลย ผิวโค้งต่อเนื่องรอบทุกทิศทาง จึงเท่ากับ <b>พื้นที่ผิวข้าง</b> ไปในตัว (ไม่ต้องแยกสองคำนี้)`
+    },
+    volume: {
+      tag:'ปริมาตร', color:'var(--volume)',
+      cylinder:`<b>ปริมาตร</b> คือ "เนื้อที่" ภายในทั้งก้อน ไม่ใช่แค่ผิวด้านนอก — เหมือนปริมาณน้ำที่เทใส่ทรงกระบอกนี้จนเต็มพอดี มีหน่วยเป็น <b>ลูกบาศก์หน่วย</b> (3 มิติ) ต่างจากพื้นที่ผิวที่เป็นแค่ "เปลือก" 2 มิติห่อหุ้มอยู่`,
+      cone:`<b>ปริมาตร</b> ของกรวยคือเนื้อที่ภายในทั้งหมด สังเกตว่ามีตัวคูณ 1/3 เทียบกับทรงกระบอกที่ฐานและความสูงเท่ากัน เพราะกรวยมันแหลมเข้าหากันด้านบน เนื้อด้านในจึงน้อยกว่า`,
+      box:`<b>ปริมาตร</b> ของกล่องคือพื้นที่ในการบรรจุของภายใน คูณกันตรงๆ ทั้ง 3 มิติ (กว้าง × ยาว × สูง) ต่างจากพื้นที่ผิวที่นับแค่ผิวนอกหุ้มกล่อง`,
+      sphere:`<b>ปริมาตร</b> ของทรงกลมคือเนื้อในทั้งลูกบอล สังเกตตัวคูณ 4/3 ในสูตร V = (4/3)πr³ — ลองเทียบ: ทรงกระบอกที่หุ้มลูกบอลพอดี (รัศมีและสูง = 2r) จะมีปริมาตรมากกว่าทรงกลมอยู่ 1.5 เท่าเสมอ`
+    }
+  };
+
+  const d = explainData[currentMode];
+  const text = d[currentShape] || d.cylinder;
+  document.getElementById('explainBox').innerHTML =
+    `<span class="tag" style="background:${d.color}22;color:${d.color}">${d.tag}</span><br>${text}`;
+}
+
+// ---------- NET (รูปคลี่) SVG GENERATORS ----------
+function svgWrap(inner, vb){
+  return `<svg viewBox="${vb}" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+}
+const NET_STROKE = '#cbd5f5';
+const NET_DASH = '#5a6890';
+
+function netCylinderLateral(r,h){
+  const scale = 130/Math.max(2*Math.PI*r, h*1.4);
+  const w = 2*Math.PI*r*scale, hh = h*scale;
+  const pad=14;
+  const vbW = w+pad*2, vbH = hh+pad*2;
+  return svgWrap(`
+    <rect x="${pad}" y="${pad}" width="${w}" height="${hh}" fill="${'#f6ad55'}" fill-opacity="0.35" stroke="${'#f6ad55'}" stroke-width="2"/>
+    <line x1="${pad}" y1="${pad}" x2="${pad+w}" y2="${pad}" stroke="${NET_DASH}" stroke-dasharray="3,3"/>
+    <text x="${pad+w/2}" y="${pad+hh+16}" font-size="10" fill="#9aa6c4" text-anchor="middle">กว้าง = เส้นรอบวง = 2πr</text>
+    <text x="${pad-6}" y="${pad+hh/2}" font-size="10" fill="#9aa6c4" text-anchor="end" transform="rotate(-90 ${pad-6} ${pad+hh/2})">สูง h</text>
+  `, `0 0 ${vbW} ${vbH+18}`);
+}
+
+function netCylinderSurface(r,h){
+  const scale = 110/Math.max(2*Math.PI*r, (h+2*r)*1.1);
+  const w = 2*Math.PI*r*scale, hh = h*scale, rr = r*scale;
+  const pad=16;
+  const totalW = w+pad*2;
+  const totalH = hh + rr*4 + pad*2;
+  const cx = pad+w/2;
+  const rectY = pad+rr*2;
+  return svgWrap(`
+    <circle cx="${cx}" cy="${pad+rr}" r="${rr}" fill="${'#fc8181'}" fill-opacity="0.35" stroke="${'#fc8181'}" stroke-width="2"/>
+    <rect x="${pad}" y="${rectY}" width="${w}" height="${hh}" fill="${'#fc8181'}" fill-opacity="0.35" stroke="${'#fc8181'}" stroke-width="2"/>
+    <circle cx="${cx}" cy="${rectY+hh+rr}" r="${rr}" fill="${'#fc8181'}" fill-opacity="0.35" stroke="${'#fc8181'}" stroke-width="2"/>
+    <text x="${cx}" y="${rectY+hh+rr*2+16}" font-size="10" fill="#9aa6c4" text-anchor="middle">ฐานบน + ผิวข้าง + ฐานล่าง</text>
+  `, `0 0 ${totalW} ${totalH+18}`);
+}
+
+function netConeLateral(r,slant){
+  const scale = 120/(slant*2);
+  const R = slant*scale;
+  const theta = (2*Math.PI*r)/slant; // sector angle in radians
+  const cx = R+14, cy = R+14;
+  const x1 = cx, y1 = cy-R;
+  const x2 = cx + R*Math.sin(theta/2), y2 = cy - R*Math.cos(theta/2);
+  const x3 = cx - R*Math.sin(theta/2), y3 = cy - R*Math.cos(theta/2);
+  const largeArc = theta > Math.PI ? 1 : 0;
+  const path = `M ${cx} ${cy} L ${x3} ${y3} A ${R} ${R} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+  return svgWrap(`
+    <path d="${path}" fill="${'#f6ad55'}" fill-opacity="0.35" stroke="${'#f6ad55'}" stroke-width="2"/>
+    <text x="${cx}" y="${cy+R+18}" font-size="10" fill="#9aa6c4" text-anchor="middle">เซกเตอร์รัศมี = l (ความเอียง)</text>
+  `, `0 0 ${cx+R+14} ${cy+R+30}`);
+}
+
+function netConeSurface(r,h,slant){
+  const scale = 100/(slant*2+r*2);
+  const R = slant*scale, rr = r*scale;
+  const theta = (2*Math.PI*r)/slant;
+  const cx = R+14, cy = R+14;
+  const x2 = cx + R*Math.sin(theta/2), y2 = cy - R*Math.cos(theta/2);
+  const x3 = cx - R*Math.sin(theta/2), y3 = cy - R*Math.cos(theta/2);
+  const largeArc = theta > Math.PI ? 1 : 0;
+  const path = `M ${cx} ${cy} L ${x3} ${y3} A ${R} ${R} 0 ${largeArc} 1 ${x2} ${y2} Z`;
+  const baseCx = cx, baseCy = cy+R+rr+10;
+  const totalH = baseCy+rr+20;
+  const totalW = Math.max(cx+R+14, baseCx+rr+14);
+  return svgWrap(`
+    <path d="${path}" fill="${'#fc8181'}" fill-opacity="0.35" stroke="${'#fc8181'}" stroke-width="2"/>
+    <circle cx="${baseCx}" cy="${baseCy}" r="${rr}" fill="${'#fc8181'}" fill-opacity="0.35" stroke="${'#fc8181'}" stroke-width="2"/>
+    <text x="${totalW/2}" y="${totalH+14}" font-size="10" fill="#9aa6c4" text-anchor="middle">เซกเตอร์ผิวข้าง + วงกลมฐาน</text>
+  `, `0 0 ${totalW} ${totalH+24}`);
+}
+
+function netBoxLateral(w,h,d){
+  const scale = 130/(2*(w+d));
+  const W=w*scale, H=h*scale, D=d*scale;
+  const pad=14;
+  const xs=[0, W, W+D, W+D+W, W+D+W+D];
+  const totalW = xs[4]+pad*2;
+  const totalH = H+pad*2;
+  let rects='';
+  const labels=['หน้า','ขวา','หลัง','ซ้าย'];
+  for(let i=0;i<4;i++){
+    rects += `<rect x="${pad+xs[i]}" y="${pad}" width="${xs[i+1]-xs[i]}" height="${H}" fill="${'#f6ad55'}" fill-opacity="0.35" stroke="${'#f6ad55'}" stroke-width="2"/>`;
+  }
+  return svgWrap(`${rects}
+    <text x="${pad+xs[4]/2}" y="${pad+H+16}" font-size="10" fill="#9aa6c4" text-anchor="middle">4 หน้าด้านข้างคลี่เรียงกัน</text>
+  `, `0 0 ${totalW} ${totalH+18}`);
+}
+
+function netBoxSurface(w,h,d){
+  const scale = 100/Math.max(w+2*d, h+2*w);
+  const W=w*scale, H=h*scale, D=d*scale;
+  const pad=14;
+  const colX = pad+D, colXend = colX+W;
+  const rowY1 = pad, rowY2 = rowY1+D, rowY3 = rowY2+H, rowY4 = rowY3+H, rowY5=rowY4+H;
+  const totalW = colX+W+D+pad;
+  const totalH = rowY5+D+pad;
+  const c = '#fc8181';
+  return svgWrap(`
+    <rect x="${colX}" y="${rowY1}" width="${W}" height="${D}" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="2"/>
+    <rect x="${pad}" y="${rowY2}" width="${D}" height="${H}" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="2"/>
+    <rect x="${colX}" y="${rowY2}" width="${W}" height="${H}" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="2"/>
+    <rect x="${colXend}" y="${rowY2}" width="${D}" height="${H}" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="2"/>
+    <rect x="${colX}" y="${rowY3}" width="${W}" height="${H}" fill="${c}" fill-opacity="0.18" stroke="${c}" stroke-width="1" stroke-dasharray="2,2"/>
+    <rect x="${colX}" y="${rowY4}" width="${W}" height="${D}" fill="${c}" fill-opacity="0.35" stroke="${c}" stroke-width="2"/>
+    <text x="${totalW/2}" y="${totalH+10}" font-size="10" fill="#9aa6c4" text-anchor="middle">กางทั้ง 6 หน้าออกเป็นรูปกากบาท</text>
+  `, `0 0 ${totalW} ${totalH+26}`);
+}
+
+function updateNetPopup(){
+  const popup = document.getElementById('netPopup');
+  const holder = document.getElementById('netSvgHolder');
+  const title = document.getElementById('netTitle');
+  const sub = document.getElementById('netSub');
+
+  // only show for lateral & surface modes, and not for sphere (no flat net exists)
+  if(currentShape === 'sphere' || (currentMode !== 'lateral' && currentMode !== 'surface')){
+    popup.classList.remove('show');
+    holder.innerHTML = '';
+    return;
+  }
+
+  let svg = '', titleText = '', subText = '';
+
+  if(currentShape === 'cylinder'){
+    const {r,h} = dims.cylinder;
+    if(currentMode === 'lateral'){
+      svg = netCylinderLateral(r,h);
+      titleText = 'คลี่ผิวข้างทรงกระบอก';
+      subText = 'ลอกฉลากออกมาคลี่แบนๆ ได้สี่เหลี่ยมผืนผ้า';
+    } else {
+      svg = netCylinderSurface(r,h);
+      titleText = 'คลี่พื้นที่ผิวทั้งหมด';
+      subText = 'สี่เหลี่ยมผืนผ้า (ผิวข้าง) + วงกลม 2 วง (ฝาบน-ล่าง)';
+    }
+  } else if(currentShape === 'cone'){
+    const {r,h} = dims.cone;
+    const slant = Math.sqrt(r*r+h*h);
+    if(currentMode === 'lateral'){
+      svg = netConeLateral(r,slant);
+      titleText = 'คลี่ผิวข้างกรวย';
+      subText = 'ได้เป็นรูปเซกเตอร์ (ส่วนหนึ่งของวงกลม) รัศมี = ความเอียง l';
+    } else {
+      svg = netConeSurface(r,h,slant);
+      titleText = 'คลี่พื้นที่ผิวทั้งหมด';
+      subText = 'เซกเตอร์ผิวข้าง + วงกลมฐาน 1 วง';
+    }
+  } else if(currentShape === 'box'){
+    const {w,h,d} = dims.box;
+    if(currentMode === 'lateral'){
+      svg = netBoxLateral(w,h,d);
+      titleText = 'คลี่ผิวข้างกล่อง';
+      subText = '4 หน้าด้านข้างคลี่เรียงเป็นแถบยาว (ไม่รวมฝาบน-ล่าง)';
+    } else {
+      svg = netBoxSurface(w,h,d);
+      titleText = 'คลี่พื้นที่ผิวทั้งหมด';
+      subText = 'กางทั้ง 6 หน้าออกเป็นรูปกากบาท (รวมฝาบน-ล่างด้วย)';
+    }
+  }
+
+  holder.innerHTML = svg;
+  title.textContent = titleText;
+  sub.textContent = subText;
+  popup.classList.add('show');
+}
+
+document.getElementById('netClose').addEventListener('click', ()=>{
+  document.getElementById('netPopup').classList.remove('show');
+});
+
+function setupControlsUI(){
+  const dim1Label = document.getElementById('dim1Label');
+  const dim2Label = document.getElementById('dim2Label');
+  const dim2Row = document.getElementById('dim2Row');
+  const dim3Row = document.getElementById('dim3Row');
+  const dim3Label = document.getElementById('dim3Label');
+  const dim1 = document.getElementById('dim1');
+  const dim2 = document.getElementById('dim2');
+  const dim3 = document.getElementById('dim3');
+
+  if(currentShape === 'sphere'){
+    dim1Label.textContent = 'รัศมี r';
+    dim1.min=0.8; dim1.max=3.5; dim1.value = dims.sphere.r;
+    dim2Row.style.display = 'none';
+    dim3Row.style.display = 'none';
+  } else if(currentShape === 'cylinder' || currentShape === 'cone'){
+    dim1Label.textContent = 'รัศมี r';
+    dim2Label.textContent = 'สูง h';
+    dim1.min=0.5; dim1.max=3.5; dim1.value = dims[currentShape].r;
+    dim2.min=0.5; dim2.max=5.5; dim2.value = dims[currentShape].h;
+    dim2Row.style.display = 'flex';
+    dim3Row.style.display = 'none';
+  } else {
+    dim1Label.textContent = 'กว้าง w';
+    dim2Label.textContent = 'สูง h';
+    dim3Label.textContent = 'ลึก d';
+    dim1.min=0.5; dim1.max=4.5; dim1.value = dims.box.w;
+    dim2.min=0.5; dim2.max=5.5; dim2.value = dims.box.h;
+    dim3.min=0.5; dim3.max=4.5; dim3.value = dims.box.d;
+    dim2Row.style.display = 'flex';
+    dim3Row.style.display = 'flex';
+  }
+  document.getElementById('dim1Val').textContent = parseFloat(dim1.value).toFixed(1);
+  document.getElementById('dim2Val').textContent = parseFloat(dim2.value).toFixed(1);
+  document.getElementById('dim3Val').textContent = parseFloat(dim3.value).toFixed(1);
+
+  // hide lateral mode button entirely for sphere (no separate lateral area)
+  const lateralBtn = document.getElementById('lateralModeBtn');
+  if(currentShape === 'sphere'){
+    lateralBtn.style.display = 'none';
+    if(currentMode === 'lateral'){
+      currentMode = 'surface';
+      document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelector('.mode-btn[data-mode="surface"]').classList.add('active');
+    }
+  } else {
+    lateralBtn.style.display = 'flex';
+  }
+}
+
+function bindEvents(){
+  document.querySelectorAll('.shape-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.shape-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentShape = btn.dataset.shape;
+      setupControlsUI();
+      buildShape();
+    });
+  });
+
+  document.querySelectorAll('.mode-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.mode-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      currentMode = btn.dataset.mode;
+      buildShape();
+    });
+  });
+
+  const dim1 = document.getElementById('dim1');
+  const dim2 = document.getElementById('dim2');
+  const dim3 = document.getElementById('dim3');
+
+  function onDimChange(){
+    document.getElementById('dim1Val').textContent = parseFloat(dim1.value).toFixed(1);
+    document.getElementById('dim2Val').textContent = parseFloat(dim2.value).toFixed(1);
+    document.getElementById('dim3Val').textContent = parseFloat(dim3.value).toFixed(1);
+    if(currentShape === 'sphere'){
+      dims.sphere.r = parseFloat(dim1.value);
+    } else if(currentShape === 'cylinder' || currentShape === 'cone'){
+      dims[currentShape].r = parseFloat(dim1.value);
+      dims[currentShape].h = parseFloat(dim2.value);
+    } else {
+      dims.box.w = parseFloat(dim1.value);
+      dims.box.h = parseFloat(dim2.value);
+      dims.box.d = parseFloat(dim3.value);
+    }
+    buildShape();
+  }
+  dim1.addEventListener('input', onDimChange);
+  dim2.addEventListener('input', onDimChange);
+  dim3.addEventListener('input', onDimChange);
+}
+
+setupControlsUI();
+bindEvents();
+initThree();
+</script>
+</body>
+</html>
