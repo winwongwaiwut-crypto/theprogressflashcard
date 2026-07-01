@@ -1,0 +1,736 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>สื่อการสอน: ความน่าจะเป็น — รองเท้า 4 คู่ 4 เจ้าของ (Inclusion-Exclusion)</title>
+<style>
+  :root{
+    --c1:#ef4444; /* แดง - คนที่ 1 / รองเท้าคู่ 1 */
+    --c2:#3b82f6; /* น้ำเงิน - คนที่ 2 / รองเท้าคู่ 2 */
+    --c3:#10b981; /* เขียว - คนที่ 3 / รองเท้าคู่ 3 */
+    --c4:#f59e0b; /* ส้ม - คนที่ 4 / รองเท้าคู่ 4 */
+    --ok:#16a34a;
+    --bad:#dc2626;
+    --ink:#1f2328;
+    --muted:#6b7280;
+    --border:#e5e7eb;
+    --bg:#f7f7f9;
+    --card:#ffffff;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Sarabun","Noto Sans Thai",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.6;
+  }
+  .page{ max-width:900px; margin:0 auto; padding:32px 20px 80px; }
+  h1{ font-size:24px; text-align:center; margin:0 0 6px; }
+  .subtitle{ text-align:center; color:var(--muted); font-size:14.5px; margin-bottom:28px; }
+  h2{ font-size:17px; margin:0 0 4px; display:flex; align-items:center; gap:8px; }
+  .step-no{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:24px; height:24px; border-radius:50%; background:var(--ink); color:#fff;
+    font-size:12px; font-weight:700; flex:none;
+  }
+  section{
+    background:var(--card); border:1px solid var(--border); border-radius:var(--radius);
+    padding:22px 20px; margin-bottom:22px; box-shadow:0 1px 2px rgba(0,0,0,.03);
+  }
+  .sec-desc{ color:var(--muted); font-size:13px; margin:2px 0 18px 32px; }
+
+  svg.icon{ width:100%; height:100%; display:block; fill:currentColor; }
+
+  /* ---------- Legend ---------- */
+  .legend-row{
+    display:flex; justify-content:center; gap:22px; flex-wrap:wrap; margin-bottom:6px;
+  }
+  .legend-item{ display:flex; flex-direction:column; align-items:center; gap:4px; }
+  .legend-item .icon-pair{ display:flex; align-items:center; gap:4px; }
+  .legend-item .icon-pair .mini{ width:26px; height:26px; }
+  .legend-item .name{ font-size:11.5px; color:var(--muted); }
+
+  /* ---------- Demo stage ---------- */
+  .stage{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin:18px 0 10px;
+  }
+  .station{
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    padding:14px 6px; border-radius:12px; background:var(--bg);
+    border:1px solid var(--border);
+  }
+  .person-icon{ width:46px; height:46px; }
+  .station .label{ font-size:12px; color:var(--muted); font-weight:600; }
+  .arrow-down{ font-size:12px; color:var(--muted); }
+  .slot{
+    width:52px; height:52px; border-radius:12px;
+    display:flex; align-items:center; justify-content:center;
+    border:2px dashed var(--border);
+    transition:box-shadow .3s ease, border-color .3s ease, background .3s ease;
+    position:relative;
+  }
+  .slot.match{ border-style:solid; border-color:var(--ok); background:rgba(22,163,74,.08); box-shadow:0 0 0 3px rgba(22,163,74,.15); }
+  .slot.nomatch{ border-style:solid; border-color:var(--bad); background:rgba(220,38,38,.06); }
+  .shoe-icon{
+    width:32px; height:32px; color:var(--muted); opacity:.35;
+    transition:transform .35s cubic-bezier(.34,1.56,.64,1), opacity .3s ease;
+  }
+  .shoe-icon.placeholder{ opacity:.25; }
+  .shoe-icon.leaving{ transform:scale(0) rotate(-40deg); opacity:0; }
+  .shoe-icon.entering{ transform:scale(0) rotate(40deg); opacity:0; }
+  .shoe-icon.settled{ opacity:1; }
+
+  .demo-footer{
+    display:flex; align-items:center; justify-content:center; gap:14px; margin-top:14px; flex-wrap:wrap;
+  }
+  button.btn{
+    background:var(--ink); color:#fff; border:none; border-radius:999px;
+    padding:9px 18px; font-size:13px; font-weight:600; cursor:pointer;
+    transition:transform .15s ease, opacity .15s ease;
+  }
+  button.btn:hover{ opacity:.85; }
+  button.btn:active{ transform:scale(.96); }
+  #matchReadout{ font-size:13.5px; font-weight:600; min-width:190px; text-align:center; }
+  #matchReadout.ok{ color:var(--ok); }
+  #matchReadout.bad{ color:var(--bad); }
+
+  /* ---------- Enumeration grid ---------- */
+  .grid{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:9px; margin:16px 0 14px;
+  }
+  @media (max-width:560px){ .grid{ grid-template-columns:repeat(4,1fr); } }
+  .card{
+    position:relative;
+    border-radius:10px; border:1.5px solid var(--border); background:var(--bg);
+    padding:6px 4px 5px; display:flex; flex-direction:column; align-items:center; gap:3px;
+    opacity:0; transform:translateY(10px);
+    transition:opacity .45s ease, transform .45s ease, border-color .3s ease, background .3s ease;
+  }
+  .in-view .card{ opacity:1; transform:translateY(0); }
+  .card.ok{ border-color:rgba(22,163,74,.55); background:rgba(22,163,74,.07); }
+  .card.bad{ border-color:rgba(220,38,38,.5); background:rgba(220,38,38,.06); }
+  .card .row{ display:flex; gap:2px; }
+  .mini-shoe{ width:15px; height:15px; }
+  .card .count{ font-size:9px; color:var(--muted); }
+  .card.ok .count{ color:var(--ok); }
+  .card.bad .count{ color:var(--bad); }
+
+  .badge-tag{
+    position:absolute; top:-7px; right:-7px; min-width:17px; height:17px; padding:0 3px;
+    border-radius:9px; background:var(--card); border:1.5px solid var(--border);
+    font-size:9.5px; font-weight:800; display:flex; align-items:center; justify-content:center;
+    color:var(--muted); opacity:0;
+    transition:transform .25s ease, background .25s ease, color .25s ease, border-color .25s ease, opacity .25s ease;
+  }
+  .badge-tag.on{ opacity:1; }
+  .badge-tag.flash-plus{ transform:scale(1.4); background:rgba(22,163,74,.18); border-color:var(--ok); color:var(--ok); }
+  .badge-tag.flash-minus{ transform:scale(1.4); background:rgba(220,38,38,.18); border-color:var(--bad); color:var(--bad); }
+
+  .card.overcounted{ outline:2px dashed #f59e0b; outline-offset:2px; }
+
+  .delta-pop{
+    position:absolute; top:-6px; right:16px; font-size:11.5px; font-weight:800;
+    pointer-events:none; opacity:0; z-index:2;
+    animation:deltaFloat .9s ease forwards;
+  }
+  .delta-pop.plus{ color:var(--ok); }
+  .delta-pop.minus{ color:var(--bad); }
+  @keyframes deltaFloat{
+    0%{ opacity:0; transform:translateY(4px) scale(.8); }
+    15%{ opacity:1; transform:translateY(-2px) scale(1.15); }
+    70%{ opacity:1; transform:translateY(-15px) scale(1); }
+    100%{ opacity:0; transform:translateY(-25px) scale(.9); }
+  }
+
+  .overcount-note{
+    margin-top:10px; font-size:12.5px; line-height:1.6;
+    background:rgba(245,158,11,.08); border:1px solid rgba(245,158,11,.35);
+    border-radius:10px; padding:10px 12px;
+  }
+  .overcount-note b{ color:#b45309; }
+
+  .legend2{ display:flex; justify-content:center; gap:18px; font-size:11.5px; margin-bottom:16px; }
+  .legend2 .ok{ color:var(--ok); } .legend2 .bad{ color:var(--bad); }
+
+  .summary{ display:flex; justify-content:center; gap:10px; flex-wrap:wrap; }
+  .stat{
+    flex:1; min-width:120px; max-width:160px; text-align:center;
+    border:1px solid var(--border); border-radius:12px; background:var(--bg); padding:12px 8px;
+  }
+  .stat.ok{ border-color:rgba(22,163,74,.5); background:rgba(22,163,74,.06); }
+  .stat.bad{ border-color:rgba(220,38,38,.5); background:rgba(220,38,38,.06); }
+  .stat .num{ font-size:24px; font-weight:800; }
+  .stat.ok .num{ color:var(--ok); }
+  .stat.bad .num{ color:var(--bad); }
+  .stat .lbl{ font-size:10.5px; color:var(--muted); margin-top:2px; }
+
+  /* ---------- Why section ---------- */
+  .why-sub{ margin-top:6px; padding-top:16px; border-top:1px dashed var(--border); }
+  .why-sub:first-of-type{ border-top:none; padding-top:0; }
+  .why-sub-title{ font-size:13.5px; font-weight:700; margin-bottom:6px; }
+
+  #vennSvg{ width:100%; max-width:340px; display:block; margin:6px auto 4px; }
+  .venn-circle{ opacity:0; transform-origin:center; transform:scale(.6); transition:opacity .5s ease, transform .5s ease; }
+  .venn-circle.show{ opacity:1; transform:scale(1); }
+  .venn-overlap{ opacity:0; transition:opacity .5s ease; }
+  .venn-overlap.show{ opacity:1; }
+  .venn-overlap.pulse{ animation:vennPulse 1s ease; }
+  @keyframes vennPulse{ 0%,100%{ filter:brightness(1); } 50%{ filter:brightness(1.5); } }
+  .venn-label{ font-size:13px; font-weight:700; opacity:0; transition:opacity .4s ease; }
+  .venn-label.show{ opacity:1; }
+  .venn-overlap-label{ font-size:11px; }
+
+  .venn-math{
+    display:flex; justify-content:center; align-items:center; gap:8px; flex-wrap:wrap;
+    margin-top:8px; font-size:12.5px;
+  }
+  .vm-step{
+    opacity:0; transform:translateY(6px); transition:opacity .4s ease, transform .4s ease;
+    padding:6px 10px; border-radius:8px; background:var(--bg); border:1px solid var(--border);
+  }
+  .vm-step.show{ opacity:1; transform:translateY(0); }
+  .vm-step.vm-final{ border-color:rgba(37,99,235,.4); background:rgba(37,99,235,.06); font-weight:700; }
+  .vm-step.vm-final strong{ color:#1d4ed8; font-size:14px; }
+  .vm-arrow{ color:var(--muted); font-size:12px; }
+
+  .ie-controls{
+    display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap;
+    margin:14px 0 10px;
+  }
+  .pass-label{ font-size:12.5px; font-weight:600; color:var(--muted); min-width:200px; text-align:center; }
+
+  #venn4Svg{ width:100%; max-width:320px; display:block; margin:10px auto 6px; }
+  .v4-caption{ text-align:center; font-size:12px; color:var(--muted); }
+  .v4-caption strong{ color:var(--ink); }
+
+  .derive-table{ display:flex; flex-direction:column; gap:8px; margin:12px 0 6px; }
+  .derive-row{
+    opacity:0; transform:translateY(10px);
+    transition:opacity .45s ease, transform .45s ease;
+    border:1px solid var(--border); border-radius:10px; padding:10px 12px; background:var(--bg);
+  }
+  .derive-row.show{ opacity:1; transform:translateY(0); }
+  .dr-head{ font-size:12.5px; font-weight:700; margin-bottom:3px; }
+  .dr-body{ font-size:11.5px; color:var(--muted); margin-bottom:6px; }
+  .dr-calc{ font-size:13.5px; font-family:ui-monospace,"SFMono-Regular",Menlo,monospace; }
+  .dr-calc strong{ color:#1d4ed8; }
+  .sign{ font-weight:800; padding:1px 6px; border-radius:6px; }
+  .sign.plus{ color:var(--ok); background:rgba(22,163,74,.12); }
+  .sign.minus{ color:var(--bad); background:rgba(220,38,38,.12); }
+
+  .final-box{
+    text-align:center; margin-top:16px; padding:16px; border-radius:12px;
+    border:1px solid rgba(37,99,235,.4); background:rgba(37,99,235,.06);
+    opacity:0; transform:translateY(10px); transition:opacity .5s ease, transform .5s ease;
+  }
+  .final-box.show{ opacity:1; transform:translateY(0); }
+  .final-line{ font-size:14px; color:var(--muted); margin-bottom:6px; }
+  .final-line .num{ font-weight:800; color:#1d4ed8; }
+  .final-answer{ font-size:17px; }
+  .final-answer strong{ font-size:20px; color:#1d4ed8; }
+
+  .replay-wrap{ text-align:center; margin-top:16px; }
+
+  footer{ text-align:center; color:var(--muted); font-size:11.5px; margin-top:10px; }
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-person" viewBox="0 0 24 24">
+      <circle cx="12" cy="7" r="4"/>
+      <path d="M4 21c0-4.42 3.58-8 8-8s8 3.58 8 8H4z"/>
+    </symbol>
+    <symbol id="i-shoe" viewBox="0 0 24 24">
+      <path d="M2.5 15.8c0-.44.36-.8.8-.8h1.2l.9-2.2c.28-.68.94-1.13 1.68-1.13h3.9c.5 0 .98.2 1.33.55l2.2 2.2c.35.35.83.55 1.33.55H19c1.38 0 2.5 1.12 2.5 2.5v1.2c0 .5-.4.9-.9.9H3.4c-.5 0-.9-.4-.9-.9v-2.87z"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="page">
+
+  <h1>👟 นักเรียน 4 คน สุ่มหยิบรองเท้า</h1>
+  <p class="subtitle">โจทย์: นักเรียน 4 คนฝากรองเท้าไว้หน้าห้อง แล้วสุ่มหยิบคนละคู่โดยไม่ใส่คืน<br>
+  ความน่าจะเป็นที่ <b>อย่างน้อย 1 คน</b> หยิบได้รองเท้าคู่ของตัวเองเท่ากับเท่าใด? <b>(แก้ด้วย Inclusion-Exclusion)</b></p>
+
+  <div class="legend-row">
+    <div class="legend-item">
+      <div class="icon-pair">
+        <svg class="mini icon" style="color:var(--c1)"><use href="#i-person"/></svg>
+        <svg class="mini icon" style="color:var(--c1)"><use href="#i-shoe"/></svg>
+      </div>
+      <div class="name">คนที่ 1 = คู่ 1</div>
+    </div>
+    <div class="legend-item">
+      <div class="icon-pair">
+        <svg class="mini icon" style="color:var(--c2)"><use href="#i-person"/></svg>
+        <svg class="mini icon" style="color:var(--c2)"><use href="#i-shoe"/></svg>
+      </div>
+      <div class="name">คนที่ 2 = คู่ 2</div>
+    </div>
+    <div class="legend-item">
+      <div class="icon-pair">
+        <svg class="mini icon" style="color:var(--c3)"><use href="#i-person"/></svg>
+        <svg class="mini icon" style="color:var(--c3)"><use href="#i-shoe"/></svg>
+      </div>
+      <div class="name">คนที่ 3 = คู่ 3</div>
+    </div>
+    <div class="legend-item">
+      <div class="icon-pair">
+        <svg class="mini icon" style="color:var(--c4)"><use href="#i-person"/></svg>
+        <svg class="mini icon" style="color:var(--c4)"><use href="#i-shoe"/></svg>
+      </div>
+      <div class="name">คนที่ 4 = คู่ 4</div>
+    </div>
+  </div>
+  <p class="sec-desc" style="margin-left:0;text-align:center;">สีของคนตรงกับสีรองเท้าของตัวเอง — ถ้าใครหยิบได้รองเท้า "สีเดียวกับตัวเอง" แปลว่าหยิบถูกคู่</p>
+
+  <!-- ================= DEMO STAGE ================= -->
+  <section id="demo">
+    <h2><span class="step-no">1</span> ลองสุ่มดู</h2>
+    <p class="sec-desc">กดปุ่ม "สุ่มใหม่" เพื่อดูว่าแต่ละครั้งใครหยิบถูกคู่ตัวเองบ้าง (กรอบเขียว = หยิบถูก, กรอบแดง = หยิบผิด)</p>
+
+    <div class="stage" id="stage">
+      <div class="station">
+        <svg class="person-icon icon" style="color:var(--c1)"><use href="#i-person"/></svg>
+        <div class="label">นักเรียน 1</div>
+        <div class="arrow-down">↓ หยิบได้</div>
+        <div class="slot" data-i="0">
+          <svg class="shoe-icon placeholder icon"><use href="#i-shoe"/></svg>
+        </div>
+      </div>
+      <div class="station">
+        <svg class="person-icon icon" style="color:var(--c2)"><use href="#i-person"/></svg>
+        <div class="label">นักเรียน 2</div>
+        <div class="arrow-down">↓ หยิบได้</div>
+        <div class="slot" data-i="1">
+          <svg class="shoe-icon placeholder icon"><use href="#i-shoe"/></svg>
+        </div>
+      </div>
+      <div class="station">
+        <svg class="person-icon icon" style="color:var(--c3)"><use href="#i-person"/></svg>
+        <div class="label">นักเรียน 3</div>
+        <div class="arrow-down">↓ หยิบได้</div>
+        <div class="slot" data-i="2">
+          <svg class="shoe-icon placeholder icon"><use href="#i-shoe"/></svg>
+        </div>
+      </div>
+      <div class="station">
+        <svg class="person-icon icon" style="color:var(--c4)"><use href="#i-person"/></svg>
+        <div class="label">นักเรียน 4</div>
+        <div class="arrow-down">↓ หยิบได้</div>
+        <div class="slot" data-i="3">
+          <svg class="shoe-icon placeholder icon"><use href="#i-shoe"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-footer">
+      <button class="btn" id="shuffleBtn">🔀 สุ่มใหม่</button>
+      <span id="matchReadout">กดปุ่มเพื่อเริ่มสุ่ม</span>
+    </div>
+  </section>
+
+  <!-- ================= ENUMERATION ================= -->
+  <section id="enumeration">
+    <h2><span class="step-no">2</span> นับทุกความเป็นไปได้ (4! = 24 แบบ)</h2>
+    <p class="sec-desc">แต่ละการ์ด = การจัดรองเท้า 1 แบบ เรียงตามนักเรียน 1→4 ถ้าสีรองเท้าตรงกับลำดับ (สีเดียวกับคนนั้น) แสดงว่าหยิบถูก ป้ายตัวเลขมุมขวาบนจะใช้ในขั้นตอนถัดไป</p>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="legend2">
+      <span class="ok">■ อย่างน้อย 1 คู่ตรง</span>
+      <span class="bad">■ ไม่ตรงเลย</span>
+    </div>
+
+    <div class="summary">
+      <div class="stat"><div class="num">24</div><div class="lbl">วิธีจัดทั้งหมด</div></div>
+      <div class="stat bad"><div class="num">9</div><div class="lbl">ไม่มีใครถูกเลย</div></div>
+      <div class="stat ok"><div class="num">15</div><div class="lbl">อย่างน้อย 1 คนถูก</div></div>
+    </div>
+  </section>
+
+  <!-- ================= WHY ADD/SUBTRACT ================= -->
+  <section id="why">
+    <h2><span class="step-no">3</span> ทำไมต้อง "บวก-ลบสลับกัน" (Inclusion-Exclusion)</h2>
+    <p class="sec-desc">ไล่ดูตั้งแต่ตัวอย่างง่ายๆ (2 เหตุการณ์) ไปจนถึงโจทย์จริง (4 เหตุการณ์) กด "เล่นแอนิเมชัน" แล้วดูตั้งแต่ต้นจนจบ</p>
+
+    <div class="why-sub">
+      <div class="why-sub-title">🔴🔵 ก่อนอื่น ลองดูแค่ 2 คน</div>
+      <p class="sec-desc" style="margin-left:0;">ให้ A₁ = "คนที่ 1 หยิบถูก" (มี 6 แบบ จากทั้งหมด 24) และ A₂ = "คนที่ 2 หยิบถูก" (มี 6 แบบ) ถ้าบวกตรงๆ 6+6=12 จะเกินจริง เพราะแบบที่ "ทั้งคู่ถูกพร้อมกัน" ถูกนับซ้ำ 2 ครั้ง (นับใน A₁ ครั้งหนึ่ง นับใน A₂ อีกครั้งหนึ่ง)</p>
+
+      <svg id="vennSvg" viewBox="0 0 320 175" role="img" aria-label="แผนภาพเวนน์แสดงการซ้อนทับระหว่างเหตุการณ์คนที่ 1 ถูกกับคนที่ 2 ถูก">
+        <defs>
+          <clipPath id="clipA"><circle cx="130" cy="85" r="58"/></clipPath>
+        </defs>
+        <circle cx="130" cy="85" r="58" fill="var(--c1)" fill-opacity="0.28" class="venn-circle vc-a" id="vennA"/>
+        <circle cx="190" cy="85" r="58" fill="var(--c2)" fill-opacity="0.28" class="venn-circle vc-b" id="vennB"/>
+        <circle cx="190" cy="85" r="58" fill="#7c3aed" fill-opacity="0.55" clip-path="url(#clipA)" class="venn-overlap" id="vennOverlap"/>
+        <text x="80" y="45" class="venn-label" fill="var(--c1)" id="vennLabelA">A₁ (6)</text>
+        <text x="228" y="45" class="venn-label" fill="var(--c2)" id="vennLabelB">A₂ (6)</text>
+        <text x="128" y="165" class="venn-label venn-overlap-label" fill="#5b21b6" id="vennLabelOverlap">A₁∩A₂ (2) — นับซ้ำตรงนี้</text>
+      </svg>
+
+      <div class="venn-math" id="vennMath">
+        <span class="vm-step" data-vm>6 + 6 = 12</span>
+        <span class="vm-arrow">→</span>
+        <span class="vm-step" data-vm>ลบส่วนม่วงที่ซ้ำออก 2 แบบ</span>
+        <span class="vm-arrow">→</span>
+        <span class="vm-step vm-final" data-vm>|A₁∪A₂| = 6+6−2 = <strong>10</strong></span>
+      </div>
+    </div>
+
+    <div class="why-sub">
+      <div class="why-sub-title">🎯 ขยายเป็น 4 คน — ภาพเซต A₁ A₂ A₃ A₄</div>
+      <p class="sec-desc" style="margin-left:0;">เซตทั้ง 4 ทับซ้อนกันเองได้หลายชั้น (2 เซตทับกัน, 3 เซตทับกัน, ไปจนถึงทับกันทั้ง 4 เซตตรงกลาง) สีที่เข้มขึ้นเรื่อยๆ ตรงกลาง = จุดที่ถูกนับซ้ำมากที่สุด ยิ่งทับหลายชั้นยิ่งต้องแก้หลายรอบ</p>
+
+      <svg id="venn4Svg" viewBox="0 0 320 300" role="img" aria-label="แผนภาพเซตแสดงการซ้อนทับของเหตุการณ์คนที่ 1 ถึงคนที่ 4 ถูก โดยตรงกลางที่เข้มที่สุดคือจุดที่ทั้ง 4 คนถูกพร้อมกัน">
+        <circle cx="160" cy="95" r="95" fill="var(--c1)" fill-opacity="0.35" style="mix-blend-mode:multiply" class="venn-circle" id="v4a"/>
+        <circle cx="225" cy="150" r="95" fill="var(--c2)" fill-opacity="0.35" style="mix-blend-mode:multiply" class="venn-circle" id="v4b"/>
+        <circle cx="160" cy="205" r="95" fill="var(--c3)" fill-opacity="0.35" style="mix-blend-mode:multiply" class="venn-circle" id="v4c"/>
+        <circle cx="95" cy="150" r="95" fill="var(--c4)" fill-opacity="0.35" style="mix-blend-mode:multiply" class="venn-circle" id="v4d"/>
+        <text x="160" y="30" text-anchor="middle" class="venn-label" fill="var(--c1)" id="v4labelA">A₁</text>
+        <text x="290" y="150" text-anchor="middle" class="venn-label" fill="var(--c2)" id="v4labelB">A₂</text>
+        <text x="160" y="278" text-anchor="middle" class="venn-label" fill="var(--c3)" id="v4labelC">A₃</text>
+        <text x="30" y="150" text-anchor="middle" class="venn-label" fill="var(--c4)" id="v4labelD">A₄</text>
+      </svg>
+      <div class="v4-caption vm-step" id="v4caption">จุดกลางที่เข้มที่สุด = <strong>A₁∩A₂∩A₃∩A₄</strong> (มีแค่ 1 แบบ คือทุกคนถูกหมด) — เป็นจุดที่โดนนับซ้ำหนักสุด จึงต้องแก้ถึง 4 รอบ</div>
+
+      <div class="ie-controls">
+        <button class="btn" id="playIEBtn">▶ เล่นแอนิเมชันตั้งแต่ต้นจนจบ</button>
+        <div class="pass-label" id="passLabel">รอเริ่มการนับ...</div>
+      </div>
+
+      <div class="overcount-note vm-step" id="overCountNote"></div>
+
+      <p class="sec-desc" style="margin-left:0;">สังเกตป้ายเลขมุมขวาบนของการ์ดทั้ง 24 ใบในข้อ 2 ไปพร้อมกัน — กรอบส้มประ = ใบที่ยังนับซ้ำอยู่ ตัวเลข +/− ที่ลอยขึ้นเหนือป้าย = จำนวนที่บวก/ลบออกจากใบนั้นในแต่ละขั้น และดูที่มาของตัวเลข 24, 12, 16, 15 ด้านล่างนี้:</p>
+      <div class="derive-table" id="ieDerive"></div>
+    </div>
+
+    <div class="final-box" id="finalBox">
+      <div class="final-line">|A₁∪A₂∪A₃∪A₄| = 24 − 12 + 4 − 1 = <span class="num" id="finalUnion">0</span></div>
+      <div class="final-answer">P(อย่างน้อย 1 คนถูก) = 15/24 = <strong>5/8 = 0.625 (62.5%)</strong></div>
+    </div>
+  </section>
+
+  <footer>ทำโดยวิน · สื่อการสอนความน่าจะเป็น: Inclusion-Exclusion (4 คู่รองเท้า)</footer>
+</div>
+
+<script>
+  const COLORS = ['var(--c1)','var(--c2)','var(--c3)','var(--c4)'];
+
+  /* ---------- 1. Demo stage ---------- */
+  const slots = Array.from(document.querySelectorAll('.slot'));
+  const readout = document.getElementById('matchReadout');
+  let demoTimer = null;
+
+  function shuffleArr(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function runDemo(){
+    const perm = shuffleArr([0,1,2,3]);
+    let matches = 0;
+
+    slots.forEach((slot, i) => {
+      const icon = slot.querySelector('.shoe-icon');
+      icon.classList.add('leaving');
+      icon.classList.remove('settled');
+      setTimeout(() => {
+        icon.style.color = COLORS[perm[i]];
+        icon.classList.remove('placeholder','leaving');
+        const isMatch = perm[i] === i;
+        if(isMatch) matches++;
+        slot.classList.toggle('match', isMatch);
+        slot.classList.toggle('nomatch', !isMatch);
+        icon.classList.add('entering');
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            icon.classList.remove('entering');
+            icon.classList.add('settled');
+          });
+        });
+        if(i === slots.length - 1){
+          setTimeout(() => updateReadout(matches), 200);
+        }
+      }, 260);
+    });
+  }
+
+  function updateReadout(matches){
+    readout.classList.remove('ok','bad');
+    if(matches > 0){
+      readout.textContent = `✅ ตรง ${matches} คน — เข้าเงื่อนไข "อย่างน้อย 1 คนถูก"`;
+      readout.classList.add('ok');
+    } else {
+      readout.textContent = `❌ ไม่มีใครถูกเลย`;
+      readout.classList.add('bad');
+    }
+  }
+
+  document.getElementById('shuffleBtn').addEventListener('click', () => {
+    runDemo();
+    clearInterval(demoTimer);
+    demoTimer = setInterval(runDemo, 4000);
+  });
+  setTimeout(runDemo, 500);
+  demoTimer = setInterval(runDemo, 4000);
+
+  /* ---------- 2. Enumeration grid ---------- */
+  const ENUM = [
+    [[0,1,2,3],4], [[0,1,3,2],2], [[0,2,1,3],2], [[0,2,3,1],1],
+    [[0,3,1,2],1], [[0,3,2,1],2], [[1,0,2,3],2], [[1,0,3,2],0],
+    [[1,2,0,3],1], [[1,2,3,0],0], [[1,3,0,2],0], [[1,3,2,0],1],
+    [[2,0,1,3],1], [[2,0,3,1],0], [[2,1,0,3],2], [[2,1,3,0],1],
+    [[2,3,0,1],0], [[2,3,1,0],0], [[3,0,1,2],0], [[3,0,2,1],1],
+    [[3,1,0,2],1], [[3,1,2,0],2], [[3,2,0,1],0], [[3,2,1,0],0]
+  ];
+
+  const gridEl = document.getElementById('grid');
+  const cardEls = [];
+  ENUM.forEach(([perm, fixed], idx) => {
+    const card = document.createElement('div');
+    card.className = 'card ' + (fixed > 0 ? 'ok' : 'bad');
+    card.dataset.fixed = fixed;
+    card.style.transitionDelay = (idx * 22) + 'ms';
+
+    const row = document.createElement('div');
+    row.className = 'row';
+    perm.forEach((val, pos) => {
+      const svg = document.createElementNS('http://www.w3.org/2000/svg','svg');
+      svg.setAttribute('class','mini-shoe icon');
+      svg.style.color = COLORS[val];
+      if(val !== pos){ svg.style.opacity = '0.35'; }
+      const use = document.createElementNS('http://www.w3.org/2000/svg','use');
+      use.setAttribute('href','#i-shoe');
+      svg.appendChild(use);
+      row.appendChild(svg);
+    });
+    card.appendChild(row);
+
+    const count = document.createElement('div');
+    count.className = 'count';
+    count.textContent = 'ตรง ' + fixed;
+    card.appendChild(count);
+
+    const badge = document.createElement('div');
+    badge.className = 'badge-tag';
+    badge.textContent = '';
+    card.appendChild(badge);
+
+    gridEl.appendChild(card);
+    cardEls.push(card);
+  });
+
+  /* ---------- Count-up numbers ---------- */
+  function countUp(el, target, duration){
+    const start = performance.now();
+    const from = 0;
+    function frame(now){
+      const p = Math.min(1, (now - start) / duration);
+      el.textContent = Math.round(from + p * (target - from));
+      if(p < 1) requestAnimationFrame(frame);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(frame);
+  }
+
+  /* ---------- IntersectionObserver reveal (enumeration grid only) ---------- */
+  function setupReveal(sectionId, onReveal){
+    const el = document.getElementById(sectionId);
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if(entry.isIntersecting){
+          el.classList.add('in-view');
+          if(onReveal) onReveal();
+        }
+      });
+    }, { threshold: 0.15 });
+    obs.observe(el);
+  }
+  setupReveal('enumeration');
+
+  /* ================= WHY (Inclusion-Exclusion) ANIMATION ================= */
+
+  // Badge value after pass k (k=1..4) for a card with `fixed` correct positions.
+  // Derived from alternating sum of C(fixed, k):
+  const BADGE_SEQ = {
+    0: [0, 0, 0, 0],
+    1: [1, 1, 1, 1],
+    2: [2, 1, 1, 1],
+    4: [4, -2, 2, 1]
+  };
+  const RUNNING_TOTAL = [24, 12, 16, 15]; // cumulative total after each pass
+  const PASS_LABELS = [
+    'ขั้นที่ 1: บวกทีละคน (Σ|Aᵢ|) — ล็อกคนถูก 1 คน ที่เหลือสลับอิสระ',
+    'ขั้นที่ 2: ลบทีละคู่ (Σ|Aᵢ∩Aⱼ|) — แก้การนับซ้ำของคนที่ถูกพร้อมกัน 2 คน',
+    'ขั้นที่ 3: บวกทีละสาม (Σ|Aᵢ∩Aⱼ∩Aₖ|) — แก้ส่วนที่ลบเกินไป',
+    'ขั้นที่ 4: ลบทั้งสี่ (A₁∩A₂∩A₃∩A₄) — แก้ให้เหลือพอดี 1'
+  ];
+  // Explicit derivation of where 24 / 12 / 16 / 15 come from, per pass k=1..4:
+  // subtotal = C(4,k) terms, each worth (4-k)! ways for the remaining people to shuffle freely.
+  const IE_DERIVE = [
+    { k:1, head:'k=1 — ล็อกถูก 1 คน (Σ|Aᵢ|)',
+      body:'เลือกคนที่ล็อกให้ถูกได้ C(4,1) = 4 พจน์ (A₁,A₂,A₃,A₄) แต่ละพจน์ คนที่เหลืออีก 3 คนสลับกันเองได้อิสระ 3! = 6 วิธี',
+      calc:'4 × 6 = ', sign:'+24', signClass:'plus', total:24 },
+    { k:2, head:'k=2 — ล็อกถูกพร้อมกัน 2 คน (Σ|Aᵢ∩Aⱼ|)',
+      body:'จำนวนคู่ที่เลือกได้ C(4,2) = 6 พจน์ แต่ละพจน์ คนที่เหลือ 2 คนสลับกันเองได้ 2! = 2 วิธี — ลบออกเพราะถูกนับซ้ำตอน k=1',
+      calc:'6 × 2 = ', sign:'−12', signClass:'minus', total:12 },
+    { k:3, head:'k=3 — ล็อกถูกพร้อมกัน 3 คน (Σ|Aᵢ∩Aⱼ∩Aₖ|)',
+      body:'จำนวนชุดที่เลือกได้ C(4,3) = 4 พจน์ แต่ละพจน์ คนที่เหลือ 1 คนไม่มีทางเลือกอื่น 1! = 1 วิธี — บวกกลับเพราะขั้นก่อนลบเกินไป',
+      calc:'4 × 1 = ', sign:'+4', signClass:'plus', total:16 },
+    { k:4, head:'k=4 — ล็อกถูกทั้ง 4 คน (A₁∩A₂∩A₃∩A₄)',
+      body:'มีทางเดียว C(4,4) = 1 พจน์ (ทุกคนถูกหมด) เหลือ 0 คนให้สลับ 0! = 1 วิธี — ลบครั้งสุดท้ายให้เหลือพอดี',
+      calc:'1 × 1 = ', sign:'−1', signClass:'minus', total:15 }
+  ];
+  const ieDeriveEl = document.getElementById('ieDerive');
+  const deriveRows = IE_DERIVE.map(d => {
+    const row = document.createElement('div');
+    row.className = 'derive-row';
+    row.innerHTML =
+      '<div class="dr-head">' + d.head + '</div>' +
+      '<div class="dr-body">' + d.body + '</div>' +
+      '<div class="dr-calc">' + d.calc + '<span class="sign ' + d.signClass + '">' + d.sign + '</span>' +
+      ' &nbsp;→&nbsp; สะสม = <strong>' + d.total + '</strong></div>';
+    ieDeriveEl.appendChild(row);
+    return row;
+  });
+
+  const vennA = document.getElementById('vennA');
+  const vennB = document.getElementById('vennB');
+  const vennOverlap = document.getElementById('vennOverlap');
+  const vennLabelA = document.getElementById('vennLabelA');
+  const vennLabelB = document.getElementById('vennLabelB');
+  const vennLabelOverlap = document.getElementById('vennLabelOverlap');
+  const vmSteps = Array.from(document.querySelectorAll('#vennMath .vm-step'));
+  const v4Circles = ['v4a','v4b','v4c','v4d'].map(id => document.getElementById(id));
+  const v4Labels = ['v4labelA','v4labelB','v4labelC','v4labelD'].map(id => document.getElementById(id));
+  const v4Caption = document.getElementById('v4caption');
+  const passLabelEl = document.getElementById('passLabel');
+  const overCountNoteEl = document.getElementById('overCountNote');
+  const finalBoxEl = document.getElementById('finalBox');
+  const finalUnionEl = document.getElementById('finalUnion');
+  const playIEBtn = document.getElementById('playIEBtn');
+
+  function resetWhy(){
+    [vennA, vennB].forEach(el => el.classList.remove('show'));
+    vennOverlap.classList.remove('show', 'pulse');
+    [vennLabelA, vennLabelB, vennLabelOverlap].forEach(el => el.classList.remove('show'));
+    vmSteps.forEach(el => el.classList.remove('show'));
+    v4Circles.forEach(el => el.classList.remove('show'));
+    v4Labels.forEach(el => el.classList.remove('show'));
+    v4Caption.classList.remove('show');
+    deriveRows.forEach(el => el.classList.remove('show'));
+    passLabelEl.textContent = 'รอเริ่มการนับ...';
+    overCountNoteEl.classList.remove('show');
+    overCountNoteEl.innerHTML = '';
+    finalBoxEl.classList.remove('show');
+    finalUnionEl.textContent = '0';
+    cardEls.forEach(card => {
+      const badge = card.querySelector('.badge-tag');
+      badge.textContent = '';
+      badge.classList.remove('on', 'flash-plus', 'flash-minus');
+      card.classList.remove('overcounted');
+      card.querySelectorAll('.delta-pop').forEach(p => p.remove());
+    });
+  }
+
+  // Target value a card's badge should settle at: 1 if it's in the union (fixed>0), else 0.
+  function targetFor(fixed){ return fixed > 0 ? 1 : 0; }
+
+  function runPass(passIndex){
+    passLabelEl.textContent = PASS_LABELS[passIndex];
+    cardEls.forEach(card => {
+      const fixed = parseInt(card.dataset.fixed, 10);
+      const seq = BADGE_SEQ[fixed] || [0,0,0,0];
+      const newVal = seq[passIndex];
+      const prevVal = passIndex === 0 ? 0 : seq[passIndex - 1];
+      const badge = card.querySelector('.badge-tag');
+      badge.classList.add('on');
+      badge.classList.remove('flash-plus', 'flash-minus');
+      badge.textContent = newVal;
+
+      const delta = newVal - prevVal;
+      if(delta !== 0){
+        badge.classList.add(delta > 0 ? 'flash-plus' : 'flash-minus');
+        setTimeout(() => badge.classList.remove('flash-plus', 'flash-minus'), 500);
+
+        // Floating "+N" / "-N" popup showing exactly what's added/removed on THIS card.
+        const pop = document.createElement('div');
+        pop.className = 'delta-pop ' + (delta > 0 ? 'plus' : 'minus');
+        pop.textContent = (delta > 0 ? '+' : '') + delta;
+        card.appendChild(pop);
+        setTimeout(() => pop.remove(), 950);
+      }
+
+      // Orange dashed ring = this card is still over/under-counted vs. the true answer (1 or 0).
+      card.classList.toggle('overcounted', newVal !== targetFor(fixed));
+    });
+    deriveRows[passIndex].classList.add('show');
+
+    // Right after pass 1 (k=1), explain in plain words WHY a subtraction is coming next.
+    if(passIndex === 0){
+      overCountNoteEl.innerHTML =
+        'รวมตอนนี้ = <b>24</b> แต่คำตอบจริงคือ <b>15</b> → นับเกินไป <b>9</b> ครั้ง สาเหตุ (ดูกรอบส้มประบนการ์ด):<br>' +
+        '• 6 ใบที่มีคนถูกพร้อมกัน 2 คน ถูกนับ <b>2 ครั้ง</b> ทั้งที่ควรนับแค่ 1 → เกินใบละ 1 ครั้ง รวมเกิน 6<br>' +
+        '• 1 ใบที่ทุกคนถูกหมด ถูกนับ <b>4 ครั้ง</b> ทั้งที่ควรนับแค่ 1 → เกิน 3 ครั้ง<br>' +
+        'รวมนับเกิน 6 + 3 = <b>9</b> พอดี → ขั้นถัดไปจะลบส่วนเกินนี้คืน (ดูเลขสีแดงลอยขึ้นจากการ์ด)';
+      overCountNoteEl.classList.add('show');
+    }
+  }
+
+  function playAll(){
+    resetWhy();
+
+    // Mini Venn (2-set) intro
+    setTimeout(() => { vennA.classList.add('show'); vennLabelA.classList.add('show'); }, 150);
+    setTimeout(() => { vennB.classList.add('show'); vennLabelB.classList.add('show'); }, 650);
+    setTimeout(() => { vennOverlap.classList.add('show'); vennLabelOverlap.classList.add('show'); }, 1050);
+    setTimeout(() => { vmSteps[0].classList.add('show'); }, 1500);
+    setTimeout(() => { vmSteps[1].classList.add('show'); vennOverlap.classList.add('pulse'); }, 2100);
+    setTimeout(() => { vmSteps[2].classList.add('show'); }, 2800);
+
+    // 4-set diagram intro
+    const v4Start = 3600;
+    v4Circles.forEach((el, i) => setTimeout(() => {
+      el.classList.add('show');
+      v4Labels[i].classList.add('show');
+    }, v4Start + i * 380));
+    setTimeout(() => v4Caption.classList.add('show'), v4Start + v4Circles.length * 380 + 300);
+
+    // 4-set Inclusion-Exclusion passes on the 24-card grid.
+    // Extra-long gap after pass 1 so the "why we subtract" note can be read before pass 2 fires.
+    const passStart = v4Start + v4Circles.length * 380 + 1000;
+    const gaps = [3400, 2600, 2600]; // gap AFTER pass 0, pass 1, pass 2
+    const passTimes = [passStart];
+    gaps.forEach(g => passTimes.push(passTimes[passTimes.length - 1] + g));
+    passTimes.forEach((t, p) => setTimeout(() => runPass(p), t));
+
+    // Final answer
+    const finalDelay = passTimes[3] + 1600;
+    setTimeout(() => {
+      finalBoxEl.classList.add('show');
+      countUp(finalUnionEl, 15, 700);
+    }, finalDelay);
+  }
+
+  playIEBtn.addEventListener('click', playAll);
+  setupReveal('why', () => {
+    if(!playIEBtn.dataset.played){
+      playIEBtn.dataset.played = '1';
+      playAll();
+    }
+  });
+</script>
+
+</body>
+</html>
